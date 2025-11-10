@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { User } from 'firebase/auth';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { Models } from 'appwrite';
+import { databases, ID, DATABASE_ID, TEST_RESULTS_COLLECTION_ID } from '../appwriteConfig';
 import { TestQuestion } from '../types';
 import { CheckCircleIcon } from './icons/CheckCircleIcon';
 import { XCircleIcon } from './icons/XCircleIcon';
 import QuizBarChart from './charts/QuizBarChart';
 
 interface QuizProps {
-  user: User;
+  user: Models.User<Models.Preferences>;
   testName: string;
   questions: TestQuestion[];
   onFinish: () => void;
@@ -36,14 +35,18 @@ const Quiz: React.FC<QuizProps> = ({ user, testName, questions, onFinish }) => {
     setShowScore(true);
 
     try {
-      const resultsCollectionRef = collection(db, 'users', user.uid, 'testResults');
       const finalScore = paddedAnswers.reduce((acc, ans, index) => (questions[index] && ans === questions[index].correctAnswer ? acc + 1 : acc), 0);
-      await addDoc(resultsCollectionRef, {
-        testName,
-        score: finalScore,
-        totalQuestions: questions.length,
-        timestamp: serverTimestamp(),
-      });
+      await databases.createDocument(
+        DATABASE_ID,
+        TEST_RESULTS_COLLECTION_ID,
+        ID.unique(),
+        {
+            testName,
+            score: finalScore,
+            totalQuestions: questions.length,
+            userId: user.$id
+        }
+      );
     } catch (error) {
       console.error("Error saving test result: ", error);
     }
@@ -59,9 +62,6 @@ const Quiz: React.FC<QuizProps> = ({ user, testName, questions, onFinish }) => {
       return;
     }
 
-    // This timer logic is inefficient as it resets the interval on every second and answer,
-    // but kept to reflect the provided truncated code's apparent logic. A better
-    // implementation would use setTimeout or a ref to avoid this.
     const timerId = setInterval(() => {
       setTimeLeft(prevTime => prevTime - 1);
     }, 1000);

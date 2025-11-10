@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { User } from 'firebase/auth';
+import { Models } from 'appwrite';
 import { UserProfile, CourseCategory, UniversityLevel } from '../types';
 import { NIGERIAN_UNIVERSITIES, COURSE_CATEGORIES, UNIVERSITY_LEVELS } from '../constants';
 import { UserIcon } from './icons/UserIcon';
+import { requestPermissionAndSaveSubscription } from '../services/notificationService';
 
 
 interface UserProfileFormProps {
   onSave: (profile: UserProfile) => void;
-  user: User;
+  user: Models.User<Models.Preferences>;
 }
 
 const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSave, user }) => {
   const [profile, setProfile] = useState<UserProfile>({
-    fullName: user.displayName || '',
+    fullName: user.name || '',
     cgpa: 3.5,
     level: UniversityLevel.L200,
     courseCategory: CourseCategory.STEM,
@@ -30,7 +31,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSave, user }) => {
     setProfile(prev => ({ ...prev, cgpa: parseFloat(e.target.value) }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!profile.fullName) {
         setError('Full Name is required.');
@@ -38,6 +39,9 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onSave, user }) => {
     }
     setError('');
     onSave(profile);
+
+    // After saving the profile, request permission to enable automatic notifications
+    await requestPermissionAndSaveSubscription(user.$id);
   };
 
   return (

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged, User, signOut } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db } from './firebaseConfig';
+import { account, databases, USERS_COLLECTION_ID, DATABASE_ID } from './appwriteConfig';
+import { Models } from 'appwrite';
 
 import { Scholarship, Tab, UserProfile } from './types';
 import ScholarshipFinder from './components/ScholarshipFinder';
@@ -51,39 +50,44 @@ const checkCgpaMatch = (cgpaRequirement: string, userCgpa: number): boolean => {
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('finder');
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [matchedScholarships, setMatchedScholarships] = useState<Scholarship[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // Start loading to check auth status
+  const [isLoading, setIsLoading] = useState(true);
   const [isLoadingScholarships, setIsLoadingScholarships] = useState(false);
 
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
+    const checkAuthStatus = async () => {
+      try {
+        const currentUser = await account.get();
         setUser(currentUser);
-        // Check for user profile in Firestore
-        const userDocRef = doc(db, 'users', currentUser.uid);
-        const userDocSnap = await getDoc(userDocRef);
-        if (userDocSnap.exists()) {
-          setUserProfile(userDocSnap.data() as UserProfile);
-        } else {
-          setUserProfile(null); // Force profile creation
+        // Check for user profile in Appwrite Database
+        try {
+          const profileDoc = await databases.getDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id);
+          const { $id, $collectionId, $databaseId, $createdAt, $updatedAt, $permissions, ...profileData } = profileDoc;
+          // Fix: Type assertion to UserProfile after removing Appwrite metadata.
+          // Using 'unknown' as an intermediate step is required for type safety.
+          setUserProfile(profileData as unknown as UserProfile);
+        } catch (e) {
+            // User exists in Auth but not in DB, force profile creation
+            setUserProfile(null);
         }
-      } else {
+      } catch (error) {
         setUser(null);
         setUserProfile(null);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    });
-    return () => unsubscribe();
+    };
+    checkAuthStatus();
   }, []);
 
   useEffect(() => {
     if (userProfile) {
       setIsLoadingScholarships(true);
 
-      const allScholarships: Scholarship[] = Object.values(rawScholarshipData).map((s: any) => ({
+      const allScholarships: Scholarship[] = Object.entries(rawScholarshipData).map(([id, s]: [string, any]) => ({
+        id: id,
         name: s.title,
         provider: s.provider,
         description: s.description,
@@ -131,15 +135,24 @@ const App: React.FC = () => {
   
   const handleProfileSave = async (profile: UserProfile) => {
     if (user) {
-      const userDocRef = doc(db, 'users', user.uid);
-      await setDoc(userDocRef, profile);
-      setUserProfile(profile);
+      try {
+        await databases.createDocument(DATABASE_ID, USERS_COLLECTION_ID, user.$id, profile);
+        setUserProfile(profile);
+      } catch (error) {
+        console.error("Failed to save profile:", error);
+        // Handle error (e.g., show a notification to the user)
+      }
     }
   };
 
   const handleSignOut = async () => {
-    const auth = getAuth();
-    await signOut(auth);
+    try {
+      await account.deleteSession('current');
+      setUser(null);
+      setUserProfile(null);
+    } catch (error) {
+        console.error("Failed to sign out:", error);
+    }
   };
 
   const renderContent = () => {
@@ -156,7 +169,8 @@ const App: React.FC = () => {
     }
 
     if (!user) {
-      return <Auth />;
+      // Pass a function to Auth to update user state upon successful login/signup
+      return <Auth onAuthSuccess={(authedUser) => setUser(authedUser)} />;
     }
 
     if (!userProfile) {

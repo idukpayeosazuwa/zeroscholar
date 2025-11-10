@@ -7,10 +7,10 @@ export const rawScholarshipData = {
     "official_link": "https://www.shell.com.ng/sustainability/communities/education-programmes/scholarships.html",
     "status": "Closed",
     "mode_selection":"Aptitude Test",
-    "cgpa_requirement": "Minimum 3.5 (on 5.0 scale)",
-    "level": "Undergraduate",
+    "cgpa_requirement": "Minimum Grade Requirement 3.5 (on 5.0 scale)",
+    "level": "Undergraduate 200L Only",
     "course_category": "All courses in NUC-accredited universities",
-    "benefit_in_cash": "₦200,000 per year",
+    "benefit_in_cash": "₦200,000 per year Until Graduation",
     "description": "NNPC/SPDC Joint Venture Undergraduate Scholarship for Nigerian undergraduates, offering ₦150,000 per year."
   },
   "Shell (SNEPCo) Scholarship": {
@@ -21,10 +21,10 @@ export const rawScholarshipData = {
     "mode_selection":"Aptitude Test",
     "official_link": "https://candidate.scholastica.ng/schemes/snepco",
     "status": "Closed",
-    "cgpa_requirement": "Minimum 3.5 (on 5.0 scale)",
-    "level": "Undergraduate",
+    "cgpa_requirement": "Minimum Grade Requirement 3.5 (on 5.0 scale)",
+    "level": "Undergraudate 200L",
     "course_category": "All NUC-accredited",
-    "benefit_in_cash": "₦200,000",
+    "benefit_in_cash": "₦200,000/year Until Graduation",
     "description": "Shell (SNEPCo) & NNPC scholarship for 2nd year and above undergraduates, offering ₦200,000."
   },
 
@@ -32,15 +32,14 @@ export const rawScholarshipData = {
     "title": " Julius Berger Scholarship Award 2025",
     "provider": "Julius Berger",
     "start_date": "2024/2025 cycle",
-    "deadline": "varies",
+    "deadline": "",
     "mode_selection":"Aptitude Test",
     "official_link": "https://candidate.scholastica.ng/schemes/JBN",
     "status": "closed",
-    "cgpa_requirement": "Minimum 3.5/5.0 Avaible ONLY to female students",
-    "level": "200L",
-    "Gender" :"F",
-    "course_category": "Science & Social courses (Niger Delta indigenes)",
-    "benefit_in_cash": "₦200 per year",
+    "cgpa_requirement": "Minimum Grade Requirment 3.5/5.0 Avaible ONLY to Female students",
+    "level": "Undergraduate 200L",
+    "course_category": "Enigineering, Techonlogy, and Science",
+    "benefit_in_cash": "₦200,000/year Until Graduation",
     "description": "Annual scholarship for Female undergraudate students styding enigineering, techonlogy, and science"
   },
 
@@ -55,8 +54,8 @@ export const rawScholarshipData = {
     "cgpa_requirement": "Minimum 2.5 (for 200L students) and As and Bs for 100L",
     "level": "Undergraduate (100L/200L)",
     "course_category": "All courses",
-    "benefit_in_cash": "₦200,000",
-    "description": "National merit scholarship by NNPC and TotalEnergies for undergraduates; ₦200,000 per year."
+    "benefit_in_cash": "₦200,000/year Until Graduation",
+    "description": "National merit scholarship by NNPC and TotalEnergies for undergraduates;"
   },
 
   "NNPC/CHEVRON SCHOLARSHIP": {
@@ -67,11 +66,11 @@ export const rawScholarshipData = {
     "official_link": "https://candidate.scholastica.ng/schemes/2024cnlawards",
     "status": "Closed",
     "mode_selection":"Aptitude test not required",
-    "cgpa_requirement": "≥3.5 (5.0 scale); 2.5 for visually impaired",
-    "level": "Undergraduate",
+    "cgpa_requirement": "Minumum Grade Requirement (3.5/5)",
+    "level": "Undergraduate 200L only",
     "course_category": "All courses (all states)",
-    "benefit_in_cash": "₦100,000 per year",
-    "description": "NNPC/Chevron JV scholarship for undergraduates (100L/200L) nationwide, granting ₦100,000/year."
+    "benefit_in_cash": "₦200,000 per year Until Graduation",
+    "description": "NNPC/Chevron JV scholarship for undergraduates (200L) nationwide,."
   },
   "SOHCAHTOA Foundation Scholarship 2025": {
     "title": "SOHCAHTOA Foundation Scholarship 2025",
@@ -82,38 +81,38 @@ export const rawScholarshipData = {
     "status": "Closed",
     "mode_selection":"Aptitude test required",
     "cgpa_requirement": "Minimum 3.5 (on 5.0 scale)",
-    "level": "Undergraduate (200L Only",
+    "level": "Undergraduate (200L Only)",
     "course_category": "Engineering, Sciences, Business, etc.",
-    "benefit_in_cash": "₦200,000 per year",
-    "description": "SOHCAHTOA scholarship (200L) for various courses, awarding ₦150,000 per year."
+    "benefit_in_cash": "₦200,000/year Until Graduation",
+    "description": "SOHCAHTOA scholarship (200L) for various courses"
   },
 
   "PTDF Scholarship": {
     "title": "PTDF In-Country Scholarship",
     "provider": "Petroleum Technology Development Fund (PTDF)",
     "start_date": "2025",
-    "deadline": "N/A",
+    "deadline": "1st April",
     "official_link": "https://ptdf.gov.ng",
     "status": "Closed",
-    "cgpa_requirement": "3.5 \ 5",
-    "level": "200L",
+    "cgpa_requirement": "Minimum Grade Requirement (3.5 \ 5)",
+    "level": "Undergraduate 200L Only",
     "mode_selection":"Aptitude test required",
     "course_category": "Engineering and Sciences",
-    "benefit_in_cash": "500k per year",
-    "description": "PTDF is a scholarship from the federal government"
+    "benefit_in_cash": "₦500,000  Until Graduation",
+    "description": "PTDF is a scholarship from the federal government scholarships from the ministry of petroleum"
   },
   "MTN Science and Technology Award Scholarship": {
     "title": "MTN Science and Technology Award Scholarship",
     "provider": "MTN Nigeria Foundation",
     "start_date": "Annual",
-    "deadline": "Varies by program",
+    "deadline": "30th March",
     "official_link": "https://www.mtn.ng/scholarships",
     "status": "closed",
     "mode_selection":"Aptitude test required",
-    "cgpa_requirement": "Science/Tech:(3.5/5)",
-    "level": "Undergraduate (300L)",
-    "course_category": "Science & Tech (300L); Blind (200L/300L); Top UTME (100L)",
-    "benefit_in_cash": "₦300,000 per year",
+    "cgpa_requirement": "Minimum Grade Requirement (3.5 / 5)",
+    "level": "Undergraduate 300L Only",
+    "course_category": "Science & Tech",
+    "benefit_in_cash": "₦300,000/year Until Graduation",
     "description": "MTN Foundation awards ₦300,000/year (until graduation) to qualified science & tech students, blind students, and top UTME candidates."
   },
   "Jim Ovia Scholarship": {
@@ -124,24 +123,24 @@ export const rawScholarshipData = {
     "official_link": "https://jimoviafoundation.org",
     "status": "Closed",
     "mode_selection":"Aptitude test NOT required",
-    "cgpa_requirement": "High academic standing",
-    "level": "Undergraduate",
+    "cgpa_requirement": "Good",
+    "level": "Undergraduate 200L Only",
     "course_category": "All courses",
-    "benefit_in_cash": "₦150,000 per year",
-    "description": ""
+    "benefit_in_cash": "₦150,000 per year Until Graduation",
+    "description": "Jim Ovia Scholarship is founded by the creator of Zenith Bank"
   },
   "FSB (NA) Scholarship": {
     "title": "Federal Scholarship Board (FSB) Awards",
     "provider": "Federal Scholarship Board (Nigeria)",
     "start_date": "Annual",
-    "deadline": "Varies",
+    "deadline": "20th March 2025",
     "official_link": "https://education.gov.ng/fsb/",
     "status": "closed", 
-    "cgpa_requirement": "(4.0 \ 5)",
-    "level": "Undergraduate (200L)",
+    "cgpa_requirement": "Minimum Grade Requirement (4.0 \ 5)",
+    "level": "Undergraduate 200L Only",
     "mode_selection":"Aptitude test required",
     "course_category": "All courses",
-    "benefit_in_cash": "₦200,000 per year",
+    "benefit_in_cash": "₦200,000 per year Until Graduation",
     "description": "Federal Government scholarship for Nigerian undergraduates, providing ₦200,000 per year."
   },
   "NPDC/SEPLAT Scholarship": {
@@ -151,11 +150,11 @@ export const rawScholarshipData = {
     "deadline": "April 21, 2025",
     "official_link": "https://www.seplatenergy.com",
     "status": "Closed",
-    "cgpa_requirement": "Merit-based",
+    "cgpa_requirement": "Minimum Grade Requirement (3.5 \ 5)",
     "mode_selection":"Aptitude test required",
-    "level": "Undergraduate (200L+)",
+    "level": "Undergraduate 200L Only",
     "course_category": "Accountancy, Engineering, Sciences, etc.",
-    "benefit_in_cash": "₦200k per year",
+    "benefit_in_cash": "₦200,000 per year Until Graduation",
     "description": "NNPC/Seplat JV scholarship for undergraduates (200L+), awarding ₦200,000 per year."
   },
    "KPMG University Scholarships": {
@@ -166,10 +165,10 @@ export const rawScholarshipData = {
     "official_link": "https://kpmg.seamlesshiring.com",
     "status": "Closed",
     "mode_selection":"Aptitude test required",
-    "cgpa_requirement": "Minimum 3.5/5.0",
+    "cgpa_requirement": "Minimum Grade Requirement 3.5/5.0",
     "level": "Undergraduate (100L/200L)",
     "course_category": "All disciplines (full scholarship)",
-    "benefit_in_cash": "₦400k Annually (Full tuition, accommodation, and books)",
+    "benefit_in_cash": "₦400,000/year Until Graduation",
     "description": "KPMG's scholarship provides full funding including tuition, accommodation, and books for high-achieving 100L/200L students."
   },
    "NNPC - RENAISSANCE JV University Scholarship": {
@@ -180,10 +179,10 @@ export const rawScholarshipData = {
     "official_link": "https://candidate.scholastica.ng/schemes/nnpcraecjv2025",
     "status": "Closed",
     "mode_selection":"Aptitude test required",
-    "cgpa_requirement": "Minimum 3.5/5.0",
-    "level": "Undergraduate (100L/200L)",
-    "course_category": "All disciplines (full scholarship)",
-    "benefit_in_cash": "₦400k Annually (Full tuition, accommodation, and books)",
+    "cgpa_requirement": "Minimum Grade Requirement (3.5/5.0)",
+    "level": "Undergraduate 200L Only",
+    "course_category": "All disciplines",
+    "benefit_in_cash": "₦400,000/year Unitl Graduation",
     "description": "Note that the scholarhips is of two variants of merit and host communties, make to apply to merit if you don't live in oil producing states"
   },
   "PICFI Scholarship": {
@@ -191,13 +190,13 @@ export const rawScholarshipData = {
     "provider": "Petroleum Industry Christian Fellowship Int'l (PICFI)",
     "start_date": "Annual (mid-August)",
     "deadline": "Mid-August 2025",
-    "official_link": "",
+    "official_link": "https://candidate.scholastica.ng/schemes/picfischolarship",
     "status": "closed",
     "mode_selection":"Aptitude test required",
-    "cgpa_requirement": "3.5",
-    "level": "Undergraduate (200L)",
-    "course_category": "All courses (first-year only)",
-    "benefit_in_cash": "200k per year",
+    "cgpa_requirement": "Minimum Grade Requirement (3.5/5)",
+    "level": "Undergraduate 200L Only",
+    "course_category": "Sciences, Engineering, Accounting, Law, Economics",
+    "benefit_in_cash": "₦200,000 per year  Until Graduation",
     "description": "PICFI scholarship for first-year undergraduates nationwide, awarding ₦200,000 per year."
   },
 
@@ -207,12 +206,12 @@ export const rawScholarshipData = {
     "start_date": "2024",
     "deadline": "September 17, 2024",
     "mode_selection":"Aptitude test required",
-    "official_link": "https://forms.office.com",
+    "official_link": "https://www.guinness-nigeria.com/en/careers/internships/undergraduate-scholarship",
     "status": "Closed",
-    "cgpa_requirement": "≥3.5 (on 5.0 scale)",
-    "level": "Undergraduate (200L STEM)",
+    "cgpa_requirement": "Minimum Grade Requirement (3.5/ 5.0)",
+    "level": "Undergraduate (200L)",
     "course_category": "STEM courses (Science, Technology, Engineering)",
-    "benefit_in_cash": "Full tuition",
+    "benefit_in_cash": "₦150,000 per Until Graduation",
     "description": "Guinness Nigeria STEM scholarship for 200L students, covering full tuition costs for qualifying STEM courses."
   },
 };

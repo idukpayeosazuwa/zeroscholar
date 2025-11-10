@@ -81,7 +81,8 @@ const QuizBarChart: React.FC<QuizBarChartProps> = ({ data }) => {
                 const x = groupX + (groupSpacing / 2) + (setIndex * barWidth);
                 const barYPos = value >= 0 ? zeroY - barHeight : zeroY;
                 const y = topPadding + barYPos;
-                const color = dataset.backgroundColor || '#3b82f6';
+                // Fix: Handle both string and string[] for backgroundColor to ensure type safety.
+                const color = (Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[0] : dataset.backgroundColor) || '#3b82f6';
                 
                 return (
                   <g key={`${label}-${dataset.label}`}>
@@ -105,7 +106,8 @@ const QuizBarChart: React.FC<QuizBarChartProps> = ({ data }) => {
       <div className="flex justify-center flex-wrap gap-x-4 gap-y-1 mt-2">
         {data.datasets.map((dataset) => (
           <div key={dataset.label} className="flex items-center text-xs">
-            <span className="w-3 h-3 rounded-sm mr-2" style={{ backgroundColor: dataset.backgroundColor }}></span>
+            {/* Fix: Handle both string and string[] for backgroundColor to ensure type safety. */}
+            <span className="w-3 h-3 rounded-sm mr-2" style={{ backgroundColor: Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[0] : dataset.backgroundColor }}></span>
             <span>{dataset.label}</span>
           </div>
         ))}

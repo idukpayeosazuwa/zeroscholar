@@ -75,7 +75,8 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
                 const barHeight = maxValue > 0 ? (value / maxValue) * chartHeight : 0;
                 const x = groupX + (groupWidth * 0.15) + (setIndex * barWidth);
                 const y = topPadding + chartHeight - barHeight;
-                const color = dataset.backgroundColor || '#3b82f6';
+                // Fix: Handle both string and string[] for backgroundColor to ensure type safety.
+                const color = (Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[0] : dataset.backgroundColor) || '#3b82f6';
                 
                 return (
                   <g key={`${label}-${dataset.label}`}>
@@ -97,7 +98,8 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
          <div className="flex justify-center flex-wrap gap-x-4 gap-y-1 mt-2">
             {data.datasets.map((dataset) => (
             <div key={dataset.label} className="flex items-center text-xs">
-                <span className="w-3 h-3 rounded-sm mr-2" style={{ backgroundColor: dataset.backgroundColor }}></span>
+                {/* Fix: Handle both string and string[] for backgroundColor to ensure type safety. */}
+                <span className="w-3 h-3 rounded-sm mr-2" style={{ backgroundColor: Array.isArray(dataset.backgroundColor) ? dataset.backgroundColor[0] : dataset.backgroundColor }}></span>
                 <span>{dataset.label}</span>
             </div>
             ))}

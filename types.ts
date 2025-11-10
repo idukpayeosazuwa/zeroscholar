@@ -1,5 +1,3 @@
-import { Timestamp } from 'firebase/firestore';
-
 export enum CourseCategory {
   STEM = "Science, Technology, Engineering, and Mathematics",
   Medicine = "Medicine and Health Sciences",
@@ -25,12 +23,14 @@ export interface UserProfile {
   courseCategory: CourseCategory;
   university: string;
   location: string;
+  pushSubscription?: string; // Storing the subscription object as a JSON string
 }
 
 export interface Scholarship {
+  id: string;
   name: string;
   provider: string;
-  description: string;
+  description:string;
   eligibility: string[];
   rewardAmount: string;
   deadline: string;
@@ -44,7 +44,8 @@ export type Tab = 'finder' | 'tests' | 'community';
 export interface GraphDataSet {
   label: string;
   data: number[];
-  backgroundColor?: string;
+  // Fix: Allow backgroundColor to be an array of strings for pie chart compatibility.
+  backgroundColor?: string | string[];
 }
 
 export interface GraphData {
@@ -67,28 +68,29 @@ export interface TestQuestion {
 }
 
 export interface CommunityPost {
-    id?: string; // Firestore will generate this
+    $id?: string; // Appwrite document ID
     author: string;
     authorId: string;
     avatar: string; // Kept for legacy emoji avatars
     tag: string;
     content: string;
-    timestamp: Timestamp;
+    $createdAt: string; // Appwrite timestamp
 }
 
 export interface Reply {
-    id?: string;
+    $id?: string; // Appwrite document ID
     author: string;
     authorId: string;
     content: string;
-    timestamp: Timestamp;
+    $createdAt: string; // Appwrite timestamp
 }
 
 export interface TestResult {
   testName: string;
   score: number;
   totalQuestions: number;
-  timestamp: Timestamp;
+  $createdAt: string; // Appwrite timestamp
+  userId: string;
 }
 
 export interface Source {

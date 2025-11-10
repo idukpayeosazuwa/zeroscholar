@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, orderBy, getDocs } from 'firebase/firestore';
-import { User } from 'firebase/auth';
-import { db } from '../firebaseConfig';
+import { Query } from 'appwrite';
+import { Models } from 'appwrite';
+import { databases, DATABASE_ID, TEST_RESULTS_COLLECTION_ID } from '../appwriteConfig';
 import { APTITUDE_TESTS } from '../constants';
 import Quiz from './Quiz';
 import { BookOpenIcon } from './icons/BookOpenIcon';
@@ -9,7 +9,7 @@ import { TestQuestion, TestResult, GraphData } from '../types';
 import BarChart from './charts/BarChart';
 
 interface AptitudeTestArenaProps {
-  user: User;
+  user: Models.User<Models.Preferences>;
 }
 
 const AptitudeTestArena: React.FC<AptitudeTestArenaProps> = ({ user }) => {
@@ -24,21 +24,26 @@ const AptitudeTestArena: React.FC<AptitudeTestArenaProps> = ({ user }) => {
     if (view === 'analytics') {
       const fetchTestResults = async () => {
         setIsLoadingAnalytics(true);
-        const results: TestResult[] = [];
-        const resultsQuery = query(
-          collection(db, 'users', user.uid, 'testResults'),
-          orderBy('timestamp', 'desc')
-        );
-        const querySnapshot = await getDocs(resultsQuery);
-        querySnapshot.forEach((doc) => {
-          results.push(doc.data() as TestResult);
-        });
-        setTestResults(results);
-        setIsLoadingAnalytics(false);
+        try {
+          const response = await databases.listDocuments(
+            DATABASE_ID,
+            TEST_RESULTS_COLLECTION_ID,
+            [
+              Query.equal('userId', user.$id),
+              Query.orderDesc('$createdAt')
+            ]
+          );
+          setTestResults(response.documents as unknown as TestResult[]);
+        } catch (error) {
+          console.error("Failed to fetch test results:", error);
+          setTestResults([]);
+        } finally {
+          setIsLoadingAnalytics(false);
+        }
       };
       fetchTestResults();
     }
-  }, [view, user.uid]);
+  }, [view, user.$id]);
 
   const startTest = (categoryName: string, testNameInCat: string) => {
     setSelectedTest(`${categoryName} - ${testNameInCat}`);

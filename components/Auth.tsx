@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { account, ID } from '../appwriteConfig';
 import { LogoIcon } from './icons/LogoIcon';
+import { Models } from 'appwrite';
 
-const Auth: React.FC = () => {
+interface AuthProps {
+    onAuthSuccess: (user: Models.User<Models.Preferences>) => void;
+}
+
+const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState(''); // For signup
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -13,14 +19,16 @@ const Auth: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-    const auth = getAuth();
 
     try {
       if (isLogin) {
-        await signInWithEmailAndPassword(auth, email, password);
+        await account.createEmailPasswordSession(email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        await account.create(ID.unique(), email, password, name);
+        await account.createEmailPasswordSession(email, password);
       }
+      const user = await account.get();
+      onAuthSuccess(user);
     } catch (err: any) {
       setError(err.message || 'An error occurred.');
     } finally {
@@ -41,6 +49,21 @@ const Auth: React.FC = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {!isLogin && (
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Bamidele Chidinma"
+            />
+          </div>
+        )}
+
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
           <input
@@ -62,7 +85,7 @@ const Auth: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            minLength={6}
+            minLength={8}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder="••••••••"
           />
@@ -80,9 +103,20 @@ const Auth: React.FC = () => {
       </form>
 
       <div className="mt-6 text-center">
-        <button onClick={() => setIsLogin(!isLogin)} className="text-sm text-blue-600 hover:underline">
+        <button onClick={() => { setIsLogin(!isLogin); setError(null); }} className="text-sm text-blue-600 hover:underline">
           {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
         </button>
+      </div>
+      
+      <div className="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded-r-lg">
+        <h4 className="font-bold">Appwrite Configuration Help</h4>
+        <p className="text-sm mt-1">
+          If you see a "Failed to fetch" error, you must add this app's hostname to your Appwrite project's "Platforms" list.
+        </p>
+        <p className="text-sm mt-2">
+            Add this exact value:
+            <code className="ml-2 font-mono bg-yellow-200 p-1 rounded text-sm">{window.location.origin}</code>
+        </p>
       </div>
     </div>
   );
