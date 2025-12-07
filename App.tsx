@@ -1,52 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { account, databases, USERS_COLLECTION_ID, DATABASE_ID } from './appwriteConfig';
+import { account, databases, USERS_COLLECTION_ID, DATABASE_ID, SCHOLARSHIPS_COLLECTION_ID } from './appwriteConfig';
 import { Models } from 'appwrite';
 
-import { Scholarship, Tab, UserProfile } from './types';
+import { Scholarship, Tab, UserProfile, UniversityLevel } from './types';
 import ScholarshipFinder from './components/ScholarshipFinder';
 import AptitudeTestArena from './components/AptitudeTestArena';
-import CommunityBoard from './components/CommunityBoard';
+
 import BottomNav from './components/BottomNav';
-import UserProfileForm from './components/UserProfileForm';
+
 import Auth from './components/Auth';
-import { rawScholarshipData } from './data/scholarships';
-import { fetchLiveDeadlines } from './services/geminiService';
+
 import { LogoIcon } from './components/icons/LogoIcon';
-
-
-// Helper to parse level requirements from strings like "Undergraduate (200L)" or "100L/200L"
-const checkLevelMatch = (levelRequirement: string, userLevelStr: string): boolean => {
-  const userLevel = parseInt(userLevelStr.match(/\d+/)?.[0] || '0');
-  if (levelRequirement.toLowerCase().includes('postgraduate')) return false;
-  if (userLevel === 0) return true; // Default to match if user level is weird
-
-  const levels = levelRequirement.match(/\d{3}/g) || [];
-  if (levels.length === 0) return true; // Matches if no specific level is required
-
-  const isRange = levelRequirement.includes('/');
-  const isMinimum = levelRequirement.includes('+');
-
-  if (isMinimum) {
-    return userLevel >= parseInt(levels[0]);
-  }
-  
-  if (isRange) {
-    return levels.some(lvl => userLevel === parseInt(lvl));
-  }
-  
-  return levels.some(lvl => userLevel === parseInt(lvl));
-};
-
-
-// Helper to parse CGPA requirements from strings like "Minimum 3.5" or "≥3.5"
-const checkCgpaMatch = (cgpaRequirement: string, userCgpa: number): boolean => {
-  const reqGpaMatch = cgpaRequirement.match(/(\d\.\d+)/);
-  if (!reqGpaMatch) return true; // Matches if no specific CGPA is required
-
-  const reqGpa = parseFloat(reqGpaMatch[0]);
-  return userCgpa >= reqGpa;
-};
-
+import { sortScholarshipsByRelevance } from './utils/scholarshipMatcher';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('finder');
@@ -65,11 +30,8 @@ const App: React.FC = () => {
         try {
           const profileDoc = await databases.getDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id);
           const { $id, $collectionId, $databaseId, $createdAt, $updatedAt, $permissions, ...profileData } = profileDoc;
-          // Fix: Type assertion to UserProfile after removing Appwrite metadata.
-          // Using 'unknown' as an intermediate step is required for type safety.
           setUserProfile(profileData as unknown as UserProfile);
         } catch (e) {
-            // User exists in Auth but not in DB, force profile creation
             setUserProfile(null);
         }
       } catch (error) {
@@ -84,64 +46,66 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (userProfile) {
-      setIsLoadingScholarships(true);
-
-      const allScholarships: Scholarship[] = Object.entries(rawScholarshipData).map(([id, s]: [string, any]) => ({
-        id: id,
-        name: s.title,
-        provider: s.provider,
-        description: s.description,
-        eligibility: [
-          s.cgpa_requirement,
-          `Level: ${s.level}`,
-          `Courses: ${s.course_category}`
-        ].filter(Boolean),
-        rewardAmount: s.benefit_in_cash || 'N/A',
-        deadline: s.deadline || 'Varies',
-        link: s.official_link || '',
-        status: s.status || 'Closed',
-        modeOfSelection: s.mode_selection || 'Not specified'
-      }));
-
-      const profileMatches = allScholarships.filter(s => 
-        checkCgpaMatch(s.eligibility[0] || '', userProfile.cgpa) &&
-        checkLevelMatch(s.eligibility[1] || '', userProfile.level)
-      );
-
-      const fetchAndUpdateDeadlines = async () => {
-        try {
-          const scholarshipNames = profileMatches.map(s => s.name);
-          if (scholarshipNames.length > 0) {
-            const liveDeadlines = await fetchLiveDeadlines(scholarshipNames);
-            const updatedMatches = profileMatches.map(scholarship => ({
-              ...scholarship,
-              deadline: liveDeadlines[scholarship.name] || scholarship.deadline,
-            }));
-            setMatchedScholarships(updatedMatches);
-          } else {
-             setMatchedScholarships([]);
-          }
-        } catch (error) {
-          console.error("Failed to fetch live deadlines, using static data.", error);
-          setMatchedScholarships(profileMatches);
-        } finally {
-          setIsLoadingScholarships(false);
-        }
-      };
-
-      fetchAndUpdateDeadlines();
+      fetchAndMatchScholarships();
     }
   }, [userProfile]);
+
+  const fetchAndMatchScholarships = async () => {
+    if (!userProfile) return;
+    
+    setIsLoadingScholarships(true);
+    try {
+      // Fetch all scholarships from Appwrite
+      const response = await databases.listDocuments(
+        DATABASE_ID,
+        SCHOLARSHIPS_COLLECTION_ID
+      );
+
+      // Sort and filter scholarships based on user profile
+      const matchedScholarships = sortScholarshipsByRelevance(
+        response.documents,
+        userProfile
+      );
+
+      // Transform to Scholarship type
+      const scholarships: Scholarship[] = matchedScholarships.map((doc: any) => ({
+        id: doc.$id,
+        name: doc.title,
+        provider: doc.provider,
+        description: doc.description || `${doc.provider} scholarship`,
+        eligibility: doc.matchData.reasons, // Show match reasons
+        rewardAmount: doc.benefitInCash || 'N/A',
+        deadline: doc.deadline || 'Varies',
+        link: doc.officialLink || '',
+        status: doc.status || 'Closed',
+        modeOfSelection: doc.modeSelection || 'Not specified'
+      }));
+
+      setMatchedScholarships(scholarships);
+    } catch (error) {
+      console.error('Failed to fetch scholarships:', error);
+      setMatchedScholarships([]);
+    } finally {
+      setIsLoadingScholarships(false);
+    }
+  };
   
-  const handleProfileSave = async (profile: UserProfile) => {
-    if (user) {
-      try {
-        await databases.createDocument(DATABASE_ID, USERS_COLLECTION_ID, user.$id, profile);
-        setUserProfile(profile);
-      } catch (error) {
-        console.error("Failed to save profile:", error);
-        // Handle error (e.g., show a notification to the user)
-      }
+  const handleAuthSuccess = async (authedUser: Models.User<Models.Preferences>, level: UniversityLevel) => {
+    setUser(authedUser);
+    
+    // Fetch or create user profile
+    try {
+      const profileDoc = await databases.getDocument(DATABASE_ID, USERS_COLLECTION_ID, authedUser.$id);
+      const { $id, $collectionId, $databaseId, $createdAt, $updatedAt, $permissions, ...profileData } = profileDoc;
+      setUserProfile(profileData as unknown as UserProfile);
+    } catch (e) {
+      // Profile doesn't exist, create it with the level from signup
+    //   const newProfile: UserProfile = {
+    //     fullName: authedUser.email,
+    //     level: level
+    //   };
+    //   setUserProfile(newProfile);
+    // }
     }
   };
 
@@ -150,6 +114,7 @@ const App: React.FC = () => {
       await account.deleteSession('current');
       setUser(null);
       setUserProfile(null);
+      setMatchedScholarships([]);
     } catch (error) {
         console.error("Failed to sign out:", error);
     }
@@ -168,21 +133,14 @@ const App: React.FC = () => {
       );
     }
 
-    if (!user) {
-      // Pass a function to Auth to update user state upon successful login/signup
-      return <Auth onAuthSuccess={(authedUser) => setUser(authedUser)} />;
-    }
-
-    if (!userProfile) {
-      return <UserProfileForm onSave={handleProfileSave} user={user} />;
+    if (!user || !userProfile) {
+      return <Auth onAuthSuccess={handleAuthSuccess} />;
     }
 
     switch (activeTab) {
       case 'tests':
         return <AptitudeTestArena user={user} />;
-      case 'community':
-        return <CommunityBoard user={user} userProfile={userProfile} />;
-      case 'finder':
+
       default:
         return (
           <ScholarshipFinder
@@ -198,15 +156,15 @@ const App: React.FC = () => {
     <div className="min-h-screen font-sans text-gray-800 bg-gray-50">
       <header className="bg-white shadow-sm sticky top-0 z-10 p-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
-            <LogoIcon className="h-8 w-8 text-blue-600" />
-            <h1 className="text-2xl font-bold text-blue-800">ZeroScholar</h1>
+            <LogoIcon className="h-8 w-8 text-[#2240AF]" />
+            <h1 className="text-2xl font-bold text-[#2240AF]">ScholarAI</h1>
         </div>
         {user && (
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-600 hidden md:block">{user.email}</span>
             <button
               onClick={handleSignOut}
-              className="px-3 py-1.5 text-sm font-semibold text-blue-600 bg-blue-100 rounded-md hover:bg-blue-200"
+              className="px-3 py-1.5 text-sm font-semibold text-[#2240AF] bg-blue-100 rounded-md hover:bg-blue-200"
             >
               Sign Out
             </button>

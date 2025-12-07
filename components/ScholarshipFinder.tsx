@@ -8,7 +8,7 @@ type FilterStatus = 'open' | 'upcoming' | 'closed';
 interface ScholarshipFinderProps {
   scholarships: Scholarship[];
   isLoading: boolean;
-  userName: string;
+  userName?: string;
 }
 
 const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({ scholarships, isLoading, userName }) => {
@@ -40,11 +40,11 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({ scholarships, isL
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-        <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg mb-6">
-            <h2 className="font-bold">Welcome, {userName.split(' ')[0]}!</h2>
-            <p>Here are the scholarships that match your profile. We've checked for the latest deadlines.</p>
-        </div>
+    <div className="space-y-6">
+      <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold">Hello, {userName || 'Scholar'}!</h2>
+        <p>Here are the scholarships that match your profile. We've checked for the latest deadlines.</p>
+      </div>
 
       <div className="mb-6 flex justify-center space-x-2 bg-gray-200 p-1 rounded-full">
         <button className={getButtonClasses('open')} onClick={() => setActiveFilter('open')}>Open</button>

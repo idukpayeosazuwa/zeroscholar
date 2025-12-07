@@ -16,7 +16,20 @@ export { ID };
 // Database and Collection IDs
 export const DATABASE_ID = '690f7e600037897da65f'; // Replace with your database ID
 export const USERS_COLLECTION_ID = 'users'; // Replace with your user profiles collection ID
-export const POSTS_COLLECTION_ID = 'communityPosts'; // Replace with your community posts collection ID
-export const REPLIES_COLLECTION_ID_SUFFIX = '_replies'; // Suffix for reply collections if needed, though Appwrite can handle nested docs or relations.
-export const SUBSCRIPTIONS_COLLECTION_ID = 'subscriptions'; // Replace with your subscriptions collection ID
-export const TEST_RESULTS_COLLECTION_ID = 'testResults'; // Replace with your test results collection ID
+export const SCHOLARSHIPS_COLLECTION_ID = 'eveything'; // Replace with your scholarships collection ID
+export const TEST_RESULTS_COLLECTION_ID = 'testresults'; // Replace with your test results collection ID
+
+// Scholarship schema fields (for reference):
+// - title (string, 200)
+// - deadline (string, 100)
+// - startDate (string, 100)
+// - status (string, 50) // "Open", "Closed", "Upcoming"
+// - officialLink (string, 500)
+// - provider (string, 200)
+// - benefitInCash (string, 200)
+// - modeSelection (string, 200)
+// - eligibilityRules (string, 5000) // JSON string
+// - description (string, 2000) // Add this
+// - cgpaRequirement (string, 100) // Keep for backward compatibility
+// - level (string, 100) // Keep for backward compatibility
+// - courseCategory (string, 200) // Keep for backward compatibility

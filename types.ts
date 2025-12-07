@@ -17,12 +17,16 @@ export enum UniversityLevel {
 }
 
 export interface UserProfile {
-  fullName: string;
-  cgpa: number;
+  fullName?: string;
+  email?: string;
+  userID?: string;
   level: UniversityLevel;
-  courseCategory: CourseCategory;
-  university: string;
-  location: string;
+  course?: string;
+  gender?: 'Male' | 'Female';
+  state?: string;
+  university?: string;
+  cgpa?: number;
+  notifiedScholarships?: string[];
   pushSubscription?: string; // Storing the subscription object as a JSON string
 }
 

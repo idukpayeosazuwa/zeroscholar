@@ -8,7 +8,7 @@ import { BellIcon } from './icons/BellIcon';
 import { CheckCircleIcon } from './icons/CheckCircleIcon';
 import { XCircleIcon } from './icons/XCircleIcon';
 import { account } from '../appwriteConfig';
-import { subscribeToScholarship, checkSubscription } from '../services/notificationService';
+// import { subscribeToScholarship, checkSubscription } from '../services/notificationService';
 
 interface ScholarshipCardProps {
   scholarship: Scholarship;
@@ -37,31 +37,31 @@ const ScholarshipCard: React.FC<ScholarshipCardProps> = ({ scholarship }) => {
   const noTestRequired = mode.includes('not required');
   const isActionable = scholarship.status?.toLowerCase() === 'closed' || scholarship.status?.toLowerCase() === 'upcoming';
 
-  useEffect(() => {
-    // Only check subscription for actionable scholarships and if a user is logged in
-    if (isActionable && user) {
-      const checkCurrentSubscription = async () => {
-        const isSubscribed = await checkSubscription(user.$id, scholarship.id);
-        if (isSubscribed) {
-          setNotificationStatus('subscribed');
-        }
-      };
-      checkCurrentSubscription();
-    }
-  }, [scholarship.id, user, isActionable]);
+  // useEffect(() => {
+  //   // Only check subscription for actionable scholarships and if a user is logged in
+  //   if (isActionable && user) {
+  //     const checkCurrentSubscription = async () => {
+  //       const isSubscribed = await checkSubscription(user.$id, scholarship.id);
+  //       if (isSubscribed) {
+  //         setNotificationStatus('subscribed');
+  //       }
+  //     };
+  //     checkCurrentSubscription();
+  //   }
+  // }, [scholarship.id, user, isActionable]);
 
 
-  const handleNotifyClick = async () => {
-    if (!user) return;
-    setNotificationStatus('loading');
-    const success = await subscribeToScholarship(user.$id, scholarship.id, scholarship.name);
-    if (success) {
-      setNotificationStatus('subscribed');
-    } else {
-      // This could be because permission was denied or an error occurred
-      setNotificationStatus(Notification.permission === 'denied' ? 'denied' : 'idle');
-    }
-  };
+  // const handleNotifyClick = async () => {
+  //   if (!user) return;
+  //   setNotificationStatus('loading');
+  //   const success = await subscribeToScholarship(user.$id, scholarship.id, scholarship.name);
+  //   if (success) {
+  //     setNotificationStatus('subscribed');
+  //   } else {
+  //     // This could be because permission was denied or an error occurred
+  //     setNotificationStatus(Notification.permission === 'denied' ? 'denied' : 'idle');
+  //   }
+  // };
 
   const renderNotificationButton = () => {
     if (!isActionable) return null;
@@ -95,7 +95,7 @@ const ScholarshipCard: React.FC<ScholarshipCardProps> = ({ scholarship }) => {
       default:
         return (
           <button
-            onClick={handleNotifyClick}
+        
             className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded-full shadow-sm text-gray-700 bg-white hover:bg-gray-50"
           >
             <BellIcon className="mr-1.5 h-4 w-4" />

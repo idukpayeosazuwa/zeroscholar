@@ -1,0 +1,1565 @@
+[
+  {
+    "scholarship_name": "YAYEF Scholarship 2025",
+    "provider": "Yahaya Alapansapa Youth Educational Foundation",
+    "deadline": "2025-10-21",
+    "is_aptitude_test_required": false,
+    "official_link": "Click green button",
+    "award_amount": "₦10 million tuition fund (split among selected students)",
+    "tracks": [
+      {
+        "track_name": "Campus Starter",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Kwara"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Age 16-21", "Public University Only"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      },
+      {
+        "track_name": "Campus Achiever",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Kwara"],
+        "required_lga_list": [],
+        "allowed_levels": [200, 300, 400],
+        "required_gender": "ANY",
+        "min_cgpa": 3.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Public University Only"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "NNPC/OANDO Scholarship 2025",
+    "provider": "NNPC / Oando Energy Resources",
+    "deadline": "2025-04-30",
+    "is_aptitude_test_required": true,
+    "official_link": "Scholastica",
+    "award_amount": "₦200,000/Year",
+    "tracks": [
+      {
+        "track_name": "National Merit Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Not a beneficiary of other Oil & Gas scholarships"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      },
+      {
+        "track_name": "Host Communities Merit Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Bayelsa", "Delta", "Imo", "Rivers"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Letter from Community Paramount Ruler required", "Letter from CDC Chairman required"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "OML 17 Heirs of Tomorrow Scholarship (HOTSS)",
+    "provider": "Heirs Energies / NNPC",
+    "deadline": "Not Specified",
+    "is_aptitude_test_required": false,
+    "official_link": "Scholastica",
+    "award_amount": "₦200,000 per year",
+    "tracks": [
+      {
+        "track_name": "Host Community Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Rivers"],
+        "required_lga_list": ["ETCHE", "IKWERRE", "OBIO-AKPOR", "OYIGBO"],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 3.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Indigene of OML 17 Communities", "Valid ID Letter from Community"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Taiwo Bankole Scholarship 2025",
+    "provider": "Paradigm Initiative",
+    "deadline": "2025-07-30",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Ajegunle Male Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["STEM", "LAW"],
+        "required_state_of_origin": ["Lagos"],
+        "required_lga_list": ["Ajegunle"],
+        "allowed_levels": [100],
+        "required_gender": "M",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Age 17-25", "Public University"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      },
+      {
+        "track_name": "Ajegunle Female Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["STEM", "LAW"],
+        "required_state_of_origin": ["Lagos"],
+        "required_lga_list": ["Ajegunle"],
+        "allowed_levels": [100],
+        "required_gender": "F",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Age 17-25", "Public University"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Nile University of Nigeria Scholarship 2025",
+    "provider": "Nile University",
+    "deadline": "Not Specified",
+    "is_aptitude_test_required": false,
+    "official_link": "Admission Portal",
+    "award_amount": "Full Scholarship (100% Tuition)",
+    "tracks": [
+      {
+        "track_name": "Merit Scholarship (100%)",
+        "required_parent_relation": "NONE",
+        "required_universities": ["Nile University of Nigeria"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 320,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["5 A1s in O-Level required", "Valid only at point of entry"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Julius Berger Nigeria Scholarship 2025",
+    "provider": "Julius Berger Nigeria",
+    "deadline": "2025-09-15",
+    "is_aptitude_test_required": false,
+    "official_link": "Scholastica",
+    "award_amount": "₦200,000/Year",
+    "tracks": [
+      {
+        "track_name": "Female Engineering Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["STEM", "ENV"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200],
+        "required_gender": "F",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Public University Only", "Faculty of Engineering/Environmental/Technology"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "WAAW Foundation Scholarship 2025",
+    "provider": "WAAW Foundation",
+    "deadline": "2025-11-30",
+    "is_aptitude_test_required": false,
+    "official_link": "Online Application",
+    "award_amount": "$500",
+    "tracks": [
+      {
+        "track_name": "Women in STEM",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["STEM"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200, 300, 400, 500],
+        "required_gender": "F",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["No core medical courses (Nursing/Medicine excluded)"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "FCM Foundation SEED Scholarship 2025",
+    "provider": "First Class Muslim Foundation",
+    "deadline": "2025-03-20",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "Full Scholarship on Tuition (Monthly Stipends provided)",
+    "tracks": [
+      {
+        "track_name": "Northern University Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ABU", "BUK", "FUGUS", "UDUS", "KASU", "KUST", "SSU", "ZSU", "SSUOE"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [300],
+        "required_gender": "ANY",
+        "min_cgpa": 4.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must be Muslim", "Reference from Islamic Organization"],
+        "required_religion": "Muslim",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "PICFI Undergraduate Scholarship 2025",
+    "provider": "Petroleum Industry Christian Fellowship International",
+    "deadline": "2025-08-16",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "₦200,000 per year",
+    "tracks": [
+      {
+        "track_name": "Christian Fellowship Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["STEM", "LAW", "MGT"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must attend PICFI retreat", "Federal/State University Only"],
+        "required_religion": "Christian",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "MTN Foundation Muson Scholarship 2025",
+    "provider": "MTN Foundation",
+    "deadline": "2025-08-25",
+    "is_aptitude_test_required": false,
+    "official_link": "Scholarship Portal",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Music Diploma",
+        "required_parent_relation": "NONE",
+        "required_universities": ["MUSON School of Music"],
+        "course_category": ["ARTS"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Grade 5 Music Practical/Theory Certificate required"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "MTN Scholarship 2025",
+    "provider": "MTN Foundation",
+    "deadline": "2025-04-25",
+    "is_aptitude_test_required": false,
+    "official_link": "MTN Portal",
+    "award_amount": "₦300,000 per year",
+    "tracks": [
+      {
+        "track_name": "Science & Technology Scholarship (STSS)",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["STEM"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [300],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Public Institution Only"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      },
+      {
+        "track_name": "Scholarship for Blind Students (SBSS)",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200, 300],
+        "required_gender": "ANY",
+        "min_cgpa": 2.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must be Blind Student", "Public Institution Only"],
+        "required_religion": "NONE",
+        "is_disability_specific": true
+      }
+    ]
+  },
+  {
+    "scholarship_name": "HillCity Foundation Bright Scholarship 2025",
+    "provider": "HillCity Foundation",
+    "deadline": "Not Specified",
+    "is_aptitude_test_required": false,
+    "official_link": "Foundation Website",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Bright Scholar",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 4.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Age under 25", "Mentorship participation mandatory"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Lagos State Scholarship 2025",
+    "provider": "Lagos State Scholarship Board",
+    "deadline": "Not Specified",
+    "is_aptitude_test_required": false,
+    "official_link": "Board Portal",
+    "award_amount": "₦200,000 (Scholarship), ₦35,000 - ₦50,000 (Bursary)",
+    "tracks": [
+      {
+        "track_name": "Local Scholarship",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Lagos"],
+        "required_lga_list": [],
+        "allowed_levels": [200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["LASSRA ID Required", "Evidence of Indigeneship from Oba/LGA"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      },
+      {
+        "track_name": "Local Bursary",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Lagos"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["LASSRA ID Required"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "OCI Foundation Scholarship 2025",
+    "provider": "Onyebuchi Chris Ifediora (OCI) Foundation",
+    "deadline": "2025-04-26",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Anambra Indigene Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Anambra"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Letter from Traditional Ruler confirming LGA required", "500-word essay"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "NIPES Daniel Ejike Ewim Foundation Scholarship 2025",
+    "provider": "NIPES / Daniel Ejike Ewim Foundation",
+    "deadline": "2025-06-30",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "₦200,000",
+    "tracks": [
+      {
+        "track_name": "Science & Engineering Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["STEM", "MED", "AGRI"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must complete 1 free NIPES online course", "Membership preferred"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "AG Leventis Egba Scholarship 2025",
+    "provider": "A.G Leventis",
+    "deadline": "2025-07-30",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Egba Indigene Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Ogun"],
+        "required_lga_list": ["Abeokuta North", "Abeokuta South", "Ewekoro", "Ifo", "Obafemi Owode", "Odeda"],
+        "allowed_levels": [200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must be indigene of Egbaland", "Must not be 100 level"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "ASMAF Scholarship 2025",
+    "provider": "Ajesola Solarin Majekodunmi Foundation",
+    "deadline": "2025-09-12",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Professional Course Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["MED", "LAW", "STEM", "MGT", "ENV"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "F",
+        "min_cgpa": 3.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must be Indigent", "Public University Only", "Affidavit of Indigence required"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "NNPC Seplat Scholarship 2025",
+    "provider": "NNPC / Seplat Energy",
+    "deadline": "2025-04-21",
+    "is_aptitude_test_required": true,
+    "official_link": "Seplat Energy Website",
+    "award_amount": "₦200,000 per year",
+    "tracks": [
+      {
+        "track_name": "National Merit Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["STEM", "MED", "LAW", "MGT", "ENV", "ARTS", "AGRI"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["5 O-Level Credits in one sitting"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "TotalEnergies National Merit Scholarship 2025",
+    "provider": "TotalEnergies / NNPC",
+    "deadline": "2025-07-01",
+    "is_aptitude_test_required": true,
+    "official_link": "TotalEnergies CSR Webpage",
+    "award_amount": "₦200,000 per year",
+    "tracks": [
+      {
+        "track_name": "National Merit Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200],
+        "required_gender": "ANY",
+        "min_cgpa": 2.5,
+        "min_jamb_score": 200,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Not a beneficiary of other Oil & Gas scholarships"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "KPMG Seyi Bickersteth Scholarship 2025",
+    "provider": "Seyi Bickersteth / KPMG",
+    "deadline": "2025-02-03",
+    "is_aptitude_test_required": true,
+    "official_link": "Click button below",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Business Merit Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["MGT"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 230,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Federal University Only", "5 Distinctions in WASSCE"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "SOHCAHTOA Foundation Scholarship 2025",
+    "provider": "SOHCAHTOA Foundation",
+    "deadline": "2025-09-30",
+    "is_aptitude_test_required": true,
+    "official_link": "Click button below",
+    "award_amount": "₦250,000/Year",
+    "tracks": [
+      {
+        "track_name": "Undergraduate Merit Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["STEM", "MED", "LAW", "MGT", "ARTS"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Public Tertiary Institution Only"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "One Youth Young Leaders Scholarship 2025",
+    "provider": "One Youth Global Leaders",
+    "deadline": "2025-11-30",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "₦1,000,000 Award",
+    "tracks": [
+      {
+        "track_name": "Young Leaders Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 4.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Public University Only", "Faith-based initiative"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Kwara State Government Scholarship 2025",
+    "provider": "Kwara State Government",
+    "deadline": "2025-09-18",
+    "is_aptitude_test_required": false,
+    "official_link": "https://scholarship.kw.gov.ng/",
+    "award_amount": "₦100,000 (Scholarship), ₦10,000 (Bursary)",
+    "tracks": [
+      {
+        "track_name": "State Bursary/Scholarship",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Kwara"],
+        "required_lga_list": [],
+        "allowed_levels": [400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must be Final Year Student", "NAKSS due payment evidence required"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "TKM Foundation Scholarship 2025",
+    "provider": "TKM Foundation",
+    "deadline": "2025-11-03",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "New Applicants",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Age 15-24", "Must be from low-income family or orphanage"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      },
+      {
+        "track_name": "Returning Applicants",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 2.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Age 15-24"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "PPAfan Scholarship 2025",
+    "provider": "Precious People Assembly",
+    "deadline": "2025-06-27",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "FCT Indigene Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["FCT"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must be FCT Indigene"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "BOVAS Scholarship 2025",
+    "provider": "BOVAS Charitable Foundation",
+    "deadline": "2025-07-25",
+    "is_aptitude_test_required": false,
+    "official_link": "Dean of Faculty Office",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "UI Indigent Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["UI"],
+        "course_category": ["MED", "STEM"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Worthy in character"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "NNPC Renaissance University Scholarship 2025",
+    "provider": "NNPC/Renaissance/TotalEnergies/AENR JV",
+    "deadline": "2025-07-25",
+    "is_aptitude_test_required": false,
+    "official_link": "Scholastica",
+    "award_amount": "₦200,000 per year",
+    "tracks": [
+      {
+        "track_name": "Merit Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": [],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      },
+      {
+        "track_name": "Areas of Operation Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Bayelsa", "Imo", "Delta", "Rivers"],
+        "required_lga_list": [],
+        "allowed_levels": [200],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Letter from Paramount Ruler required"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Dominican University Scholarship 2025",
+    "provider": "Dominican University",
+    "deadline": "Not Specified",
+    "is_aptitude_test_required": false,
+    "official_link": "Email Application",
+    "award_amount": "₦200,000",
+    "tracks": [
+      {
+        "track_name": "Entrance Scholarship",
+        "required_parent_relation": "NONE",
+        "required_universities": ["Dominican University"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 200,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must make Dominican University first choice"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "OA Foundation ARASH Scholarship 2025",
+    "provider": "OA Foundation",
+    "deadline": "Not Specified",
+    "is_aptitude_test_required": true,
+    "official_link": "Click button below",
+    "award_amount": "₦265,000 (₦120k Tuition + Allowances)",
+    "tracks": [
+      {
+        "track_name": "ARASH Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Age 18-23"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Long Empowerment Foundation Scholarship 2025",
+    "provider": "Long Empowerment Foundation",
+    "deadline": "2025-07-25",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "₦350,000",
+    "tracks": [
+      {
+        "track_name": "LONG Scholars",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Age 16-26", "Household income below N3,000,000/year"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Stanbic IBTC University Scholarship 2025",
+    "provider": "Stanbic IBTC",
+    "deadline": "2025-09-16",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "₦800,000 (₦200,000 per year)",
+    "tracks": [
+      {
+        "track_name": "Undergraduate Merit",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 250,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["5 O-Level Credits including Math/English"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "FCM Foundation Board Scholarship 2025",
+    "provider": "First Class Muslim Foundation",
+    "deadline": "2025-09-10",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "Full Scholarship on Tuition (Cash Award)",
+    "tracks": [
+      {
+        "track_name": "Female Muslim Leaders Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["FUTA", "OAU", "FUNAAB", "UI", "AAUA", "EKSU", "LAUTECH", "OSUSTECH", "OOU", "TASUED", "UNIOSUN", "OSUMEDSCI", "UNILESA", "FUOYE"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200, 300],
+        "required_gender": "F",
+        "min_cgpa": 4.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must be Muslim", "Reference from Islamic Organization"],
+        "required_religion": "Muslim",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "SieDiHub Educational Scholarship 2025",
+    "provider": "SieDi-Hub",
+    "deadline": "2025-08-31",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "₦250,000 per year",
+    "tracks": [
+      {
+        "track_name": "Opportunity Youth Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Age 17-25", "Experiencing significant hardship"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Joseph Adekunle Adegbite Foundation Scholarship 2025",
+    "provider": "Joseph Adekunle Adegbite Foundation",
+    "deadline": "2025-08-20",
+    "is_aptitude_test_required": false,
+    "official_link": "Click green button",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Fresh Students",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 250,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Government University Only"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      },
+      {
+        "track_name": "Returning Students",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Government University Only"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Mkpouto Pius Foundation WomanUp Scholarship 2025",
+    "provider": "Mkpouto Pius Foundation",
+    "deadline": "Not Specified",
+    "is_aptitude_test_required": true,
+    "official_link": "Google Form",
+    "award_amount": "₦250,000 per year (Stipend + Tuition)",
+    "tracks": [
+      {
+        "track_name": "WomanUp Programme",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "F",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Public University Only", "Must attend monthly coaching sessions"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Bridge Scholarship Award 2025",
+    "provider": "The Bridge Scholarship Foundation",
+    "deadline": "2025-09-12",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Undergraduate Support",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Public University Only"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Bloom Scholars Program For Africans 2025",
+    "provider": "The Bloom Africa",
+    "deadline": "2025-08-01",
+    "is_aptitude_test_required": true,
+    "official_link": "Click button below",
+    "award_amount": "$500 yearly",
+    "tracks": [
+      {
+        "track_name": "African Female Change-makers",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "F",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must be citizen of African country"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "DESOPADEC Scholarship and Bursary 2025",
+    "provider": "Delta State Oil Producing Areas Development Commission",
+    "deadline": "2025-05-28",
+    "is_aptitude_test_required": false,
+    "official_link": "DESOPADEC Website",
+    "award_amount": "Up to ₦50,000",
+    "tracks": [
+      {
+        "track_name": "Oil Producing Area Bursary",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Delta"],
+        "required_lga_list": [],
+        "allowed_levels": [200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Must be from Oil Producing Mandate Area"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Toriola Stephen Excellence Scholarship 2025",
+    "provider": "Toriola Stephen",
+    "deadline": "2025-07-31",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below",
+    "award_amount": "₦50,000",
+    "tracks": [
+      {
+        "track_name": "Excellence Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 4.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": true,
+        "specific_requirements": ["Essay required"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Ondo State Scholarship and Bursary 2025",
+    "provider": "Ondo State Scholarship Board",
+    "deadline": "2025-05-31",
+    "is_aptitude_test_required": false,
+    "official_link": "odssb.org.ng",
+    "award_amount": "₦100,000 (Scholarship), ₦10,000 - ₦50,000 (Bursary)",
+    "tracks": [
+      {
+        "track_name": "Scholarship Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Ondo"],
+        "required_lga_list": [],
+        "allowed_levels": [200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 4.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Indigene of Ondo State"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      },
+      {
+        "track_name": "Bursary Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Ondo"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Indigene of Ondo State"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "NBF Undergraduate Scholarship 2025",
+    "provider": "Nifemi Brown Foundation",
+    "deadline": "2025-06-30",
+    "is_aptitude_test_required": false,
+    "official_link": "NBF Website",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Undergraduate Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200, 300],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Strong moral character"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "AOS Orwell Tertiary Scholarship 2025",
+    "provider": "AOS Orwell",
+    "deadline": "2025-05-29",
+    "is_aptitude_test_required": false,
+    "official_link": "Scholastica",
+    "award_amount": "₦150,000",
+    "tracks": [
+      {
+        "track_name": "Engineering Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["Rivers State University"],
+        "course_category": ["STEM"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": [],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Kenyon Undergraduate Scholarship 2025",
+    "provider": "Kenyon International West Africa",
+    "deadline": "2025-05-10",
+    "is_aptitude_test_required": false,
+    "official_link": "Kenyon Website",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Energy Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ABU", "UNIZIK", "PTI", "UNIABUJA", "UI", "UNILAG", "UNIMAID", "UNN", "UNIPORT", "UNIUYO"],
+        "course_category": ["STEM"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [300],
+        "required_gender": "ANY",
+        "min_cgpa": 2.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": [],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "JBC Scholarship Scheme 2025",
+    "provider": "Jericho Businessmen Club",
+    "deadline": "2025-05-30",
+    "is_aptitude_test_required": false,
+    "official_link": "Scholarship Portal",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "Ibadan Indigene Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["Oyo"],
+        "required_lga_list": ["Ibadan North", "Ibadan North East", "Ibadan North West", "Ibadan South East", "Ibadan South West"],
+        "allowed_levels": [100, 200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "specific_requirements": ["Native of Ibadan (Attestation required)"],
+        "required_religion": "NONE",
+        "is_disability_specific": false
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Jim Ovia Foundation Scholarship 2025",
+    "provider": "Jim Ovia Foundation",
+    "deadline": "2025-11-29",
+    "is_aptitude_test_required": false,
+    "official_link": "Click button below to proceed to the application page",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "New Applicants (Entry Level)",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "ANY",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "required_religion": "NONE",
+        "is_disability_specific": false,
+        "specific_requirements": ["Age 16+", "Must provide proof of admission", "5 credits in O/level"]
+      },
+      {
+        "track_name": "Returning Applicants (Renewal)",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200, 300, 400, 500],
+        "required_gender": "ANY",
+        "min_cgpa": 3.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "required_religion": "NONE",
+        "is_disability_specific": false,
+        "specific_requirements": ["Requires signed & stamped CGPA result", "Renewal depends on maintaining satisfactory grade"]
+      }
+    ]
+  },
+  {
+    "scholarship_name": "Christopher Kolade Foundation SHE Soars Scholarship 2025",
+    "provider": "Christopher Kolade Foundation (CKF)",
+    "deadline": "2025-11-13",
+    "is_aptitude_test_required": false,
+    "official_link": "Official application link of the Christopher Kolade Foundation",
+    "award_amount": "Full Scholarship on Tuition",
+    "tracks": [
+      {
+        "track_name": "SHE Soars Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100],
+        "required_gender": "F",
+        "min_cgpa": 0.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": true,
+        "is_orphan_or_single_parent_required": false,
+        "required_religion": "NONE",
+        "is_disability_specific": false,
+        "specific_requirements": ["Must be female graduate of a Nigerian public secondary school", "Admission into a Nigerian public university required"]
+      }
+    ]
+  },
+  {
+    "scholarship_name": "NNPC SNEPCo Scholarship 2025",
+    "provider": "NNPC | Shell",
+    "deadline": "2025-08-29",
+    "is_aptitude_test_required": true,
+    "official_link": "Click button below",
+    "award_amount": "₦200,000/Year",
+    "tracks": [
+      {
+        "track_name": "National Merit Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["STEM", "MED", "LAW", "MGT", "ARTS", "AGRI", "ENV", "SOC"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "required_religion": "NONE",
+        "is_disability_specific": false,
+        "specific_requirements": [
+          "5 O-Level credits in one sitting (Math/English required).",
+          "Must not be a beneficiary of any other Oil and Gas industry scholarship.",
+          "Public university only.",
+          "Female candidates are strongly encouraged to apply."
+        ]
+      }
+    ]
+  },
+  {
+    "scholarship_name": "PTDF In-Country Scholarship 2025 (Undergraduate)",
+    "provider": "Federal Government & Petroleum Development Trust Fund",
+    "deadline": "Not Specified",
+    "is_aptitude_test_required": false,
+    "official_link": "PTDF Scholarship Management Portal",
+    "award_amount": "₦500,000/Year + Laptop",
+    "tracks": [
+      {
+        "track_name": "Undergraduate Award (Oil & Gas)",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["STEM", "MGT"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200],
+        "required_gender": "ANY",
+        "min_cgpa": 3.0,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "required_religion": "NONE",
+        "is_disability_specific": false,
+        "specific_requirements": [
+          "Federal University only.",
+          "Course must be related to Oil & Gas industry/Management.",
+          "5 credits in WAEC/NECO (Math/English required).",
+          "Transcripts for first year of study required."
+        ]
+      }
+    ]
+  },
+  {
+    "scholarship_name": "KPMG Nigeria University Scholarship 2025",
+    "provider": "KPMG Nigeria",
+    "deadline": "2025-07-03",
+    "is_aptitude_test_required": true,
+    "official_link": "https://kpmg.seamlesshiring.com/job/view/187?application_source=Direct",
+    "award_amount": "₦400,000",
+    "tracks": [
+      {
+        "track_name": "Undergraduate Merit Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [100, 200],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 230,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "required_religion": "NONE",
+        "is_disability_specific": false,
+        "specific_requirements": [
+          "Must be a citizen of Nigeria.",
+          "Completed secondary education at a public secondary school (state, federal, or military).",
+          "5 distinctions in WASSCE/NECO (including Math/English) in one sitting.",
+          "Must be enrolled in a Federal University in Nigeria.",
+          "Full-time study only (not part-time/distance learning)."
+        ]
+      }
+    ]
+  },
+  {
+    "scholarship_name": "NNPC Chevron Undergraduate Scholarship 2025",
+    "provider": "Chevron Nigeria Limited (CNL) / NNPC",
+    "deadline": "2025-06-30",
+    "is_aptitude_test_required": false,
+    "official_link": "https://candidate.scholastica.ng/schemes/2025cnlawards",
+    "award_amount": "₦200,000/Year",
+    "tracks": [
+      {
+        "track_name": "National Merit Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": [
+          "MGT", "AGRI", "ENV", "STEM", "MED", "LAW", "ARTS", "SOC"
+        ],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200],
+        "required_gender": "ANY",
+        "min_cgpa": 3.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "required_religion": "NONE",
+        "is_disability_specific": false,
+        "specific_requirements": [
+          "Full-time 200-level student admitted in 2023/2024 session.",
+          "Minimum of 6 O-level credits in one sitting.",
+          "Not a beneficiary of other Oil & Gas scholarships."
+        ]
+      },
+      {
+        "track_name": "Visually Impaired Award",
+        "required_parent_relation": "NONE",
+        "required_universities": ["ALL"],
+        "course_category": ["ALL"],
+        "required_state_of_origin": ["ALL"],
+        "required_lga_list": [],
+        "allowed_levels": [200],
+        "required_gender": "ANY",
+        "min_cgpa": 2.5,
+        "min_jamb_score": 0,
+        "is_financial_need_required": false,
+        "is_orphan_or_single_parent_required": false,
+        "required_religion": "NONE",
+        "is_disability_specific": true,
+        "specific_requirements": [
+          "Must be blind/visually impaired.",
+          "Full-time 200-level student admitted in 2023/2024 session.",
+          "Minimum of 5 O-level credits."
+        ]
+      }
+    ]
+  }
+]

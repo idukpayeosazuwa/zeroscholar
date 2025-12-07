@@ -47,12 +47,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, setActiveTab }) => {
           isActive={activeTab === 'tests'}
           onClick={() => setActiveTab('tests')}
         />
-        <NavItem
-          icon={<ChatBubbleLeftRightIcon className="h-6 w-6 mb-1" />}
-          label="Community"
-          isActive={activeTab === 'community'}
-          onClick={() => setActiveTab('community')}
-        />
+
       </div>
     </footer>
   );
