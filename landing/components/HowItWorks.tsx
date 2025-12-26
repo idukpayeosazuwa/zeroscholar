@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { authContext } from '../../Router';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const steps = [
   {
@@ -25,10 +25,10 @@ const steps = [
 ];
 
 export default function HowItWorks() {
-  const authCtx = useContext(authContext);
+  const navigate = useNavigate();
 
   const handleGetWrapped = () => {
-    authCtx.forceAuthPage();
+    navigate('/login');
   };
 
   return (

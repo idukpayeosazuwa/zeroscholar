@@ -36,11 +36,20 @@ export default async ({ req, res, log, error }) => {
   try {
     // Fetch all active tracks with basic numeric filters
     // These are the only filters Appwrite can handle efficiently
+    
+    // Check if user is 100 Level (they don't have CGPA yet)
+    const isUser100Level = user.current_level === 100 || String(user.current_level).includes('100');
+    
+    // Build queries - skip CGPA filter for 100L students
     const queries = [
-      Query.lessThanEqual('min_cgpa', user.current_cgpa),
       Query.lessThanEqual('min_jamb_score', user.jamb_score),
       Query.limit(500) // Increase if you have more tracks
     ];
+    
+    // Only add CGPA filter if user is NOT 100 Level
+    if (!isUser100Level) {
+      queries.unshift(Query.lessThanEqual('min_cgpa', user.current_cgpa));
+    }
 
     const tracksResponse = await databases.listDocuments(DB_ID, TRACKS_COL_ID, queries);
     const allTracks = tracksResponse.documents;
@@ -143,8 +152,10 @@ function isTrackMatch(track, user) {
     return false;
   }
 
-  // 8. CGPA and JAMB already filtered at DB level, but double-check
-  if ((track.min_cgpa || 0) > user.current_cgpa) {
+  // 8. CGPA and JAMB checks
+  // SKIP CGPA check for 100 Level students (they don't have CGPA yet)
+  const isUser100Level = user.current_level === 100 || String(user.current_level).includes('100');
+  if (!isUser100Level && (track.min_cgpa || 0) > user.current_cgpa) {
     return false;
   }
   if ((track.min_jamb_score || 0) > user.jamb_score) {

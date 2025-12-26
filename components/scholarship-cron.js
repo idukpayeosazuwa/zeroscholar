@@ -27,10 +27,10 @@ const GEMINI_API_KEY = 'AIzaSyBWUCQdn_c3889aDZg2byga-OqExPKucAA';
 // ═══════════════════════════════════════════════════════════════════════════
 // SCRAPER CONFIGURATION - Change this to scrape different pages
 // ═══════════════════════════════════════════════════════════════════════════
-const SCRAPE_PAGE = 18;
+const SCRAPE_PAGE = 1;
 const SCRAPE_URL = SCRAPE_PAGE === 1 
-  ? 'https://scholarsworld.ng/nigerian-scholarships/'
-  : `https://scholarsworld.ng/nigerian-scholarships/page/${SCRAPE_PAGE}/`;
+  ? 'https://scholarsworld.ng/category/scholarships/undergraduate-scholarships/'
+  : `https://scholarsworld.ng/category/scholarships/undergraduate-scholarships/${SCRAPE_PAGE}/`;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // INITIALIZE SERVICES
@@ -553,6 +553,7 @@ async function createScholarship(scholarshipData) {
 // DEADLINE MAINTENANCE
 // ═══════════════════════════════════════════════════════════════════════════
 
+/*
 async function deactivateExpiredScholarships() {
   console.log('🧹 Checking for expired scholarships...\n');
   
@@ -604,6 +605,7 @@ async function deactivateExpiredScholarships() {
     return 0;
   }
 }
+*/
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN CRON FUNCTION
@@ -621,8 +623,9 @@ async function runCron() {
   let newCount = 0, skippedCount = 0, filteredCount = 0, updatedCount = 0;
   
   // STEP 0: Deactivate expired scholarships
-  console.log('🧹 STEP 0: Maintenance...\n');
-  const deactivatedCount = await deactivateExpiredScholarships();
+  console.log('🧹 STEP 0: Maintenance (Skipped)...\n');
+  // const deactivatedCount = await deactivateExpiredScholarships();
+  const deactivatedCount = 0;
   
   console.log('📡 STEP 1: Scraping...\n');
   const scrapedScholarships = await scrapeScholarsWorld();
@@ -672,7 +675,7 @@ async function runCron() {
         console.log(`      │  States: [${track.required_state_of_origin?.join(', ') || 'ALL'}]`);
         console.log(`      │  LGAs: [${track.required_lga_list?.length ? track.required_lga_list.join(', ') : 'None'}]`);
         console.log(`      │  Universities: [${track.required_universities?.join(', ') || 'ALL'}]`);
-        console.log(`      │  Courses: [${track.course_category?.join(', ') || 'ALL'}]`);
+        console.log(`      │  Courses: [${track.course?.join(', ') || 'ALL'}]`);
         console.log(`      │  Financial Need: ${track.is_financial_need_required ? '✓' : '✗'} | Orphan/Single Parent: ${track.is_orphan_or_single_parent_required ? '✓' : '✗'}`);
         console.log(`      │  Disability: ${track.is_disability_specific ? '✓' : '✗'} | Aptitude Test: ${track.is_aptitude_test_required ? '✓' : '✗'}`);
         console.log(`      │  Specific Reqs: ${track.specific_requirements?.length ? track.specific_requirements.join('; ') : 'None'}`);

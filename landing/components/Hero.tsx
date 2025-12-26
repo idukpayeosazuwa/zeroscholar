@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { authContext } from '../../Router';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function AnimatedNumber({ end, duration = 2000, suffix = '' }: { end: number; duration?: number; suffix?: string }) {
   const [count, setCount] = useState(0);
@@ -28,11 +28,11 @@ function AnimatedNumber({ end, duration = 2000, suffix = '' }: { end: number; du
   return <>{count.toLocaleString()}{suffix}</>;
 }
 
-export default function Hero({ onGetStarted }: { onGetStarted?: () => void }) {
-  const authCtx = useContext(authContext);
+export default function Hero() {
+  const navigate = useNavigate();
 
   const handleGetStarted = () => {
-    authCtx.forceAuthPage();
+    navigate('/login');
   };
 
   return (
@@ -45,53 +45,26 @@ export default function Hero({ onGetStarted }: { onGetStarted?: () => void }) {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
         <div className="text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-3xl md:text-6xl font-bold mb-6 leading-tight">
             Find Your Perfect Scholarship with <span className="text-yellow-300">AI</span>
           </h1>
-          <p className="text-lg md:text-xl text-white/90 mb-4 max-w-2xl mx-auto">
-            Intelligent scholarship matching powered by advanced AI. Discover opportunities tailored to your profile.
-          </p>
 
-          {/* Badge */}
-          <div className="bg-yellow-300/20 border border-yellow-300/40 rounded-lg p-4 mb-8 max-w-2xl mx-auto inline-block">
-            <p className="text-yellow-100 font-semibold">
-              🎓 <span className="text-yellow-300">181 Active Scholarships</span> from 2025 • AI-Trained & Verified
-            </p>
-          </div>
-
-          <p className="text-white/80 mb-8 max-w-2xl mx-auto">
-            Our AI has been trained on 181 verified scholarship opportunities from 2025, ensuring you get the most accurate and up-to-date matches.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={handleGetStarted}
-              className="px-8 py-3 bg-yellow-300 text-[#2240AF] font-bold rounded-lg hover:bg-yellow-400 transition-colors"
-            >
-              Get Started Free
-            </button>
-            <a
-              href="#features"
-              className="px-8 py-3 border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-colors"
-            >
-              Learn More
-            </a>
-          </div>
+            <p>Every year students miss out millions in scholarships</p>
         </div>
 
         {/* Hero stats with animation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-3">
           <div className="text-center">
             <div className="text-3xl md:text-4xl font-bold text-yellow-300 mb-2">
-              <AnimatedNumber end={181} duration={2000} />
+              <AnimatedNumber end={181} duration={8000} />
             </div>
             <p className="text-white/80">Active Scholarships from 2025</p>
           </div>
           <div className="text-center">
             <div className="text-3xl md:text-4xl font-bold text-yellow-300 mb-2">
-              ₦<AnimatedNumber end={22755010} duration={2500} />
+              ₦<AnimatedNumber end={42755010} duration={8500} />
             </div>
-            <p className="text-white/80">Potential Value from 2025</p>
+            <p className="text-white/80"> Value from 2025</p>
           </div>
         </div>
       </div>

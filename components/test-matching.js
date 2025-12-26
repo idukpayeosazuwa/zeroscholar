@@ -36,10 +36,10 @@ const testUsers = [
     current_cgpa: 4.0,
     email:'idukpayealex@gmail.com',
     jamb_score: 265,
-    university_alias: "UNILAG",
+    university_alias: "UNIBEN",
     course_category: "ENG", // Updated to new code (Engineering)
-    state_of_origin: "Lagos",
-    lga_of_origin: "Ajegunle",
+    state_of_origin: "Edo",
+    lga_of_origin: "",
     is_orphan_single_parent: false,
     religious_affiliation: "Christian",
     is_financially_indigent: false,
@@ -119,7 +119,9 @@ function isTrackMatch(track, user) {
   if (track.is_disability_specific === true && user.is_physically_challenged !== true) return false;
 
   // Academic checks
-  if ((track.min_cgpa || 0) > user.current_cgpa) return false;
+  // SKIP CGPA check for 100 Level students (they don't have CGPA yet)
+  const isUser100Level = user.current_level === 100 || String(user.current_level).includes('100');
+  if (!isUser100Level && (track.min_cgpa || 0) > user.current_cgpa) return false;
   if ((track.min_jamb_score || 0) > user.jamb_score) return false;
 
   return true;

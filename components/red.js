@@ -38,19 +38,15 @@ async function activateAll() {
 
       // Process batch in parallel
       const updates = response.documents.map(async (doc) => {
-        if (doc.is_active === true) {
-            skipped++;
-            return; 
-        }
         
         try {
             await databases.updateDocument(
               DB_ID,
               SCHOLARSHIP_COL_ID,
               doc.$id,
-              { is_active: true }
+              { is_active: false }
             );
-            console.log(`   ✅ Activated: "${doc.scholarship_name}"`);
+            console.log(`   ✅ DeActivated: "${doc.scholarship_name}"`);
             count++;
         } catch (err) {
             console.error(`   ❌ Failed "${doc.scholarship_name}": ${err.message}`);

@@ -1,14 +1,15 @@
-import React, { useContext }from 'react';
+import React from 'react';
+import Navbar from '../landing/components/Navbar';
 import Hero from '../landing/components/Hero';
 import Features from '../landing/components/Features';
 import HowItWorks from '../landing/components/HowItWorks';
 import Footer from '../landing/components/Footer';
-import { authContext } from '../Router';
 
 export default function Landing() {
   return (
-    <div onGetStarted={() => useContext(authContext).forceAuthPage()} className="min-h-screen bg-white">
-      <Hero onGetStarted={() => useContext(authContext).forceAuthPage()} />
+    <div className="min-h-screen bg-white relative">
+      <Navbar />
+      <Hero />
       <Features />
       <HowItWorks />
       <Footer />

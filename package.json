@@ -20,7 +20,8 @@
     "nodemailer": "^6.10.1",
     "openai": "^6.10.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.1.5"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.35",
