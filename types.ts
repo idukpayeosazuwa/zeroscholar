@@ -17,13 +17,32 @@ export enum UniversityLevel {
 }
 
 export interface UserProfile {
-  fullName: string;
-  cgpa: number;
+  fullName?: string;
+  email?: string;
+  userID?: string;
   level: UniversityLevel;
-  courseCategory: CourseCategory;
-  university: string;
-  location: string;
+  course?: string;
+  gender?: 'Male' | 'Female';
+  state?: string;
+  university?: string;
+  uni?: string;
+  cgpa?: number;
+  jamb?: number;
+  lga?: string;
+  rel?: string;
+  orphan?: boolean;
+  finance?: boolean;
+  chal?: boolean;
+  notifiedScholarships?: string[];
   pushSubscription?: string; // Storing the subscription object as a JSON string
+  applications?: string[]; // Array of scholarship IDs that user has applied to
+}
+
+export interface Application {
+  scholarshipId: string;
+  scholarshipName: string;
+  appliedAt: string; // ISO date string
+  deadline: string;
 }
 
 export interface Scholarship {
@@ -39,7 +58,7 @@ export interface Scholarship {
   modeOfSelection?: string;
 }
 
-export type Tab = 'finder' | 'tests' | 'community';
+export type Tab = 'finder' | 'applied' | 'tests' | 'community';
 
 export interface GraphDataSet {
   label: string;
