@@ -20,6 +20,7 @@ interface ScholarshipFinderProps {
   userName: string;
   applications: Application[];
   onApply: (application: Application) => Promise<void>;
+  isOnline?: boolean;
 }
 
 interface UserProfileFromDB {
@@ -77,7 +78,8 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
   isLoading: parentLoading, 
   userName,
   applications,
-  onApply
+  onApply,
+  isOnline = true
 }) => {
   const [activeFilter, setActiveFilter] = useState<FilterStatus>('matched');
   const [showWrapped, setShowWrapped] = useState(false);
@@ -258,48 +260,6 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
     fetchActiveScholarships();
   }, []);
 
-  // Confetti effect when modal opens
-  useEffect(() => {
-    if (showWrapped) {
-      // Simple confetti animation using emojis
-      const confettiCount = 50;
-      const confettiElements: HTMLDivElement[] = [];
-      
-      for (let i = 0; i < confettiCount; i++) {
-        const confetti = document.createElement('div');
-        confetti.textContent = ['🎉', '🎊', '✨', '🌟', '💰'][Math.floor(Math.random() * 10)];
-        confetti.style.position = 'fixed';
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.top = '-50px';
-        confetti.style.fontSize = Math.random() * 20 + 20 + 'px';
-        confetti.style.zIndex = '9999';
-        confetti.style.pointerEvents = 'none';
-        confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
-        
-        document.body.appendChild(confetti);
-        confettiElements.push(confetti);
-      }
-      
-      // Add CSS animation
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes fall {
-          to {
-            transform: translateY(100vh) rotate(360deg);
-            opacity: 0;
-          }
-        }
-      `;
-      document.head.appendChild(style);
-      
-      // Cleanup after animation
-      setTimeout(() => {
-        confettiElements.forEach(el => el.remove());
-        style.remove();
-      }, 5000);
-    }
-  }, [showWrapped]);
-
 
 
   const filteredScholarships = useMemo(() => {
@@ -307,12 +267,9 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
     const appliedIds = new Set(applications.map(a => a.scholarshipId));
     
     if (activeFilter === 'matched') {
-      // Filter scholarships that match user profile AND are not applied
-      // If no profile, show all scholarships
+      // Only show matched scholarships - wait for profile to load
       if (!userProfileFromDB) {
-        return dbScholarships
-          .filter(s => !appliedIds.has(s.id))
-          .sort((a, b) => a.name.localeCompare(b.name));
+        return []; // Don't show all scholarships while loading - wait for user profile
       }
       
       return dbScholarships.filter(scholarship => {
@@ -459,6 +416,15 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
         Showing <span className="font-semibold">{filteredScholarships.length}</span> scholarship{filteredScholarships.length !== 1 ? 's' : ''}
       </div>
 
+      {/* Offline Notice for Matched Scholarships */}
+      {activeFilter === 'matched' && !isOnline && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <p className="text-sm text-blue-800">
+            <span className="font-semibold">📡 Come Online</span> to see the latest matched scholarships. Your scholarship matches will refresh when you're back online.
+          </p>
+        </div>
+      )}
+
       {/* Scholarship List */}
       <div className="space-y-4">
         {filteredScholarships.length > 0 ? (
@@ -529,12 +495,10 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
             </div>
             
             <div className="p-4 bg-gradient-to-b from-blue-50 to-white flex flex-col items-center text-center space-y-8 overflow-y-auto">
-                
-                {/* Stats Card */}
                 <div className="w-full bg-white p-6 rounded-2xl shadow-lg border border-blue-100 transform hover:scale-105 transition-transform duration-300">
                     <div className="mb-4">
                         <span className="text-5xl font-extrabold text-blue-600 block">
-                          <AnimatedCounter value={wrappedStats.count} />
+                          <AnimatedCounter value={wrappedStats.count} duration={8000} />
                         </span>
                         <span className="text-gray-500 font-medium uppercase tracking-wide text-xs">Scholarships Matched</span>
                     </div>
@@ -544,7 +508,7 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
                     <div>
                         <span className="text-gray-500 font-medium uppercase tracking-wide text-xs block mb-1">Total Potential Value</span>
                         <span className="text-3xl font-bold text-green-600 block">
-                           ₦<AnimatedCounter value={wrappedStats.totalValue} />
+                           ₦<AnimatedCounter value={wrappedStats.totalValue} duration={8000} />
                         </span>
                     </div>
                 </div>

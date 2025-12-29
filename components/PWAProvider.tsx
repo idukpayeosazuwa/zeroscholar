@@ -3,15 +3,7 @@
 import { useEffect } from 'react';
 
 export function PWAProvider({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .catch(() => {
-          // Silent fail for service worker registration
-        });
-    }
-  }, []);
-
+  // PWA registration is now handled in index.tsx for Vite
+  // This component is kept for compatibility but does nothing
   return <>{children}</>;
 }

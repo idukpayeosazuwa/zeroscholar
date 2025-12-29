@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 
 const PWAInstallPrompt: React.FC = () => {
   const { showInstallButton, handleInstall, isIOS, isAndroid, installPrompt, showSuccessMessage } = usePWAInstall();
   const [showInstructions, setShowInstructions] = useState(false);
+  const [domReady, setDomReady] = useState(false);
+
+  // Ensure DOM is ready before rendering
+  useEffect(() => {
+    setDomReady(true);
+  }, []);
+
+  // Don't render anything until DOM is ready
+  if (!domReady) return null;
 
   if (!showInstallButton && !showSuccessMessage) return null;
 
@@ -11,7 +20,7 @@ const PWAInstallPrompt: React.FC = () => {
     <>
       {/* Main Install Banner - STICKY, NON-REMOVABLE */}
       {!showInstructions ? (
-        <div className="fixed bottom-20 left-4 right-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg shadow-2xl p-4 z-40 max-w-md mx-auto animate-in slide-in-from-bottom">
+        <div className="fixed bottom-24 left-4 right-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg shadow-2xl p-4 z-40 max-w-md mx-auto animate-in slide-in-from-bottom pointer-events-auto">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1">
               <h3 className="font-bold text-sm flex items-center gap-2">

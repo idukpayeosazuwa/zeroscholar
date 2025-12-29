@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { account, databases, DATABASE_ID, USERCOURSES_COLLECTION_ID, USERS_COLLECTION_ID } from '../appwriteConfig';
 import { Query } from 'appwrite';
 import { GRADE_SCALES, DEFAULT_SCALE, AVAILABLE_GRADES, getGradePoint, calculateCGPA, type ScaleType, type GradeType } from '../utils/cgpaConstants';
+import { PREFILL_COURSES_100L, createCourseFromTemplate } from '../constants/cgpaPrefill';
 import { LogoIcon } from './icons/LogoIcon';
 import { EditIcon } from './icons/EditIcon';
 import { DeleteIcon } from './icons/DeleteIcon';
@@ -47,6 +48,15 @@ const CGPACalculator: React.FC = () => {
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
+  const [editingCreditUnits, setEditingCreditUnits] = useState<string | null>(null);
+  const [tempCreditUnits, setTempCreditUnits] = useState<number>(0);
+  const [editingGrade, setEditingGrade] = useState<string | null>(null);
+  const [tempGrade, setTempGrade] = useState<GradeType>('A');
+  const [editingTitle, setEditingTitle] = useState<string | null>(null);
+  const [tempTitle, setTempTitle] = useState<string>('');
+  const [showPrefillModal, setShowPrefillModal] = useState(false);
+  const [isPrefilling, setIsPrefilling] = useState(false);
+  const [profileCGPA, setProfileCGPA] = useState<number | null>(null);
   const mountedRef = useRef(true);
 
   // Offline sync hook
@@ -166,6 +176,98 @@ const CGPACalculator: React.FC = () => {
     setForm(prev => ({ ...prev, [field]: value }));
   }, []);
 
+  // Prefill 100L courses - localStorage only, instant UI
+  const handlePrefill100L = useCallback((semester: 'semester1' | 'semester2') => {
+    if (!userId) return;
+    setIsPrefilling(true);
+    
+    try {
+      const prefillCourses = PREFILL_COURSES_100L[semester];
+      const semesterNum = semester === 'semester1' ? '1' : '2';
+      // Use 5-point CGPA (A = 5 points)
+      const newCourses = prefillCourses.map(template =>
+        createCourseFromTemplate(template, semesterNum, 'A', '5-point')
+      );
+      
+      // Add all to state and localStorage
+      const updatedCourses = [...courses, ...newCourses] as Course[];
+      setCourses(updatedCourses);
+      saveLocalCourses(updatedCourses);
+      
+      setShowPrefillModal(false);
+      setActiveTab('history');
+      
+      // Scroll to My Courses section
+      setTimeout(() => {
+        const coursesSection = document.getElementById('my-courses-section');
+        coursesSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    } catch (err) {
+      console.error('[CGPA] Prefill error:', err);
+    } finally {
+      setIsPrefilling(false);
+    }
+  }, [userId, courses, saveLocalCourses]);
+
+  // Handle inline credit unit editing
+  const handleEditCreditUnits = useCallback((courseId: string, currentCredits: number) => {
+    setEditingCreditUnits(courseId);
+    setTempCreditUnits(currentCredits);
+  }, []);
+
+  const handleSaveCreditUnits = useCallback((courseId: string) => {
+    // Update state
+    const updatedCourses = courses.map(c => 
+      c.$id === courseId || c.localId === courseId
+        ? { ...c, creditUnits: tempCreditUnits }
+        : c
+    ) as Course[];
+    
+    setCourses(updatedCourses);
+    saveLocalCourses(updatedCourses);
+    setEditingCreditUnits(null);
+  }, [tempCreditUnits, courses, saveLocalCourses]);
+
+  // Handle inline grade editing
+  const handleEditGrade = useCallback((courseId: string, currentGrade: GradeType) => {
+    setEditingGrade(courseId);
+    setTempGrade(currentGrade);
+  }, []);
+
+  const handleSaveGrade = useCallback((courseId: string, scaleType: ScaleType) => {
+    const newGradePoint = getGradePoint(tempGrade, scaleType);
+    
+    // Update state
+    const updatedCourses = courses.map(c => 
+      c.$id === courseId || c.localId === courseId
+        ? { ...c, grade: tempGrade, gradePoint: newGradePoint }
+        : c
+    ) as Course[];
+    
+    setCourses(updatedCourses);
+    saveLocalCourses(updatedCourses);
+    setEditingGrade(null);
+  }, [tempGrade, courses, saveLocalCourses]);
+
+  // Handle inline title/course code editing
+  const handleEditTitle = useCallback((courseId: string, currentTitle: string) => {
+    setEditingTitle(courseId);
+    setTempTitle(currentTitle);
+  }, []);
+
+  const handleSaveTitle = useCallback((courseId: string) => {
+    // Update state
+    const updatedCourses = courses.map(c => 
+      c.$id === courseId || c.localId === courseId
+        ? { ...c, courseCode: tempTitle }
+        : c
+    ) as Course[];
+    
+    setCourses(updatedCourses);
+    saveLocalCourses(updatedCourses);
+    setEditingTitle(null);
+  }, [tempTitle, courses, saveLocalCourses]);
+
   // Add or update course - with offline support
   const handleAddCourse = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -226,8 +328,7 @@ const CGPACalculator: React.FC = () => {
 
   // Delete course - works offline
   const handleDeleteCourse = async (courseId: string) => {
-    if (!confirm('Are you sure you want to delete this course?')) return;
-
+    // No confirmation on mobile - just delete
     setIsSaving(true);
     setError(null);
 
@@ -327,12 +428,16 @@ const CGPACalculator: React.FC = () => {
       setIsUpdatingProfile(true);
       
       // Update the user profile with the cumulative CGPA
+      const updatedCGPA = parseFloat(cumulativeCGPA.toFixed(2));
       await databases.updateDocument(
         DATABASE_ID,
         USERS_COLLECTION_ID,
         userId,
-        { cgpa: parseFloat(cumulativeCGPA.toFixed(2)) }
+        { cgpa: updatedCGPA }
       );
+
+      // Update local profile CGPA state
+      setProfileCGPA(updatedCGPA);
 
       setUpdateSuccess(true);
       setTimeout(() => {
@@ -350,13 +455,7 @@ const CGPACalculator: React.FC = () => {
   if (isLoading && courses.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 pb-20">
-        <nav className="bg-white shadow-sm fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-4">
-          <div className="max-w-md w-full mx-auto flex items-center gap-2">
-            <LogoIcon className="h-8 w-8 text-[#2240AF]" />
-            <span className="text-lg font-bold text-[#2240AF]">CGPA Calculator</span>
-          </div>
-        </nav>
-        <div className="pt-20 px-4 max-w-md mx-auto">
+        <div className="pt-4 px-4 max-w-md mx-auto">
           {/* Skeleton GPA Card */}
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 mb-6 shadow-lg animate-pulse">
             <div className="h-4 bg-blue-400 rounded w-24 mb-2"></div>
@@ -384,38 +483,8 @@ const CGPACalculator: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Navbar with offline indicator */}
-      <nav className="bg-white shadow-sm fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-4">
-        <div className="max-w-md w-full mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <LogoIcon className="h-8 w-8 text-[#2240AF]" />
-            <span className="text-lg font-bold text-[#2240AF]">CGPA Calculator</span>
-          </div>
-          {/* Offline/Sync Status */}
-          <div className="flex items-center gap-2">
-            {!isOnline && (
-              <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full flex items-center gap-1">
-                <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-                Offline
-              </span>
-            )}
-            {isSyncing && (
-              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full flex items-center gap-1">
-                <div className="w-3 h-3 border border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                Syncing
-              </span>
-            )}
-            {pendingChanges > 0 && !isSyncing && (
-              <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
-                {pendingChanges} pending
-              </span>
-            )}
-          </div>
-        </div>
-      </nav>
-
       {/* Main Content */}
-      <div className="pt-6 px-4 max-w-md mx-auto">
+      <div className="pt-4 px-4 max-w-md mx-auto">
         {/* GPA Display Card */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg p-6 mb-6 shadow-lg">
           <p className="text-sm opacity-90 mb-1">{getGPALabel}</p>
@@ -473,7 +542,31 @@ const CGPACalculator: React.FC = () => {
 
         {/* Add Course Tab */}
         {activeTab === 'add' && (
-          <form onSubmit={handleAddCourse} className="bg-white rounded-lg shadow p-6 space-y-4">
+          <>
+            {/* Prefill Banner */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-gray-700 mb-3">
+                <span className="font-semibold">Prefill 100L Courses:</span> Quick add common 100L courses (for 100L & 200L students)
+              </p>
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => handlePrefill100L('semester1')}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm font-medium"
+                >
+                  Semester 1
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePrefill100L('semester2')}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm font-medium"
+                >
+                  Semester 2
+                </button>
+              </div>
+            </div>
+
+            <form onSubmit={handleAddCourse} className="bg-white rounded-lg shadow p-6 space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Course Code *
@@ -589,11 +682,12 @@ const CGPACalculator: React.FC = () => {
               </button>
             )}
           </form>
+          </>
         )}
 
         {/* My Courses Tab */}
         {activeTab === 'history' && (
-          <div className="space-y-4">
+          <div id="my-courses-section" className="space-y-4">
             {/* View Mode Selector */}
             <div className="bg-white rounded-lg shadow p-4">
               <div className="flex gap-2 mb-4">
@@ -678,35 +772,142 @@ const CGPACalculator: React.FC = () => {
                       <div className="space-y-3 mb-6">
                         {semesterCourses.map(course => (
                           <div
-                            key={course.$id}
+                            key={course.$id || course.localId}
                             className="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500 hover:shadow-md transition-shadow"
                           >
                             <div className="flex justify-between items-start mb-2">
                               <div className="flex-1">
-                                <h3 className="font-semibold text-gray-800">{course.courseCode}</h3>
-                                <p className="text-xs text-gray-500 mt-1">{course.courseLevel}L • {course.creditUnits} units</p>
+                                {editingTitle === (course.$id || course.localId) ? (
+                                  <div className="flex items-center gap-1 mb-2">
+                                    <input
+                                      type="text"
+                                      value={tempTitle}
+                                      onChange={(e) => setTempTitle(e.target.value)}
+                                      className="text-sm border border-blue-300 rounded px-2 py-1 flex-1"
+                                      placeholder="Course code"
+                                    />
+                                    <button
+                                      onClick={() => handleSaveTitle(course.$id || course.localId || '')}
+                                      className="px-2 py-1 text-xs bg-green-500 text-white hover:bg-green-600 rounded font-medium"
+                                    >
+                                      ✓
+                                    </button>
+                                    <button
+                                      onClick={() => setEditingTitle(null)}
+                                      className="px-2 py-1 text-xs bg-gray-400 text-white hover:bg-gray-500 rounded font-medium"
+                                    >
+                                      ✕
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <h3 className="font-semibold text-gray-800">{course.courseCode}</h3>
+                                    <button
+                                      onClick={() => handleEditTitle(course.$id || course.localId || '', course.courseCode)}
+                                      className="text-blue-600 hover:bg-blue-100 p-1 rounded transition-colors"
+                                      title="Edit course code"
+                                    >
+                                      <EditIcon className="h-4 w-4" />
+                                    </button>
+                                  </div>
+                                )}
+                                <div className="flex items-center gap-2 mt-1">
+                                  <p className="text-xs text-gray-500">{course.courseLevel}L •</p>
+                                  {editingCreditUnits === (course.$id || course.localId) ? (
+                                    <div className="flex items-center gap-1">
+                                      <select
+                                        value={tempCreditUnits}
+                                        onChange={(e) => setTempCreditUnits(parseInt(e.target.value))}
+                                        className="text-xs border border-blue-300 rounded px-1 py-0.5"
+                                      >
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                      </select>
+                                      <span className="text-xs text-gray-500">units</span>
+                                    </div>
+                                  ) : (
+                                    <p className="text-xs text-gray-500">{course.creditUnits} units</p>
+                                  )}
+                                </div>
                               </div>
                               <div className="text-right">
-                                <p className="text-lg font-bold text-blue-600">{course.grade}</p>
+                                {editingGrade === (course.$id || course.localId) ? (
+                                  <div className="flex items-center gap-1 mb-2">
+                                    <select
+                                      value={tempGrade}
+                                      onChange={(e) => setTempGrade(e.target.value as GradeType)}
+                                      className="text-sm border border-blue-300 rounded px-2 py-1"
+                                    >
+                                      {AVAILABLE_GRADES.map(g => (
+                                        <option key={g} value={g}>{g}</option>
+                                      ))}
+                                    </select>
+                                    <button
+                                      onClick={() => handleSaveGrade(course.$id || course.localId || '', course.scaleType)}
+                                      className="px-2 py-1 text-xs bg-green-500 text-white hover:bg-green-600 rounded font-medium"
+                                    >
+                                      ✓
+                                    </button>
+                                    <button
+                                      onClick={() => setEditingGrade(null)}
+                                      className="px-2 py-1 text-xs bg-gray-400 text-white hover:bg-gray-500 rounded font-medium"
+                                    >
+                                      ✕
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <p className="text-lg font-bold text-blue-600">{course.grade}</p>
+                                    <button
+                                      onClick={() => handleEditGrade(course.$id || course.localId || '', course.grade)}
+                                      className="text-blue-600 hover:bg-blue-100 p-1 rounded transition-colors"
+                                      title="Edit grade"
+                                    >
+                                      <EditIcon className="h-4 w-4" />
+                                    </button>
+                                  </div>
+                                )}
                                 <p className="text-xs text-gray-500">{course.gradePoint}</p>
                               </div>
                             </div>
 
                             <div className="flex gap-2 mt-3">
-                              <button
-                                onClick={() => handleEditCourse(course)}
-                                className="flex items-center justify-center p-2 text-blue-600 hover:bg-blue-100 rounded transition-colors"
-                                title="Edit course"
-                              >
-                                <EditIcon className="h-5 w-5" />
-                              </button>
-                              <button
-                                onClick={() => course.$id && handleDeleteCourse(course.$id)}
-                                className="flex items-center justify-center p-2 text-red-600 hover:bg-red-100 rounded transition-colors"
-                                title="Delete course"
-                              >
-                                <DeleteIcon className="h-5 w-5" />
-                              </button>
+                              {editingCreditUnits === (course.$id || course.localId) ? (
+                                <>
+                                  <button
+                                    onClick={() => handleSaveCreditUnits(course.$id || course.localId || '')}
+                                    className="flex items-center justify-center px-3 py-1 text-xs bg-green-500 text-white hover:bg-green-600 rounded transition-colors font-medium"
+                                    title="Save credits"
+                                  >
+                                    ✓ Save
+                                  </button>
+                                  <button
+                                    onClick={() => setEditingCreditUnits(null)}
+                                    className="flex items-center justify-center px-3 py-1 text-xs bg-gray-400 text-white hover:bg-gray-500 rounded transition-colors font-medium"
+                                    title="Cancel"
+                                  >
+                                    ✕ Cancel
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    onClick={() => handleEditCreditUnits(course.$id || course.localId || '', course.creditUnits)}
+                                    className="flex items-center justify-center px-3 py-1 text-xs bg-blue-500 text-white hover:bg-blue-600 rounded transition-colors font-medium"
+                                    title="Edit credit units"
+                                  >
+                                    📝 Units
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteCourse(course.$id || course.localId || '')}
+                                    className="flex items-center justify-center p-2 text-red-600 hover:bg-red-100 rounded transition-colors"
+                                    title="Delete course"
+                                  >
+                                    <DeleteIcon className="h-5 w-5" />
+                                  </button>
+                                </>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -731,35 +932,142 @@ const CGPACalculator: React.FC = () => {
                   .filter(c => c.courseLevel === selectedLevel)
                   .map(course => (
                     <div
-                      key={course.$id}
+                      key={course.$id || course.localId}
                       className="bg-white rounded-lg shadow p-4 border-l-4 border-green-500 hover:shadow-md transition-shadow"
                     >
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-800">{course.courseCode}</h3>
-                          <p className="text-xs text-gray-500 mt-1">Semester {course.semester} • {course.creditUnits} units</p>
+                          {editingTitle === (course.$id || course.localId) ? (
+                            <div className="flex items-center gap-1 mb-2">
+                              <input
+                                type="text"
+                                value={tempTitle}
+                                onChange={(e) => setTempTitle(e.target.value)}
+                                className="text-sm border border-green-300 rounded px-2 py-1 flex-1"
+                                placeholder="Course code"
+                              />
+                              <button
+                                onClick={() => handleSaveTitle(course.$id || course.localId || '')}
+                                className="px-2 py-1 text-xs bg-green-500 text-white hover:bg-green-600 rounded font-medium"
+                              >
+                                ✓
+                              </button>
+                              <button
+                                onClick={() => setEditingTitle(null)}
+                                className="px-2 py-1 text-xs bg-gray-400 text-white hover:bg-gray-500 rounded font-medium"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="font-semibold text-gray-800">{course.courseCode}</h3>
+                              <button
+                                onClick={() => handleEditTitle(course.$id || course.localId || '', course.courseCode)}
+                                className="text-blue-600 hover:bg-blue-100 p-1 rounded transition-colors"
+                                title="Edit course code"
+                              >
+                                <EditIcon className="h-4 w-4" />
+                              </button>
+                            </div>
+                          )}
+                          <div className="flex items-center gap-2 mt-1">
+                            <p className="text-xs text-gray-500">Semester {course.semester} •</p>
+                            {editingCreditUnits === (course.$id || course.localId) ? (
+                              <div className="flex items-center gap-1">
+                                <select
+                                  value={tempCreditUnits}
+                                  onChange={(e) => setTempCreditUnits(parseInt(e.target.value))}
+                                  className="text-xs border border-green-300 rounded px-1 py-0.5"
+                                >
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                </select>
+                                <span className="text-xs text-gray-500">units</span>
+                              </div>
+                            ) : (
+                              <p className="text-xs text-gray-500">{course.creditUnits} units</p>
+                            )}
+                          </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-lg font-bold text-blue-600">{course.grade}</p>
+                          {editingGrade === (course.$id || course.localId) ? (
+                            <div className="flex items-center gap-1 mb-2">
+                              <select
+                                value={tempGrade}
+                                onChange={(e) => setTempGrade(e.target.value as GradeType)}
+                                className="text-sm border border-green-300 rounded px-2 py-1"
+                              >
+                                {AVAILABLE_GRADES.map(g => (
+                                  <option key={g} value={g}>{g}</option>
+                                ))}
+                              </select>
+                              <button
+                                onClick={() => handleSaveGrade(course.$id || course.localId || '', course.scaleType)}
+                                className="px-2 py-1 text-xs bg-green-500 text-white hover:bg-green-600 rounded font-medium"
+                              >
+                                ✓
+                              </button>
+                              <button
+                                onClick={() => setEditingGrade(null)}
+                                className="px-2 py-1 text-xs bg-gray-400 text-white hover:bg-gray-500 rounded font-medium"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="text-lg font-bold text-blue-600">{course.grade}</p>
+                              <button
+                                onClick={() => handleEditGrade(course.$id || course.localId || '', course.grade)}
+                                className="text-xs text-blue-600 hover:bg-blue-100 p-1 rounded"
+                                title="Edit grade"
+                              >
+                                <EditIcon className="h-4 w-4" />
+                              </button>
+                            </div>
+                          )}
                           <p className="text-xs text-gray-500">{course.gradePoint}</p>
                         </div>
                       </div>
 
                       <div className="flex gap-2 mt-3">
-                        <button
-                          onClick={() => handleEditCourse(course)}
-                          className="flex items-center justify-center p-2 text-blue-600 hover:bg-blue-100 rounded transition-colors"
-                          title="Edit course"
-                        >
-                          <EditIcon className="h-5 w-5" />
-                        </button>
-                        <button
-                          onClick={() => course.$id && handleDeleteCourse(course.$id)}
-                          className="flex items-center justify-center p-2 text-red-600 hover:bg-red-100 rounded transition-colors"
-                          title="Delete course"
-                        >
-                          <DeleteIcon className="h-5 w-5" />
-                        </button>
+                        {editingCreditUnits === (course.$id || course.localId) ? (
+                          <>
+                            <button
+                              onClick={() => handleSaveCreditUnits(course.$id || course.localId || '')}
+                              className="flex items-center justify-center px-3 py-1 text-xs bg-green-500 text-white hover:bg-green-600 rounded transition-colors font-medium"
+                              title="Save credits"
+                            >
+                              ✓ Save
+                            </button>
+                            <button
+                              onClick={() => setEditingCreditUnits(null)}
+                              className="flex items-center justify-center px-3 py-1 text-xs bg-gray-400 text-white hover:bg-gray-500 rounded transition-colors font-medium"
+                              title="Cancel"
+                            >
+                              ✕ Cancel
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => handleEditCreditUnits(course.$id || course.localId || '', course.creditUnits)}
+                              className="flex items-center justify-center px-3 py-1 text-xs bg-blue-500 text-white hover:bg-blue-600 rounded transition-colors font-medium"
+                              title="Edit credit units"
+                            >
+                              📝 Units
+                            </button>
+                            <button
+                              onClick={() => handleDeleteCourse(course.$id || course.localId || '')}
+                              className="flex items-center justify-center p-2 text-red-600 hover:bg-red-100 rounded transition-colors"
+                              title="Delete course"
+                            >
+                              <DeleteIcon className="h-5 w-5" />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -769,35 +1077,142 @@ const CGPACalculator: React.FC = () => {
               <div className="space-y-3">
                 {courses.map(course => (
                   <div
-                    key={course.$id}
+                    key={course.$id || course.localId}
                     className="bg-white rounded-lg shadow p-4 border-l-4 border-purple-500 hover:shadow-md transition-shadow"
                   >
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-gray-800">{course.courseCode}</h3>
-                        <p className="text-xs text-gray-500 mt-1">Semester {course.semester} • {course.courseLevel}L • {course.creditUnits} units</p>
+                        {editingTitle === (course.$id || course.localId) ? (
+                          <div className="flex items-center gap-1 mb-2">
+                            <input
+                              type="text"
+                              value={tempTitle}
+                              onChange={(e) => setTempTitle(e.target.value)}
+                              className="text-sm border border-purple-300 rounded px-2 py-1 flex-1"
+                              placeholder="Course code"
+                            />
+                            <button
+                              onClick={() => handleSaveTitle(course.$id || course.localId || '')}
+                              className="px-2 py-1 text-xs bg-green-500 text-white hover:bg-green-600 rounded font-medium"
+                            >
+                              ✓
+                            </button>
+                            <button
+                              onClick={() => setEditingTitle(null)}
+                              className="px-2 py-1 text-xs bg-gray-400 text-white hover:bg-gray-500 rounded font-medium"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="font-semibold text-gray-800">{course.courseCode}</h3>
+                            <button
+                              onClick={() => handleEditTitle(course.$id || course.localId || '', course.courseCode)}
+                              className="text-blue-600 hover:bg-blue-100 p-1 rounded transition-colors"
+                              title="Edit course code"
+                            >
+                              <EditIcon className="h-4 w-4" />
+                            </button>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-2 mt-1">
+                          <p className="text-xs text-gray-500">Semester {course.semester} • {course.courseLevel}L •</p>
+                          {editingCreditUnits === (course.$id || course.localId) ? (
+                            <div className="flex items-center gap-1">
+                              <select
+                                value={tempCreditUnits}
+                                onChange={(e) => setTempCreditUnits(parseInt(e.target.value))}
+                                className="text-xs border border-purple-300 rounded px-1 py-0.5"
+                              >
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                              </select>
+                              <span className="text-xs text-gray-500">units</span>
+                            </div>
+                          ) : (
+                            <p className="text-xs text-gray-500">{course.creditUnits} units</p>
+                          )}
+                        </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-lg font-bold text-blue-600">{course.grade}</p>
+                        {editingGrade === (course.$id || course.localId) ? (
+                          <div className="flex items-center gap-1 mb-2">
+                            <select
+                              value={tempGrade}
+                              onChange={(e) => setTempGrade(e.target.value as GradeType)}
+                              className="text-sm border border-purple-300 rounded px-2 py-1"
+                            >
+                              {AVAILABLE_GRADES.map(g => (
+                                <option key={g} value={g}>{g}</option>
+                              ))}
+                            </select>
+                            <button
+                              onClick={() => handleSaveGrade(course.$id || course.localId || '', course.scaleType)}
+                              className="px-2 py-1 text-xs bg-green-500 text-white hover:bg-green-600 rounded font-medium"
+                            >
+                              ✓
+                            </button>
+                            <button
+                              onClick={() => setEditingGrade(null)}
+                              className="px-2 py-1 text-xs bg-gray-400 text-white hover:bg-gray-500 rounded font-medium"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 mb-1">
+                            <p className="text-lg font-bold text-blue-600">{course.grade}</p>
+                            <button
+                              onClick={() => handleEditGrade(course.$id || course.localId || '', course.grade)}
+                              className="text-blue-600 hover:bg-blue-100 p-1 rounded transition-colors"
+                              title="Edit grade"
+                            >
+                              <EditIcon className="h-4 w-4" />
+                            </button>
+                          </div>
+                        )}
                         <p className="text-xs text-gray-500">{course.gradePoint}</p>
                       </div>
                     </div>
 
                     <div className="flex gap-2 mt-3">
-                      <button
-                        onClick={() => handleEditCourse(course)}
-                        className="flex items-center justify-center p-2 text-blue-600 hover:bg-blue-100 rounded transition-colors"
-                        title="Edit course"
-                      >
-                        <EditIcon className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={() => course.$id && handleDeleteCourse(course.$id)}
-                        className="flex items-center justify-center p-2 text-red-600 hover:bg-red-100 rounded transition-colors"
-                        title="Delete course"
-                      >
-                        <DeleteIcon className="h-5 w-5" />
-                      </button>
+                      {editingCreditUnits === (course.$id || course.localId) ? (
+                        <>
+                          <button
+                            onClick={() => handleSaveCreditUnits(course.$id || course.localId || '')}
+                            className="flex items-center justify-center px-3 py-1 text-xs bg-green-500 text-white hover:bg-green-600 rounded transition-colors font-medium"
+                            title="Save credits"
+                          >
+                            ✓ Save
+                          </button>
+                          <button
+                            onClick={() => setEditingCreditUnits(null)}
+                            className="flex items-center justify-center px-3 py-1 text-xs bg-gray-400 text-white hover:bg-gray-500 rounded transition-colors font-medium"
+                            title="Cancel"
+                          >
+                            ✕ Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => handleEditCreditUnits(course.$id || course.localId || '', course.creditUnits)}
+                            className="flex items-center justify-center px-3 py-1 text-xs bg-blue-500 text-white hover:bg-blue-600 rounded transition-colors font-medium"
+                            title="Edit credit units"
+                          >
+                            📝 Units
+                          </button>
+                          <button
+                            onClick={() => handleDeleteCourse(course.$id || course.localId || '')}
+                            className="flex items-center justify-center p-2 text-red-600 hover:bg-red-100 rounded transition-colors"
+                            title="Delete course"
+                          >
+                            <DeleteIcon className="h-5 w-5" />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -840,6 +1255,13 @@ const CGPACalculator: React.FC = () => {
                   <div className="text-sm text-gray-600 mt-2">
                     Based on {courses.length} course{courses.length !== 1 ? 's' : ''}
                   </div>
+                  
+                  {/* Show if not updated */}
+                  {profileCGPA !== null && Math.abs(displayedGPA - profileCGPA) > 0.01 && (
+                    <div className="mt-3 px-3 py-2 bg-amber-100 border border-amber-300 rounded text-sm text-amber-800">
+                      ⚠️ You haven't updated your profile
+                    </div>
+                  )}
                 </div>
               </div>
 
