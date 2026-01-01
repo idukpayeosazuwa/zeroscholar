@@ -5,7 +5,6 @@ import { getCachedUserSession } from './hooks/useOfflineSync';
 import App from './App';
 import Landing from './pages/Landing';
 import Auth from './components/Auth';
-import EmailVerifyCallback from './components/EmailVerifyCallback';
 import EditProfile from './pages/EditProfile';
 import { UniversityLevel } from './types';
 import { Models } from 'appwrite';
@@ -78,7 +77,6 @@ const Router: React.FC = () => {
         path="/app/*" 
         element={isAuthenticated ? <App /> : <Navigate to="/login" />} 
       />
-      <Route path="/verify" element={<EmailVerifyCallback />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
