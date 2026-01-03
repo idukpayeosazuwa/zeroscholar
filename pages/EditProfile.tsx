@@ -8,9 +8,10 @@ interface EditProfileProps {
   userProfile: UserProfile;
   userId: string;
   onProfileUpdate: (updatedProfile: UserProfile) => void;
+  isOnline?: boolean;
 }
 
-const EditProfile: React.FC<EditProfileProps> = ({ userProfile, userId, onProfileUpdate }) => {
+const EditProfile: React.FC<EditProfileProps> = ({ userProfile, userId, onProfileUpdate, isOnline = true }) => {
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
@@ -133,6 +134,12 @@ const EditProfile: React.FC<EditProfileProps> = ({ userProfile, userId, onProfil
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
         <h1 className="text-3xl font-bold text-[#2240AF] mb-2">Edit Profile</h1>
         <p className="text-gray-600 mb-8">Update your profile information</p>
+
+        {!isOnline && (
+          <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg text-orange-700">
+            <span className="font-semibold">📡 You're Offline</span> - Profile edits require an internet connection. Please reconnect and try again.
+          </div>
+        )}
 
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
@@ -353,10 +360,10 @@ const EditProfile: React.FC<EditProfileProps> = ({ userProfile, userId, onProfil
         <div className="flex gap-4 pt-4">
           <button
             onClick={handleSave}
-            disabled={isSaving}
+            disabled={isSaving || !isOnline}
             className="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 font-semibold transition-colors"
           >
-            {isSaving ? 'Saving...' : 'Save Changes'}
+            {isSaving ? 'Saving...' : !isOnline ? 'Come Online to Save' : 'Save Changes'}
           </button>
           <button
             onClick={() => navigate('/app')}

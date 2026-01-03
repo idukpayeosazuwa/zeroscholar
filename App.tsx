@@ -19,6 +19,7 @@ import EditProfile from './pages/EditProfile';
 import CGPACalculator from './components/CGPACalculator';
 import ToolsPage from './components/ToolsPage';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
+import OfflineBanner from './components/OfflineBanner';
 // import AptitudeTestArena from './components/AptitudeTestArena';
 
 import BottomNav from './components/BottomNav';
@@ -66,69 +67,164 @@ const App: React.FC = () => {
   const [appliedScholarshipIds, setAppliedScholarshipIds] = useState<string[]>([]);
 
   useEffect(() => {
+    // Use a local flag to prevent race conditions in this specific effect run
+    let cancelled = false;
+
     const checkAuthStatus = async () => {
+      console.log('[App] checkAuthStatus starting...');
       // First, try to load cached data for instant UI
       const cachedProfile = getCachedUserProfile();
       const cachedUser = getCachedUserSession();
       const cachedScholarships = getCachedScholarships();
       const cachedMatched = getCachedMatchedScholarships();
       
-      if (cachedProfile && cachedScholarships) {
+      console.log('[App] Cached data:', {
+        hasProfile: !!cachedProfile,
+        hasUser: !!cachedUser,
+        hasScholarships: !!cachedScholarships,
+        hasMatched: !!cachedMatched,
+      });
+      
+      // Only use cache if we have BOTH profile and scholarships
+      // Mobile often has empty cache on first load
+      if (cachedProfile && cachedScholarships && cachedScholarships.length > 0) {
+        console.log('[App] ✅ Using cached data (profile + scholarships), hiding loading state');
         setUserProfile(cachedProfile as UserProfile);
         if (cachedUser) setUser(cachedUser);
         setAllScholarships(cachedScholarships);
-        if (cachedMatched) {
+        if (cachedMatched && cachedMatched.length > 0) {
           setWrappedScholarships(cachedMatched);
         }
         setIsLoading(false);
         setInitialDataLoaded(true);
+      } else {
+        console.log('[App] ⚠️ No valid cache, will fetch fresh data');
       }
 
+      // Safety timeout: Force UI to show after 5 seconds even if loading
+      const timeoutId = setTimeout(() => {
+        if (mountedRef.current) {
+          console.warn('[App] ⏱️ TIMEOUT FIRED - Forcing UI to show after 5 seconds');
+          setIsLoading(false);
+          // If we still don't have a profile, try to use any cached data
+          const lastProfile = getCachedUserProfile();
+          if (lastProfile && !userProfile) {
+            console.warn('[App] No profile loaded, using cached profile from timeout');
+            setUserProfile(lastProfile as UserProfile);
+          }
+        }
+      }, 8000); // Increased to 8 seconds to allow more time
+
       try {
+        console.log('[App] Calling account.get()...');
         const currentUser = await account.get();
-        if (!mountedRef.current) return;
+        console.log('[App] account.get() succeeded:', currentUser.email);
+        
+        // Don't check mountedRef here - let the flow continue
+        // We'll check it only before setState calls
+        
+        clearTimeout(timeoutId);
         
         // Check email verification BEFORE allowing access
+        console.log('[App] Checking email verification...');
         if (!currentUser.emailVerification) {
+          console.log('[App] User email not verified, redirecting to /login');
           navigate('/login');
           return;
         }
         
-        setUser(currentUser);
-        cacheUserSession(currentUser);
+        console.log('[App] Email verified, setting user...');
+        if (!cancelled) {
+          setUser(currentUser);
+          cacheUserSession(currentUser);
+        }
         
         // Check for user profile in Appwrite Database
         try {
+          console.log('[App] 📍 Starting profile fetch from:', DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id);
           const profileDoc = await databases.getDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id);
+          console.log('[App] ✅ Profile fetched successfully:', profileDoc);
+          
+          if (cancelled) return; // Exit if effect was cleaned up
+          
           const { $id, $collectionId, $databaseId, $createdAt, $updatedAt, $permissions, ...profileData } = profileDoc;
           const profile = profileData as unknown as UserProfile;
+          console.log('[App] 📍 Setting profile state...');
           setUserProfile(profile);
           // Cache the profile for offline use
           cacheUserProfile(profile);
+          console.log('[App] ✅ Profile cached');
           
           // Load applications from profile - it's a string array of scholarship IDs
           if (profileData.applications && Array.isArray(profileData.applications)) {
+            console.log('[App] Found applications:', profileData.applications.length);
             setAppliedScholarshipIds(profileData.applications as string[]);
           }
         } catch (e) {
+          console.error('[App] ❌ Profile fetch FAILED:', e);
+          const errorCode = (e as any)?.code;
+          const errorMessage = (e as any)?.message;
+          console.error('[App] Error code:', errorCode, 'Message:', errorMessage);
+          
+          if (cancelled) return; // Exit if effect was cleaned up
+          
           if (!cachedProfile) {
-            setUserProfile(null);
+            console.log('[App] No cached profile either, creating a basic profile');
+            // Create a basic profile from the user data
+            const basicProfile: UserProfile = {
+              email: currentUser.email,
+              fullName: currentUser.name || 'Scholar',
+              uni: 'Not specified',
+              university: 'Not specified',
+              state: 'Not specified',
+              lga: 'Not specified',
+              course: 'Not specified',
+              level: '100 Level' as any, // Default level
+              cgpa: 0,
+              jamb: 0,
+              finance: false,
+              orphan: false,
+              chal: false,
+              rel: 'Not specified',
+              gender: 'Male',
+            };
+            console.log('[App] Setting basic profile:', basicProfile);
+            setUserProfile(basicProfile);
+            cacheUserProfile(basicProfile);
+          } else {
+            console.log('[App] Using cached profile instead');
           }
         }
       } catch (error: any) {
+        console.error('[App] 💥 Auth error:', error?.message || error);
+        console.error('[App] Error code:', error?.code);
+        console.error('[App] Full error:', error);
         // If we have cached data and it's a network error (or we are offline), keep the session
         if ((cachedProfile || cachedUser) && (!navigator.onLine || error?.message === 'Network request failed')) {
-             console.log("Staying in offline mode with cached data");
+             console.log('[App] Offline mode with cached data');
         } else {
-            setUser(null);
-            setUserProfile(null);
+            console.log('[App] Auth failed, redirecting to login');
+            if (!cancelled) {
+              setUser(null);
+              setUserProfile(null);
+            }
             navigate('/login'); // Redirect to login if session check fails
         }
       } finally {
-        setIsLoading(false);
+        clearTimeout(timeoutId);
+        if (!cancelled) {
+          console.log('[App] ✅ Setting isLoading to false in finally block');
+          setIsLoading(false);
+        }
       }
     };
+    console.log('[App] useEffect dependency changed, calling checkAuthStatus');
     checkAuthStatus();
+    
+    // Cleanup function to cancel the effect
+    return () => {
+      cancelled = true;
+    };
   }, [navigate]);
 
   useEffect(() => {
@@ -160,20 +256,40 @@ const App: React.FC = () => {
   }, [allScholarships, appliedScholarshipIds]);
 
   const fetchAndMatchScholarships = useCallback(async () => {
-    if (!userProfile) return;
+    if (!userProfile) {
+      console.log('[App] No userProfile, skipping scholarship fetch');
+      return;
+    }
     
+    console.log('[App] fetchAndMatchScholarships starting...');
     // If we already have cached data and still loading, skip the loading state
     if (!initialDataLoaded) {
       setIsLoadingScholarships(true);
     }
     
+    // Add timeout for scholarship fetch too
+    const scholarshipTimeoutId = setTimeout(() => {
+      console.warn('[App] ⏱️ Scholarship fetch timeout after 10 seconds');
+      const cached = getCachedScholarships();
+      const cachedMatched = getCachedMatchedScholarships();
+      if (cached) {
+        console.log('[App] Using cached scholarships due to timeout');
+        setAllScholarships(cached);
+        if (cachedMatched) setWrappedScholarships(cachedMatched);
+      }
+      setIsLoadingScholarships(false);
+    }, 10000);
+    
     try {
       // 1. Fetch all scholarships
+      console.log('[App] Fetching scholarships from database...');
       const scholarshipsResponse = await databases.listDocuments(
         DATABASE_ID,
         SCHOLARSHIPS_COLLECTION_ID,
         [Query.limit(1000)]
       );
+      clearTimeout(scholarshipTimeoutId);
+      console.log('[App] Scholarships fetched:', scholarshipsResponse.documents.length);
 
       // 2. Fetch all eligibility tracks
       const tracksResponse = await databases.listDocuments(
@@ -307,12 +423,21 @@ const App: React.FC = () => {
       cacheMatchedScholarships(wrapped);
 
     } catch (error) {
+      console.error('[App] Scholarship fetch error:', error);
+      clearTimeout(scholarshipTimeoutId);
       // Only clear if we don't have cached data
       if (!initialDataLoaded) {
-        setAllScholarships([]);
-        setWrappedScholarships([]);
+        const cached = getCachedScholarships();
+        if (cached) {
+          setAllScholarships(cached);
+        } else {
+          setAllScholarships([]);
+          setWrappedScholarships([]);
+        }
       }
     } finally {
+      clearTimeout(scholarshipTimeoutId);
+      console.log('[App] Scholarship loading complete');
       setIsLoadingScholarships(false);
     }
   }, [userProfile, initialDataLoaded]);
@@ -440,13 +565,15 @@ const App: React.FC = () => {
             userName={userProfile.fullName || user?.name || 'Scholar'}
             applications={applications}
             onApply={handleApply}
+            isOnline={isOnline}
           />
         );
     }
   };
 
   return (
-    <div className="min-h-screen font-sans text-gray-800 bg-gray-50">
+    <div className="min-h-screen font-sans text-gray-800 bg-gray-50 flex flex-col" style={{ display: 'flex' }}>
+      <OfflineBanner isOnline={isOnline} />
       <header className="bg-white shadow-sm sticky top-0 z-10 p-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
             <LogoIcon className="h-8 w-8 text-[#2240AF]" />
@@ -474,11 +601,11 @@ const App: React.FC = () => {
         </div>
       </header>
       
-      <main className="pb-24">
+      <main className="pb-24 flex-1 overflow-y-auto" style={{ flex: '1 1 auto', overflowY: 'auto' }}>
         <Routes>
           {userProfile && (
             <>
-              <Route path="/edit-profile" element={<EditProfile userProfile={userProfile} userId={user?.$id || ''} onProfileUpdate={handleProfileUpdate} />} />
+              <Route path="/edit-profile" element={<EditProfile userProfile={userProfile} userId={user?.$id || ''} onProfileUpdate={handleProfileUpdate} isOnline={isOnline} />} />
               <Route path="/tools" element={<ToolsPage />} />
               <Route path="/tools/cgpa-calculator" element={<CGPACalculator />} />
             </>

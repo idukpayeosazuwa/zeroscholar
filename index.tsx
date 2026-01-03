@@ -10,9 +10,13 @@ if ('serviceWorker' in navigator) {
       .register('/sw.js')
       .then((registration) => {
         console.log('Service Worker registered:', registration);
+        // Check for updates periodically
+        setInterval(() => {
+          registration.update().catch(err => console.log('Update check failed:', err));
+        }, 60000); // Check every minute
       })
       .catch((error) => {
-        console.log('Service Worker registration failed:', error);
+        console.error('Service Worker registration failed:', error);
       });
   });
 }

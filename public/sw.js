@@ -1,5 +1,9 @@
-const CACHE_NAME = 'zeroscholar-v10';
+// Force increment version on every deploy
+const CACHE_NAME = 'zeroscholar-v' + Date.now();
 const OFFLINE_URL = '/offline';
+
+// Log for mobile debugging
+console.log('[SW] Service Worker starting, cache name:', CACHE_NAME);
 
 // Assets to pre-cache immediately
 const STATIC_ASSETS = [
@@ -64,26 +68,40 @@ const cacheResponse = async (request, response) => {
 
 // Install: Pre-cache essential assets
 self.addEventListener('install', (event) => {
+  console.log('[SW] Installing...');
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(STATIC_ASSETS))
-      .catch((err) => console.log('[SW] Pre-cache failed:', err.message))
+      .then((cache) => {
+        console.log('[SW] Caching essential assets');
+        return cache.addAll(STATIC_ASSETS);
+      })
+      .catch((err) => {
+        console.error('[SW] Pre-cache failed:', err.message);
+        // Don't block install if pre-cache fails (important for mobile)
+      })
   );
   self.skipWaiting();
+  console.log('[SW] Install complete');
 });
 
 // Activate: Clean up old caches
 self.addEventListener('activate', (event) => {
+  console.log('[SW] Activating...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
+      console.log('[SW] Found caches:', cacheNames);
       return Promise.all(
         cacheNames
           .filter((name) => name.startsWith('zeroscholar-') && name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
+          .map((name) => {
+            console.log('[SW] Deleting old cache:', name);
+            return caches.delete(name);
+          })
       );
     })
   );
   self.clients.claim();
+  console.log('[SW] Activation complete');
 });
 
 // Fetch handler
@@ -101,12 +119,21 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
-          cacheResponse(event.request, response);
+          // Cache successful navigation responses
+          if (response && response.ok) {
+            cacheResponse(event.request, response);
+          }
           return response;
         })
         .catch(async () => {
+          console.log('[SW] Navigation failed, trying cache');
           const cached = await caches.match(event.request);
-          return cached || caches.match(OFFLINE_URL);
+          if (cached) {
+            console.log('[SW] Serving cached navigation');
+            return cached;
+          }
+          console.log('[SW] No cache, serving offline page');
+          return caches.match(OFFLINE_URL) || new Response('Offline', { status: 503 });
         })
     );
     return;
@@ -116,23 +143,35 @@ self.addEventListener('fetch', (event) => {
   if (url.pathname.match(/\.(js|css|png|jpg|jpeg|svg|ico|woff|woff2|ttf|webp)$/)) {
     event.respondWith(
       caches.match(event.request).then(async (cached) => {
-        // Return cached immediately if available
+        // If cached, return it and update in background
         if (cached) {
           // Update cache in background (don't await)
           fetch(event.request)
-            .then((response) => cacheResponse(event.request, response))
+            .then((response) => {
+              if (response && response.ok) {
+                cacheResponse(event.request, response);
+              }
+            })
             .catch(() => {});
           return cached;
         }
         
-        // No cache, fetch from network
+        // No cache (MOBILE OFTEN STARTS HERE), fetch from network
         try {
           const response = await fetch(event.request);
-          cacheResponse(event.request, response);
+          // Cache successful responses for future
+          if (response && response.ok) {
+            cacheResponse(event.request, response);
+          }
           return response;
         } catch (err) {
-          // Return nothing if both cache and network fail
-          return new Response('', { status: 404 });
+          console.log('[SW] Network failed for:', url.pathname);
+          // Return empty response instead of 404 to avoid breaking the app
+          return new Response('', { 
+            status: 200, 
+            statusText: 'OK',
+            headers: new Headers({ 'Content-Type': 'text/plain' })
+          });
         }
       })
     );

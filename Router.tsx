@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { account } from './appwriteConfig';
+import { getCachedUserSession } from './hooks/useOfflineSync';
 import App from './App';
 import Landing from './pages/Landing';
 import Auth from './components/Auth';
@@ -21,16 +22,36 @@ const Router: React.FC = () => {
         await account.get();
         setIsAuthenticated(true);
       } catch {
+        // Check if we're offline and have a cached session
+        if (!navigator.onLine) {
+          console.log('[Router] Offline - checking cached session');
+          const cachedSession = getCachedUserSession();
+          if (cachedSession) {
+            console.log('[Router] Cached session found - allowing offline access');
+            setIsAuthenticated(true);
+            return;
+          }
+        }
         setIsAuthenticated(false);
       }
     };
-    checkAuth();
+    
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      if (isAuthenticated === null) {
+        console.warn('Auth check timeout - defaulting to false');
+        setIsAuthenticated(false);
+      }
+    }, 5000);
+    
+    checkAuth().finally(() => clearTimeout(timeoutId));
   }, [location.pathname]);
 
   if (isAuthenticated === null) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#2240AF]"></div>
+        <p className="mt-4 text-gray-600 text-sm">Loading...</p>
       </div>
     );
   }
