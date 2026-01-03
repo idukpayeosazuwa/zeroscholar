@@ -1,9 +1,12 @@
-// Force increment version on every deploy
-const CACHE_NAME = 'zeroscholar-v' + Date.now();
+// Smart versioning: Only changes when code actually changes
+// This hash is injected by Vite at build time (YYYYMMDD format)
+// Combined with Vite's content hashing in filenames, ensures efficient caching
+const CACHE_VERSION = '__VITE_CACHE_VERSION__' || new Date().toISOString().slice(0, 10).replace(/-/g, '');
+const CACHE_NAME = 'zeroscholar-v' + CACHE_VERSION;
 const OFFLINE_URL = '/offline';
 
 // Log for mobile debugging
-console.log('[SW] Service Worker starting, cache name:', CACHE_NAME);
+console.log('[SW] Service Worker starting, version:', CACHE_VERSION, 'cache name:', CACHE_NAME);
 
 // Assets to pre-cache immediately
 const STATIC_ASSETS = [

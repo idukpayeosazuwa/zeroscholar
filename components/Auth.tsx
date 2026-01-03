@@ -29,6 +29,7 @@ import { Models } from 'appwrite';
 import { UniversityLevel } from '../types';
 import { UNIVERSITY_LEVELS } from '../constants';
 import EmailOTPVerification from './EmailOTPVerification';
+import { retryWithBackoff, getErrorMessage, classifyError } from '../utils/errorHandler';
 
 // Helper function to handle Appwrite latency/processing delays
 const createDocumentWithRetry = async (
@@ -240,20 +241,24 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
     } catch (err: any) {
       console.error("Auth Error Details:", err);
       
-      // Specific error handling for missing attributes
-      if (err.message?.includes('Unknown attribute')) {
-        const missingAttr = err.message.match(/Unknown attribute: "([^"]+)"/)?.[1];
-        setError(`Database Error: Attribute '${missingAttr}' is missing in Appwrite. 
-        1. Check spelling/case in Console ("${missingAttr}" vs "${missingAttr?.toLowerCase()}").
-        2. If you just created it, wait 1-2 mins for status to change from "Processing" to "Available".`);
-      } else if (err.message?.includes('Invalid document structure')) {
-        setError(`Database Error: Invalid Data Structure. Check console for payload. Ensure numbers are not strings.`);
-      } else if (err.code === 404) {
-         setError(`Database Error: Collection or Database ID not found. Check appwriteConfig.ts.`);
-      } else if (err.code === 401) {
-         setError(`Configuration Error: Project ID missing or invalid. Check appwriteConfig.ts.`);
+      // Use improved error classification
+      const classified = classifyError(err);
+      
+      // Provide helpful user messages based on error type
+      if (classified.type === 'network') {
+        // Network errors are temporary - suggest retry
+        setError(`${classified.message} Try again in a moment.`);
+      } else if (classified.type === 'schema') {
+        // Schema errors are usually transient during deployment
+        setError(classified.message);
+      } else if (classified.type === 'config') {
+        // Config errors need support
+        setError(classified.message);
+      } else if (classified.type === 'offline') {
+        setError('You are offline. Please check your internet connection.');
       } else {
-        setError(err.message || 'An error occurred.');
+        // Fallback for unknown errors
+        setError(classified.message);
       }
     } finally {
       setIsLoading(false);

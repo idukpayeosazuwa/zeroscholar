@@ -4,6 +4,7 @@ import { account } from '../appwriteConfig';
 import { LogoIcon } from './icons/LogoIcon';
 import { Models } from 'appwrite';
 import { UniversityLevel } from '../types';
+import { getErrorMessage, classifyError } from '../utils/errorHandler';
 
 interface EmailOTPVerificationProps {
   userId: string;
@@ -95,13 +96,8 @@ const EmailOTPVerification: React.FC<EmailOTPVerificationProps> = ({
       }, 1500);
     } catch (err: any) {
       console.error('❌ OTP verification failed:', err);
-      if (err.message?.includes('Invalid')) {
-        setError('Invalid code. Please check and try again.');
-      } else if (err.message?.includes('expired')) {
-        setError('Code expired. Please request a new one.');
-      } else {
-        setError(err.message || 'Verification failed. Please try again.');
-      }
+      const classified = classifyError(err);
+      setError(classified.message);
     } finally {
       setIsLoading(false);
     }

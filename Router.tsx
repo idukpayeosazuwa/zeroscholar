@@ -6,6 +6,7 @@ import App from './App';
 import Landing from './pages/Landing';
 import Auth from './components/Auth';
 import EditProfile from './pages/EditProfile';
+import Privacy from './pages/Privacy';
 import { UniversityLevel } from './types';
 import { Models } from 'appwrite';
 import AdminDashboard from './pages/AdminDashboard';
@@ -64,6 +65,7 @@ const Router: React.FC = () => {
     <Routes>
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/" element={isAuthenticated ? <Navigate to="/app" /> : <Landing />} />
+      <Route path="/privacy" element={<Privacy />} />
       <Route 
         path="/login" 
         element={
