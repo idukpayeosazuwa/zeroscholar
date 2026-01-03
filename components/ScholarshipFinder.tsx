@@ -84,13 +84,18 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
   const [activeFilter, setActiveFilter] = useState<FilterStatus>('matched');
   const [showWrapped, setShowWrapped] = useState(false);
   const [dbScholarships, setDbScholarships] = useState<ScholarshipWithTracks[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingScholarships, setIsLoadingScholarships] = useState(true);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [userProfileFromDB, setUserProfileFromDB] = useState<UserProfileFromDB | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
+
+  // Combined loading state - true if either is loading
+  const isLoading = isLoadingScholarships || isLoadingProfile;
 
   // Fetch current user and profile
   useEffect(() => {
     const init = async () => {
+      setIsLoadingProfile(true);
       try {
         const user = await account.get();
         setCurrentUser(user);
@@ -106,6 +111,8 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
         }
       } catch (e) {
         // User not logged in
+      } finally {
+        setIsLoadingProfile(false);
       }
     };
     init();
@@ -188,7 +195,7 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
   // Fetch active scholarships from database
   useEffect(() => {
     const fetchActiveScholarships = async () => {
-      setIsLoading(true);
+      setIsLoadingScholarships(true);
       try {
         const response = await databases.listDocuments(DB_ID, SCHOLARSHIP_COL_ID, [
           Query.equal('is_active', true),
@@ -253,7 +260,7 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
       } catch (error) {
         // Error fetching scholarships
       } finally {
-        setIsLoading(false);
+        setIsLoadingScholarships(false);
       }
     };
 

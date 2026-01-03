@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { databases, DATABASE_ID, USERS_COLLECTION_ID } from '../appwriteConfig';
 import { UserProfile, UniversityLevel } from '../types';
 import { UNIVERSITY_LEVELS } from '../constants';
+import { getErrorMessage, classifyError } from '../utils/errorHandler';
 
 interface EditProfileProps {
   userProfile: UserProfile;
@@ -122,7 +123,9 @@ const EditProfile: React.FC<EditProfileProps> = ({ userProfile, userId, onProfil
       onProfileUpdate(payload as unknown as UserProfile);
       navigate('/app');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update profile');
+      // Use improved error classification
+      const classified = classifyError(err);
+      setError(classified.message);
       console.error('Error updating profile:', err);
     } finally {
       setIsSaving(false);

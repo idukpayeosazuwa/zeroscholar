@@ -28,6 +28,8 @@ import { LogoIcon } from './icons/LogoIcon';
 import { Models } from 'appwrite';
 import { UniversityLevel } from '../types';
 import { UNIVERSITY_LEVELS } from '../constants';
+import EmailOTPVerification from './EmailOTPVerification';
+import { retryWithBackoff, getErrorMessage, classifyError } from '../utils/errorHandler';
 
 // Helper function to handle Appwrite latency/processing delays
 const createDocumentWithRetry = async (
@@ -65,7 +67,8 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
   const [isLogin, setIsLogin] = useState(showLogin || searchParams.get('showLogin') === 'true');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [needsVerification, setNeedsVerification] = useState(false);
+  const [needsOTPVerification, setNeedsOTPVerification] = useState(false);
+  const [otpUserId, setOtpUserId] = useState('');
   const [verificationEmail, setVerificationEmail] = useState('');
   const [level, setLevel] = useState<UniversityLevel>(UniversityLevel.L200);
   const [course, setCourse] = useState('');
@@ -150,12 +153,12 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
         if (!user.emailVerification) {
           setError('Please verify your email before logging in. Check your inbox.');
           await account.deleteSession('current'); // Log them out
-          setNeedsVerification(true);
+          setNeedsOTPVerification(true);
+          setOtpUserId(user.$id);
           setVerificationEmail(user.email);
           setIsLoading(false);
           return;
         }
-        
         onAuthSuccess(user, level);
       } else {
         // Validate required fields
@@ -218,18 +221,19 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
           payload
         );
         
-        // 5. Send Verification Email
+        // 5. Send OTP via Email
         try {
-          const verificationUrl = `${window.location.origin}/verify`;
-          await account.createVerification(verificationUrl);
-          console.log('✅ Verification email sent to:', user.email);
-          console.log('🔗 Verification URL base:', verificationUrl);
-        } catch (verifyErr) {
-          console.error('❌ Failed to send verification email:', verifyErr);
+          const tokenResult = await account.createEmailToken(user.$id, user.email);
+          console.log('✅ OTP sent to:', user.email);
+          console.log('🔐 OTP User ID:', tokenResult.userId);
+        } catch (otpErr) {
+          console.error('❌ Failed to send OTP:', otpErr);
+          throw new Error('Failed to send verification code. Please try again.');
         }
         
-        // 6. Show verification screen (block access)
-        setNeedsVerification(true);
+        // 6. Show OTP verification screen (block access)
+        setNeedsOTPVerification(true);
+        setOtpUserId(newUser.$id);
         setVerificationEmail(user.email);
         setIsLoading(false);
         await account.deleteSession('current'); // Log them out until verified
@@ -237,112 +241,53 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
     } catch (err: any) {
       console.error("Auth Error Details:", err);
       
-      // Specific error handling for missing attributes
-      if (err.message?.includes('Unknown attribute')) {
-        const missingAttr = err.message.match(/Unknown attribute: "([^"]+)"/)?.[1];
-        setError(`Database Error: Attribute '${missingAttr}' is missing in Appwrite. 
-        1. Check spelling/case in Console ("${missingAttr}" vs "${missingAttr?.toLowerCase()}").
-        2. If you just created it, wait 1-2 mins for status to change from "Processing" to "Available".`);
-      } else if (err.message?.includes('Invalid document structure')) {
-        setError(`Database Error: Invalid Data Structure. Check console for payload. Ensure numbers are not strings.`);
-      } else if (err.code === 404) {
-         setError(`Database Error: Collection or Database ID not found. Check appwriteConfig.ts.`);
-      } else if (err.code === 401) {
-         setError(`Configuration Error: Project ID missing or invalid. Check appwriteConfig.ts.`);
+      // Use improved error classification
+      const classified = classifyError(err);
+      
+      // Provide helpful user messages based on error type
+      if (classified.type === 'network') {
+        // Network errors are temporary - suggest retry
+        setError(`${classified.message} Try again in a moment.`);
+      } else if (classified.type === 'schema') {
+        // Schema errors are usually transient during deployment
+        setError(classified.message);
+      } else if (classified.type === 'config') {
+        // Config errors need support
+        setError(classified.message);
+      } else if (classified.type === 'offline') {
+        setError('You are offline. Please check your internet connection.');
       } else {
-        setError(err.message || 'An error occurred.');
+        // Fallback for unknown errors
+        setError(classified.message);
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleResendVerification = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      
-      // Create temporary session to send verification
-      await account.createEmailPasswordSession(email, password);
-      const verificationUrl = `${window.location.origin}/verify`;
-      await account.createVerification(verificationUrl);
-      await account.deleteSession('current');
-      
-      setError('✅ Verification email sent! Check your inbox.');
-      setTimeout(() => setError(null), 5000);
-    } catch (err: any) {
-      setError('Failed to resend email. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+  const handleOTPVerificationSuccess = (user: Models.User<Models.Preferences>, userLevel: UniversityLevel) => {
+    console.log('✅ OTP verified successfully, user:', user.email);
+    onAuthSuccess(user, userLevel);
   };
 
-  // Show verification screen if needed
-  if (needsVerification) {
+  const handleCancelOTPVerification = () => {
+    setNeedsOTPVerification(false);
+    setOtpUserId('');
+    setVerificationEmail('');
+    setEmail('');
+    setPassword('');
+  };
+
+  // Show OTP verification screen if needed
+  if (needsOTPVerification) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Navbar */}
-        <nav className="bg-white shadow-sm fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl w-full mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <LogoIcon className="h-8 w-8 text-[#2240AF]" />
-              <span className="text-xl font-bold text-[#2240AF]">ScholarAI</span>
-            </div>
-          </div>
-        </nav>
-
-        {/* Verification Content */}
-        <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-md mx-auto p-8 bg-white shadow-xl rounded-lg text-center">
-            <div className="mb-6">
-              <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-gray-800">Verify Your Email</h2>
-              <p className="text-gray-600 mt-2">
-                We sent a verification link to:
-              </p>
-              <p className="text-blue-600 font-semibold mt-1">{verificationEmail}</p>
-            </div>
-
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 text-left">
-              <p className="text-sm text-yellow-800">
-                <strong>📧 Check your inbox</strong>
-              </p>
-              <p className="text-xs text-yellow-700 mt-2">
-                Click the verification link in the email to activate your account. 
-                It may take a few minutes to arrive. Check your spam folder if you don't see it.
-              </p>
-            </div>
-
-            {error && (
-              <p className={`text-sm mb-4 p-2 rounded ${error.includes('✅') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'}`}>
-                {error}
-              </p>
-            )}
-
-            <button
-              onClick={handleResendVerification}
-              disabled={isLoading}
-              className="w-full py-3 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300 transition-colors mb-3"
-            >
-              {isLoading ? 'Sending...' : 'Resend Verification Email'}
-            </button>
-
-            <button
-              onClick={() => {
-                setNeedsVerification(false);
-                setIsLogin(true);
-              }}
-              className="text-sm text-gray-600 hover:text-gray-800"
-            >
-              Already verified? Sign in →
-            </button>
-          </div>
-        </div>
-      </div>
+      <EmailOTPVerification
+        userId={otpUserId}
+        email={verificationEmail}
+        level={level}
+        onVerificationSuccess={handleOTPVerificationSuccess}
+        onCancel={handleCancelOTPVerification}
+      />
     );
   }
 
