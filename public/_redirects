@@ -1,12 +1,2 @@
-# Cache immutable assets forever (they have content hashes)
-/js/*       200  text/javascript;charset=utf-8  max-age=31536000, immutable
-/css/*      200  text/css;charset=utf-8         max-age=31536000, immutable
-/images/*   200                                  max-age=31536000, immutable
-/assets/*   200                                  max-age=31536000, immutable
-
-# Cache HTML briefly (might have updates)
-/            200  text/html;charset=utf-8  max-age=3600
-/*.html      200  text/html;charset=utf-8  max-age=3600
-
-# SPA routing: send everything to index.html for client-side routing
-/*           200  text/html;charset=utf-8
+# Netlify SPA routing: send all routes to index.html for client-side routing
+/*    /index.html   200

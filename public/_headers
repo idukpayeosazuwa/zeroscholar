@@ -1,0 +1,29 @@
+# Cache headers for Netlify
+
+# Service worker - never cache, always revalidate
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Immutable assets with content hash (cache forever)
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Icons and manifest
+/*.png
+  Cache-Control: public, max-age=86400
+
+/manifest.json
+  Cache-Control: public, max-age=86400
+
+# HTML pages - cache briefly
+/index.html
+  Cache-Control: public, max-age=3600
