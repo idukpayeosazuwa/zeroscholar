@@ -358,6 +358,11 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
                         className={`mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm ${level.toString().includes('100') ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'bg-white'}`}
                         placeholder={level.toString().includes('100') ? "0.0" : "e.g. 4.5"}
                       />
+                      {level.toString().includes('200') && (
+                        <p className="mt-1 text-xs text-blue-600">
+                          If you don't know your results yet, select at least 3.5. You can update it later.
+                        </p>
+                      )}
                     </div>
 
                     <div>

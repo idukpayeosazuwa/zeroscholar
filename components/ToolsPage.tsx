@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogoIcon } from './icons/LogoIcon';
 
 interface Tool {
   id: string;
@@ -77,19 +76,11 @@ const ToolsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Navbar */}
-      <nav className="bg-white shadow-sm fixed top-0 left-0 right-0 z-50 h-16 flex items-center px-4">
-        <div className="max-w-md w-full mx-auto flex items-center gap-2">
-          <LogoIcon className="h-8 w-8 text-[#2240AF]" />
-          <span className="text-lg font-bold text-[#2240AF]">Tools</span>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <div className="pt-6 px-4 max-w-md mx-auto">
+    <div className="bg-gray-50 pb-20">
+      {/* Main Content - No separate navbar since App.tsx provides the header */}
+      <div className="px-4 max-w-md mx-auto">
         {/* Header */}
-        <div className="mb-8 mt-4">
+        <div className="mb-8 pt-4">
           <h1 className="text-3xl font-bold text-gray-800">Student Tools</h1>
           <p className="text-gray-600 text-sm mt-2">Enhance your scholarship journey with these powerful tools</p>
         </div>

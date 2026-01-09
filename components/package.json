@@ -9,9 +9,10 @@
     "validate": "node validate-data.js"
   },
   "dependencies": {
-    "node-appwrite": "^14.0.0",
+    "@google/generative-ai": "^0.21.0",
     "cheerio": "^1.0.0",
-    "nodemailer": "^6.9.0",
-    "@google/generative-ai": "^0.21.0"
+    "dotenv": "^17.2.3",
+    "node-appwrite": "^14.0.0",
+    "nodemailer": "^6.9.0"
   }
 }

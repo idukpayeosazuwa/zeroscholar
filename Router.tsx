@@ -18,20 +18,48 @@ const Router: React.FC = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
+      // ALWAYS check cached session first - it's instant and works offline
+      const cachedSession = getCachedUserSession();
+      const cachedProfile = localStorage.getItem('user_profile');
+      
+      console.log('[Router] Auth check starting...', {
+        online: navigator.onLine,
+        hasCachedSession: !!cachedSession,
+        hasCachedProfile: !!cachedProfile
+      });
+      
+      // If we have cached data, allow access immediately (optimistic)
+      // This enables instant offline access without waiting for network
+      if (cachedSession && cachedProfile) {
+        console.log('[Router] ✅ Cached session found - allowing immediate access');
+        setIsAuthenticated(true);
+        
+        // If online, verify session in background (don't block)
+        if (navigator.onLine) {
+          account.get()
+            .then(() => console.log('[Router] Session verified online'))
+            .catch(() => {
+              console.log('[Router] Session invalid - but keeping user logged in with cache');
+              // Don't log out - let App.tsx handle it if needed
+            });
+        }
+        return;
+      }
+      
+      // No cached session - must be online to authenticate
+      if (!navigator.onLine) {
+        console.log('[Router] ❌ Offline with no cached session');
+        setIsAuthenticated(false);
+        return;
+      }
+      
+      // Online without cache - verify with Appwrite
       try {
         await account.get();
+        console.log('[Router] ✅ Online auth successful');
         setIsAuthenticated(true);
-      } catch {
-        // Check if we're offline and have a cached session
-        if (!navigator.onLine) {
-          console.log('[Router] Offline - checking cached session');
-          const cachedSession = getCachedUserSession();
-          if (cachedSession) {
-            console.log('[Router] Cached session found - allowing offline access');
-            setIsAuthenticated(true);
-            return;
-          }
-        }
+      } catch (err) {
+        console.log('[Router] ❌ Online auth failed:', err);
         setIsAuthenticated(false);
       }
     };
@@ -39,8 +67,14 @@ const Router: React.FC = () => {
     // Add timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
       if (isAuthenticated === null) {
-        console.warn('Auth check timeout - defaulting to false');
-        setIsAuthenticated(false);
+        console.warn('[Router] Auth check timeout - checking cache as fallback');
+        // Last resort: check cache
+        const cachedSession = getCachedUserSession();
+        if (cachedSession) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
       }
     }, 5000);
     

@@ -1,4 +1,6 @@
-// Smart versioning: Only changes when you deploy new code
+const fs = require('fs');
+
+const content = `// Smart versioning: Only changes when you deploy new code
 // Uses build date so cache updates on each deployment
 const CACHE_VERSION = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 const CACHE_NAME = 'zeroscholar-v' + CACHE_VERSION;
@@ -7,23 +9,21 @@ const CACHE_NAME = 'zeroscholar-v' + CACHE_VERSION;
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/js/index-CkCzKB2o.js',
-  'https://cdn.tailwindcss.com'
+  '/manifest.json'
 ];
 
 // Dynamic assets that should be cached when fetched
 const CACHE_ON_FETCH = [
-  /\.js$/,
-  /\.css$/,
-  /\.woff2?$/,
-  /\.ttf$/,
-  /\.png$/,
-  /\.jpg$/,
-  /\.jpeg$/,
-  /\.svg$/,
-  /\.webp$/,
-  /\.ico$/
+  /\\.js$/,
+  /\\.css$/,
+  /\\.woff2?$/,
+  /\\.ttf$/,
+  /\\.png$/,
+  /\\.jpg$/,
+  /\\.jpeg$/,
+  /\\.svg$/,
+  /\\.webp$/,
+  /\\.ico$/
 ];
 
 const OFFLINE_URL = '/'; // Redirect to home when offline
@@ -156,7 +156,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Static assets (JS, CSS, fonts, images): Cache first, network fallback
-  if (url.pathname.match(/\.(js|css|png|jpg|jpeg|svg|ico|woff|woff2|ttf|webp)$/)) {
+  if (url.pathname.match(/\\.(js|css|png|jpg|jpeg|svg|ico|woff|woff2|ttf|webp)$/)) {
     event.respondWith(
       (async () => {
         // Always check cache first for static assets
@@ -214,3 +214,7 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
+`;
+
+fs.writeFileSync('public/sw.js', content);
+console.log('sw.js updated');

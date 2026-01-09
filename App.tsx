@@ -83,6 +83,7 @@ const App: React.FC = () => {
         hasUser: !!cachedUser,
         hasScholarships: !!cachedScholarships,
         hasMatched: !!cachedMatched,
+        isOnline: navigator.onLine
       });
       
       // Only use cache if we have BOTH profile and scholarships
@@ -97,6 +98,12 @@ const App: React.FC = () => {
         }
         setIsLoading(false);
         setInitialDataLoaded(true);
+        
+        // If offline and we have cache, don't try to fetch more
+        if (!navigator.onLine) {
+          console.log('[App] 📴 Offline with cached data - skipping network requests');
+          return;
+        }
       } else {
         console.log('[App] ⚠️ No valid cache, will fetch fresh data');
       }
@@ -114,6 +121,14 @@ const App: React.FC = () => {
           }
         }
       }, 8000); // Increased to 8 seconds to allow more time
+
+      // Don't make network requests if offline and we don't have cache
+      if (!navigator.onLine) {
+        console.log('[App] 📴 Offline without cache - showing offline state');
+        clearTimeout(timeoutId);
+        setIsLoading(false);
+        return;
+      }
 
       try {
         console.log('[App] Calling account.get()...');
@@ -261,6 +276,19 @@ const App: React.FC = () => {
       return;
     }
     
+    // Skip network fetch if offline - use cached data
+    if (!isOnline) {
+      console.log('[App] 📴 Offline - using cached scholarships, skipping fetch');
+      const cached = getCachedScholarships();
+      const cachedMatched = getCachedMatchedScholarships();
+      if (cached) {
+        setAllScholarships(cached);
+        if (cachedMatched) setWrappedScholarships(cachedMatched);
+      }
+      setIsLoadingScholarships(false);
+      return;
+    }
+    
     console.log('[App] fetchAndMatchScholarships starting...');
     // If we already have cached data and still loading, skip the loading state
     if (!initialDataLoaded) {
@@ -317,104 +345,150 @@ const App: React.FC = () => {
       // Cache scholarships for offline use
       cacheScholarships(all);
 
-      // 3. Perform Matching Logic (User vs Tracks) - CASE-INSENSITIVE
+      // 3. Perform Matching Logic (User vs Tracks) - CASE-INSENSITIVE & LOGGING
+      console.group('🎁 WRAPPED REPORT GENERATION LOGS');
+      console.log(`Checking eligibility for ${all.length} scholarships...`);
+
       const matchedScholarshipIds = new Set<string>();
       
+      // Group tracks by scholarship
+      const tracksByScholarship: Record<string, any[]> = {};
       tracksResponse.documents.forEach((track: any) => {
-        let isMatch = true;
-        let failReason = "";
-
-        // Level
-        if (track.allowed_levels?.length > 0 && !track.allowed_levels.includes(userProfile.level)) {
-             isMatch = false; failReason = `Level mismatch: track has ${JSON.stringify(track.allowed_levels)} (types: ${track.allowed_levels.map((l: any) => typeof l)}) but user has ${userProfile.level} (type: ${typeof userProfile.level})`;
+        if (!tracksByScholarship[track.scholarship_id]) {
+            tracksByScholarship[track.scholarship_id] = [];
         }
-        
-        // Check if user is 100 Level (they don't have CGPA yet)
-        const userLevelNum = typeof userProfile.level === 'number' 
-          ? userProfile.level 
-          : parseInt(String(userProfile.level).replace(/\D/g, '')) || 0;
-        const isUser100Level = userLevelNum === 100;
-        
-        // CGPA - SKIP for 100 Level students (they don't have CGPA yet)
-        if (track.min_cgpa && !isUser100Level && userProfile.cgpa < track.min_cgpa) {
-            isMatch = false; failReason = "CGPA too low";
-        }
-        
-        // JAMB - FIX: Use >= instead of <
-        if (track.min_jamb_score && userProfile.jamb < track.min_jamb_score) {
-            isMatch = false; failReason = "JAMB too low";
-        }
-        
-        // Gender - CASE INSENSITIVE
-        if (track.required_gender && track.required_gender !== 'ANY' && 
-            track.required_gender.toUpperCase() !== userProfile.gender.toUpperCase()) {
-            isMatch = false; failReason = "Gender mismatch";
-        }
-        
-        // Religion - CASE INSENSITIVE
-        const trackReligion = (track.required_religion || 'NONE').toUpperCase();
-        const userReligion = (userProfile.rel || '').toUpperCase();
-        if (trackReligion !== 'NONE' && trackReligion !== 'ANY' && trackReligion !== userReligion) {
-            isMatch = false; failReason = "Religion mismatch";
-        }
-        
-        // State - CASE INSENSITIVE
-        const stateList = track.required_state_of_origin || [];
-        if (stateList.length > 0 && !stateList.includes('ALL')) {
-            const stateListLower = stateList.map((s: string) => s.toLowerCase());
-            if (!stateListLower.includes(userProfile.state.toLowerCase())) {
-                isMatch = false; failReason = "State mismatch";
-            }
-        }
-        
-        // LGA - CASE INSENSITIVE
-        const lgaList = track.required_lga_list || [];
-        if (lgaList.length > 0 && userProfile.lga) {
-            // Skip if LGA list only contains "None" or empty values
-            const validLgas = lgaList.filter((l: string) => l && l.toUpperCase() !== 'NONE');
-            if (validLgas.length > 0) {
-                const lgaListLower = validLgas.map((l: string) => l.toLowerCase());
-                if (!lgaListLower.includes(userProfile.lga.toLowerCase())) {
-                    isMatch = false; failReason = `LGA mismatch: track requires ${JSON.stringify(validLgas)} but user has ${userProfile.lga}`;
-                }
-            }
-        }
-        
-        // Course - CASE INSENSITIVE
-        const courseList = track.course_category || [];
-        if (courseList.length > 0 && !courseList.includes('ALL')) {
-            const courseListLower = courseList.map((c: string) => c.toLowerCase());
-            if (!courseListLower.includes(userProfile.course.toLowerCase())) {
-                isMatch = false; failReason = "Course mismatch";
-            }
-        }
-        
-        // University - CASE INSENSITIVE
-        const uniList = track.required_universities || [];
-        if (uniList.length > 0 && !uniList.includes('ALL')) {
-            const uniListLower = uniList.map((u: string) => u.toLowerCase());
-            if (!uniListLower.includes(userProfile.uni.toLowerCase())) {
-                isMatch = false; failReason = "University mismatch";
-            }
-        }
-        
-        // Booleans - STRICT CHECKS
-        if (track.is_financial_need_required && !userProfile.finance) {
-            isMatch = false; failReason = "Not indigent";
-        }
-        if (track.is_orphan_or_single_parent_required && !userProfile.orphan) {
-            isMatch = false; failReason = "Not orphan";
-        }
-        
-        // Disability check
-        if (track.is_disability_specific && !userProfile.chal) {
-            isMatch = false; failReason = "Not disabled";
-        }
-
-        if (isMatch) {
-          matchedScholarshipIds.add(track.scholarship_id);
-        }
+        tracksByScholarship[track.scholarship_id].push(track);
       });
+
+      let matchedCount = 0;
+      
+      all.forEach(scholarship => {
+          const tracks = tracksByScholarship[scholarship.id] || [];
+          
+          if (tracks.length === 0) {
+              console.log(`❌ ${scholarship.name}: No eligibility tracks found`);
+              return;
+          }
+
+          let scholarshipMatched = false;
+          const scholarshipFailReasons: string[] = [];
+
+          for (const track of tracks) {
+               let isMatch = true;
+               let failReason = "";
+
+                // Level
+                if (track.allowed_levels?.length > 0 && !track.allowed_levels.includes(userProfile.level)) {
+                    isMatch = false; failReason = `Level mismatch: track has ${JSON.stringify(track.allowed_levels)} (types: ${track.allowed_levels.map((l: any) => typeof l)}) but user has ${userProfile.level} (type: ${typeof userProfile.level})`;
+                }
+                
+                // Check if user is 100 Level (they don't have CGPA yet)
+                const userLevelNum = typeof userProfile.level === 'number' 
+                ? userProfile.level 
+                : parseInt(String(userProfile.level).replace(/\D/g, '')) || 0;
+                const isUser100Level = userLevelNum === 100;
+                
+                // CGPA - SKIP for 100 Level students (they don't have CGPA yet)
+                if (track.min_cgpa && !isUser100Level && userProfile.cgpa < track.min_cgpa) {
+                    isMatch = false; failReason = "CGPA too low";
+                }
+                
+                // JAMB - FIX: Use >= instead of <
+                if (track.min_jamb_score && userProfile.jamb < track.min_jamb_score) {
+                    isMatch = false; failReason = "JAMB too low";
+                }
+                
+                // Gender - CASE INSENSITIVE
+                const trackGender = (track.required_gender || 'ANY').toUpperCase();
+                const userGender = (userProfile.gender || '').toUpperCase();
+                
+                if (trackGender !== 'ANY' && trackGender !== 'ALL' && trackGender !== 'BOTH' && trackGender !== userGender) {
+                    isMatch = false; failReason = `Gender mismatch: requires ${trackGender}, user is ${userGender}`;
+                }
+                
+                // Religion - CASE INSENSITIVE
+                const trackReligion = (track.required_religion || 'NONE').toUpperCase();
+                const userReligion = (userProfile.rel || '').toUpperCase();
+                if (trackReligion !== 'NONE' && trackReligion !== 'ANY' && trackReligion !== 'ALL' && trackReligion !== userReligion) {
+                    isMatch = false; failReason = `Religion mismatch: requires ${trackReligion}, user is ${userReligion}`;
+                }
+                
+                // State - CASE INSENSITIVE
+                const stateList = track.required_state_of_origin || [];
+                if (stateList.length > 0 && !stateList.includes('ALL')) {
+                    const stateListLower = stateList.map((s: string) => s.toLowerCase());
+                    if (!stateListLower.includes(userProfile.state.toLowerCase())) {
+                        isMatch = false; failReason = "State mismatch";
+                    }
+                }
+                
+                // LGA - CASE INSENSITIVE
+                const lgaList = track.required_lga_list || [];
+                if (lgaList.length > 0 && userProfile.lga) {
+                    // Skip if LGA list only contains "None" or empty values
+                    const validLgas = lgaList.filter((l: string) => l && l.toUpperCase() !== 'NONE');
+                    if (validLgas.length > 0) {
+                        const lgaListLower = validLgas.map((l: string) => l.toLowerCase());
+                        if (!lgaListLower.includes(userProfile.lga.toLowerCase())) {
+                            isMatch = false; failReason = `LGA mismatch: track requires ${JSON.stringify(validLgas)} but user has ${userProfile.lga}`;
+                        }
+                    }
+                }
+                
+                // Course - CASE INSENSITIVE
+                const courseList = track.course_category || [];
+                if (courseList.length > 0 && !courseList.includes('ALL')) {
+                    const courseListLower = courseList.map((c: string) => c.toLowerCase());
+                    if (!courseListLower.includes(userProfile.course.toLowerCase())) {
+                        isMatch = false; failReason = `Course mismatch: user studies ${userProfile.course}, allowed: ${JSON.stringify(courseList)}`;
+                    }
+                }
+                
+                // University - CASE INSENSITIVE
+                const uniList = track.required_universities || [];
+                if (uniList.length > 0 && !uniList.includes('ALL')) {
+                    const uniListLower = uniList.map((u: string) => u.toLowerCase());
+                    if (!uniListLower.includes(userProfile.uni.toLowerCase())) {
+                        isMatch = false; failReason = `University mismatch: user is at ${userProfile.uni}, allowed: ${JSON.stringify(uniList)}`;
+                    }
+                }
+                
+                // Booleans - STRICT CHECKS
+                if (track.is_financial_need_required && !userProfile.finance) {
+                    isMatch = false; failReason = "Financial need required (user profile indicates no need)";
+                }
+                if (track.is_orphan_or_single_parent_required && !userProfile.orphan) {
+                    isMatch = false; failReason = "Orphan/Single parent status required";
+                }
+                
+                // Disability check
+                if (track.is_disability_specific && !userProfile.chal) {
+                    isMatch = false; failReason = "Disability status required";
+                }
+
+                if (isMatch) {
+                    scholarshipMatched = true;
+                    break; // Matched at least one track
+                } else {
+                    scholarshipFailReasons.push(failReason);
+                }
+          }
+
+          if (scholarshipMatched) {
+             console.log(`✅ ${scholarship.name}: MATCHED`);
+             matchedScholarshipIds.add(scholarship.id);
+             matchedCount++;
+          } else {
+             // Deduplicate reasons
+             const uniqueReasons = Array.from(new Set(scholarshipFailReasons));
+             console.groupCollapsed(`❌ ${scholarship.name}: NOT MATCHED (${uniqueReasons.length} reasons)`);
+             uniqueReasons.forEach(r => console.log(`- ${r}`));
+             console.groupEnd();
+          }
+      });
+      
+      console.log(`🎉 Total Matched for Wrapped: ${matchedCount}`);
+      console.groupEnd();
 
       const wrapped = all.filter(s => matchedScholarshipIds.has(s.id));
       
@@ -440,7 +514,7 @@ const App: React.FC = () => {
       console.log('[App] Scholarship loading complete');
       setIsLoadingScholarships(false);
     }
-  }, [userProfile, initialDataLoaded]);
+  }, [userProfile, initialDataLoaded, isOnline]);
   
   const handleSignOut = useCallback(async () => {
     try {

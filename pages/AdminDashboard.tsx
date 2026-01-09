@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { account, databases } from '../appwriteConfig';
 import { Query } from 'appwrite';
+import { normalizeDate } from '../lib/utils/dateFormatter';
 
 const DB_ID = 'scholarship_db';
 const SCHOLARSHIP_COL_ID = 'scholarships';
@@ -127,6 +128,8 @@ const AdminDashboard: React.FC = () => {
     if (!editingScholarship) return;
 
     try {
+      const normalizedDeadline = normalizeDate(editingScholarship.deadline);
+      
       await databases.updateDocument(
         DB_ID,
         SCHOLARSHIP_COL_ID,
@@ -134,7 +137,7 @@ const AdminDashboard: React.FC = () => {
         {
           scholarship_name: editingScholarship.scholarship_name,
           provider: editingScholarship.provider,
-          deadline: editingScholarship.deadline,
+          deadline: normalizedDeadline,
           award_amount: editingScholarship.award_amount,
           official_link: editingScholarship.official_link,
           is_active: editingScholarship.is_active
@@ -172,6 +175,8 @@ const AdminDashboard: React.FC = () => {
     }
 
     try {
+      const normalizedDeadline = normalizeDate(editingScholarship.deadline) || 'Not Specified';
+      
       const newScholarship = await databases.createDocument(
         DB_ID,
         SCHOLARSHIP_COL_ID,
@@ -179,7 +184,7 @@ const AdminDashboard: React.FC = () => {
         {
           scholarship_name: editingScholarship.scholarship_name,
           provider: editingScholarship.provider,
-          deadline: editingScholarship.deadline || 'Not Specified',
+          deadline: normalizedDeadline,
           award_amount: editingScholarship.award_amount,
           official_link: editingScholarship.official_link,
           is_active: editingScholarship.is_active
@@ -524,9 +529,10 @@ const AdminDashboard: React.FC = () => {
                         type="text"
                         value={editingScholarship.deadline}
                         onChange={(e) => setEditingScholarship({...editingScholarship, deadline: e.target.value})}
-                        placeholder="e.g., 2025-12-31 or Not Specified"
+                        placeholder="YYYY-MM-DD (e.g., 2025-12-31) or Not Specified"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
+                      <p className="text-xs text-gray-500 mt-1">Format must be YYYY-MM-DD for proper date parsing</p>
                     </div>
 
                     <div>
