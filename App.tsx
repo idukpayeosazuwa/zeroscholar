@@ -71,25 +71,15 @@ const App: React.FC = () => {
     let cancelled = false;
 
     const checkAuthStatus = async () => {
-      console.log('[App] checkAuthStatus starting...');
       // First, try to load cached data for instant UI
       const cachedProfile = getCachedUserProfile();
       const cachedUser = getCachedUserSession();
       const cachedScholarships = getCachedScholarships();
       const cachedMatched = getCachedMatchedScholarships();
       
-      console.log('[App] Cached data:', {
-        hasProfile: !!cachedProfile,
-        hasUser: !!cachedUser,
-        hasScholarships: !!cachedScholarships,
-        hasMatched: !!cachedMatched,
-        isOnline: navigator.onLine
-      });
-      
       // Only use cache if we have BOTH profile and scholarships
       // Mobile often has empty cache on first load
       if (cachedProfile && cachedScholarships && cachedScholarships.length > 0) {
-        console.log('[App] ✅ Using cached data (profile + scholarships), hiding loading state');
         setUserProfile(cachedProfile as UserProfile);
         if (cachedUser) setUser(cachedUser);
         setAllScholarships(cachedScholarships);
@@ -101,22 +91,18 @@ const App: React.FC = () => {
         
         // If offline and we have cache, don't try to fetch more
         if (!navigator.onLine) {
-          console.log('[App] 📴 Offline with cached data - skipping network requests');
           return;
         }
       } else {
-        console.log('[App] ⚠️ No valid cache, will fetch fresh data');
       }
 
       // Safety timeout: Force UI to show after 5 seconds even if loading
       const timeoutId = setTimeout(() => {
         if (mountedRef.current) {
-          console.warn('[App] ⏱️ TIMEOUT FIRED - Forcing UI to show after 5 seconds');
           setIsLoading(false);
           // If we still don't have a profile, try to use any cached data
           const lastProfile = getCachedUserProfile();
           if (lastProfile && !userProfile) {
-            console.warn('[App] No profile loaded, using cached profile from timeout');
             setUserProfile(lastProfile as UserProfile);
           }
         }
@@ -124,16 +110,13 @@ const App: React.FC = () => {
 
       // Don't make network requests if offline and we don't have cache
       if (!navigator.onLine) {
-        console.log('[App] 📴 Offline without cache - showing offline state');
         clearTimeout(timeoutId);
         setIsLoading(false);
         return;
       }
 
       try {
-        console.log('[App] Calling account.get()...');
         const currentUser = await account.get();
-        console.log('[App] account.get() succeeded:', currentUser.email);
         
         // Don't check mountedRef here - let the flow continue
         // We'll check it only before setState calls
@@ -141,14 +124,11 @@ const App: React.FC = () => {
         clearTimeout(timeoutId);
         
         // Check email verification BEFORE allowing access
-        console.log('[App] Checking email verification...');
         if (!currentUser.emailVerification) {
-          console.log('[App] User email not verified, redirecting to /login');
           navigate('/login');
           return;
         }
         
-        console.log('[App] Email verified, setting user...');
         if (!cancelled) {
           setUser(currentUser);
           cacheUserSession(currentUser);
@@ -156,35 +136,24 @@ const App: React.FC = () => {
         
         // Check for user profile in Appwrite Database
         try {
-          console.log('[App] 📍 Starting profile fetch from:', DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id);
           const profileDoc = await databases.getDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id);
-          console.log('[App] ✅ Profile fetched successfully:', profileDoc);
           
           if (cancelled) return; // Exit if effect was cleaned up
           
           const { $id, $collectionId, $databaseId, $createdAt, $updatedAt, $permissions, ...profileData } = profileDoc;
           const profile = profileData as unknown as UserProfile;
-          console.log('[App] 📍 Setting profile state...');
           setUserProfile(profile);
           // Cache the profile for offline use
           cacheUserProfile(profile);
-          console.log('[App] ✅ Profile cached');
           
           // Load applications from profile - it's a string array of scholarship IDs
           if (profileData.applications && Array.isArray(profileData.applications)) {
-            console.log('[App] Found applications:', profileData.applications.length);
             setAppliedScholarshipIds(profileData.applications as string[]);
           }
         } catch (e) {
-          console.error('[App] ❌ Profile fetch FAILED:', e);
-          const errorCode = (e as any)?.code;
-          const errorMessage = (e as any)?.message;
-          console.error('[App] Error code:', errorCode, 'Message:', errorMessage);
-          
           if (cancelled) return; // Exit if effect was cleaned up
           
           if (!cachedProfile) {
-            console.log('[App] No cached profile either, creating a basic profile');
             // Create a basic profile from the user data
             const basicProfile: UserProfile = {
               email: currentUser.email,
@@ -203,22 +172,15 @@ const App: React.FC = () => {
               rel: 'Not specified',
               gender: 'Male',
             };
-            console.log('[App] Setting basic profile:', basicProfile);
             setUserProfile(basicProfile);
             cacheUserProfile(basicProfile);
           } else {
-            console.log('[App] Using cached profile instead');
           }
         }
       } catch (error: any) {
-        console.error('[App] 💥 Auth error:', error?.message || error);
-        console.error('[App] Error code:', error?.code);
-        console.error('[App] Full error:', error);
         // If we have cached data and it's a network error (or we are offline), keep the session
         if ((cachedProfile || cachedUser) && (!navigator.onLine || error?.message === 'Network request failed')) {
-             console.log('[App] Offline mode with cached data');
         } else {
-            console.log('[App] Auth failed, redirecting to login');
             if (!cancelled) {
               setUser(null);
               setUserProfile(null);
@@ -228,12 +190,10 @@ const App: React.FC = () => {
       } finally {
         clearTimeout(timeoutId);
         if (!cancelled) {
-          console.log('[App] ✅ Setting isLoading to false in finally block');
           setIsLoading(false);
         }
       }
     };
-    console.log('[App] useEffect dependency changed, calling checkAuthStatus');
     checkAuthStatus();
     
     // Cleanup function to cancel the effect
@@ -272,13 +232,11 @@ const App: React.FC = () => {
 
   const fetchAndMatchScholarships = useCallback(async () => {
     if (!userProfile) {
-      console.log('[App] No userProfile, skipping scholarship fetch');
       return;
     }
     
     // Skip network fetch if offline - use cached data
     if (!isOnline) {
-      console.log('[App] 📴 Offline - using cached scholarships, skipping fetch');
       const cached = getCachedScholarships();
       const cachedMatched = getCachedMatchedScholarships();
       if (cached) {
@@ -289,7 +247,6 @@ const App: React.FC = () => {
       return;
     }
     
-    console.log('[App] fetchAndMatchScholarships starting...');
     // If we already have cached data and still loading, skip the loading state
     if (!initialDataLoaded) {
       setIsLoadingScholarships(true);
@@ -297,11 +254,9 @@ const App: React.FC = () => {
     
     // Add timeout for scholarship fetch too
     const scholarshipTimeoutId = setTimeout(() => {
-      console.warn('[App] ⏱️ Scholarship fetch timeout after 10 seconds');
       const cached = getCachedScholarships();
       const cachedMatched = getCachedMatchedScholarships();
       if (cached) {
-        console.log('[App] Using cached scholarships due to timeout');
         setAllScholarships(cached);
         if (cachedMatched) setWrappedScholarships(cachedMatched);
       }
@@ -310,14 +265,12 @@ const App: React.FC = () => {
     
     try {
       // 1. Fetch all scholarships
-      console.log('[App] Fetching scholarships from database...');
       const scholarshipsResponse = await databases.listDocuments(
         DATABASE_ID,
         SCHOLARSHIPS_COLLECTION_ID,
         [Query.limit(1000)]
       );
       clearTimeout(scholarshipTimeoutId);
-      console.log('[App] Scholarships fetched:', scholarshipsResponse.documents.length);
 
       // 2. Fetch all eligibility tracks
       const tracksResponse = await databases.listDocuments(
@@ -346,8 +299,6 @@ const App: React.FC = () => {
       cacheScholarships(all);
 
       // 3. Perform Matching Logic (User vs Tracks) - CASE-INSENSITIVE & LOGGING
-      console.group('🎁 WRAPPED REPORT GENERATION LOGS');
-      console.log(`Checking eligibility for ${all.length} scholarships...`);
 
       const matchedScholarshipIds = new Set<string>();
       
@@ -366,7 +317,6 @@ const App: React.FC = () => {
           const tracks = tracksByScholarship[scholarship.id] || [];
           
           if (tracks.length === 0) {
-              console.log(`❌ ${scholarship.name}: No eligibility tracks found`);
               return;
           }
 
@@ -475,20 +425,10 @@ const App: React.FC = () => {
           }
 
           if (scholarshipMatched) {
-             console.log(`✅ ${scholarship.name}: MATCHED`);
              matchedScholarshipIds.add(scholarship.id);
              matchedCount++;
-          } else {
-             // Deduplicate reasons
-             const uniqueReasons = Array.from(new Set(scholarshipFailReasons));
-             console.groupCollapsed(`❌ ${scholarship.name}: NOT MATCHED (${uniqueReasons.length} reasons)`);
-             uniqueReasons.forEach(r => console.log(`- ${r}`));
-             console.groupEnd();
           }
       });
-      
-      console.log(`🎉 Total Matched for Wrapped: ${matchedCount}`);
-      console.groupEnd();
 
       const wrapped = all.filter(s => matchedScholarshipIds.has(s.id));
       
@@ -511,7 +451,6 @@ const App: React.FC = () => {
       }
     } finally {
       clearTimeout(scholarshipTimeoutId);
-      console.log('[App] Scholarship loading complete');
       setIsLoadingScholarships(false);
     }
   }, [userProfile, initialDataLoaded, isOnline]);

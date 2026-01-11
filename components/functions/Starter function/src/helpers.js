@@ -72,7 +72,18 @@ export function checkTrackMatch(track, userProfile) {
 }
 
 export function generateEmailHTML(userName, scholarships) {
-  const scholarshipRows = scholarships.map((s, index) => `
+  const scholarshipRows = scholarships.map((s, index) => {
+    const hasLink = s.official_link && s.official_link.toLowerCase() !== 'none';
+    const applyButton = hasLink
+      ? `<a href="${s.official_link}" 
+           style="display: inline-block; background-color: #2563eb; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500;">
+          Apply Now →
+        </a>`
+      : `<span style="display: inline-block; background-color: #6b7280; color: white; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 500;">
+          Check Requirements on Website
+        </span>`;
+
+    return `
     <tr style="background-color: ${index % 2 === 0 ? '#f9fafb' : '#ffffff'};">
       <td style="padding: 16px; border-bottom: 1px solid #e5e7eb;">
         <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 16px; font-weight: 600;">
@@ -87,13 +98,11 @@ export function generateEmailHTML(userName, scholarships) {
         <p style="margin: 0 0 12px 0; color: #ef4444; font-size: 14px;">
           <strong>Deadline:</strong> ${s.deadline}
         </p>
-        <a href="${s.official_link}" 
-           style="display: inline-block; background-color: #2563eb; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500;">
-          Apply Now →
-        </a>
+        ${applyButton}
       </td>
     </tr>
-  `).join('');
+  `;
+  }).join('');
 
   return `
 <!DOCTYPE html>

@@ -31,14 +31,10 @@ export const useDebugMode = () => {
     caches.keys().then(names =>
       Promise.all(names.map(name => caches.delete(name)))
     ).then(() => {
-      console.log('DEBUG: All caches cleared');
     });
   }
 
   if (debug.verbose) {
-    console.log('DEBUG MODE ENABLED');
-    console.log('Query params:', Object.fromEntries(params));
-    console.log('Diagnostics:', {
       online: navigator.onLine,
       serviceWorkerSupported: 'serviceWorker' in navigator,
       cacheSupported: 'caches' in window,

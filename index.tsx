@@ -14,8 +14,8 @@ if ('serviceWorker' in navigator) {
           registration.update().catch(() => {});
         }, 60000); // Check every minute
       })
-      .catch((error) => {
-        console.error('Service Worker registration failed:', error);
+      .catch(() => {
+        // Service Worker registration failed - silent fail
       });
   });
 }

@@ -55,7 +55,6 @@ export const useOfflineSync = () => {
   const saveLocalCourses = useCallback((courses: Course[]) => {
     try {
       localStorage.setItem(STORAGE_KEYS.COURSES, JSON.stringify(courses));
-      console.log(`💾 Saved ${courses.length} courses to localStorage`);
     } catch (err) {
       console.error('Failed to save courses to localStorage:', err);
     }
@@ -73,7 +72,6 @@ export const useOfflineSync = () => {
     };
     courses.push(newCourse);
     saveLocalCourses(courses);
-    console.log(`➕ Added ${course.courseCode} to localStorage`);
     return newCourse;
   }, [getLocalCourses, saveLocalCourses]);
 
@@ -87,13 +85,11 @@ export const useOfflineSync = () => {
     const index = courses.findIndex(c => c.$id === courseId || c.localId === courseId);
     
     if (index === -1) {
-      console.warn(`⚠️ Course ${courseId} not found`);
       return null;
     }
     
     courses[index] = { ...courses[index], ...updates };
     saveLocalCourses(courses);
-    console.log(`✏️ Updated ${courses[index].courseCode} in localStorage`);
     return courses[index];
   }, [getLocalCourses, saveLocalCourses]);
 
@@ -103,14 +99,12 @@ export const useOfflineSync = () => {
     const index = courses.findIndex(c => c.$id === courseId || c.localId === courseId);
     
     if (index === -1) {
-      console.warn(`⚠️ Course ${courseId} not found`);
       return false;
     }
     
     const courseCode = courses[index].courseCode;
     courses.splice(index, 1);
     saveLocalCourses(courses);
-    console.log(`🗑️ Deleted ${courseCode} from localStorage`);
     return true;
   }, [getLocalCourses, saveLocalCourses]);
 
@@ -191,5 +185,33 @@ export const getCachedMatchedScholarships = () => {
     return cached ? JSON.parse(cached) : null;
   } catch {
     return null;
+  }
+};
+
+// Applications cache for offline support
+export const cacheApplications = (applications: any) => {
+  localStorage.setItem('applications_cache', JSON.stringify(applications));
+};
+
+export const getCachedApplications = () => {
+  try {
+    const cached = localStorage.getItem('applications_cache');
+    return cached ? JSON.parse(cached) : [];
+  } catch {
+    return [];
+  }
+};
+
+// Applied scholarship IDs cache
+export const cacheAppliedIds = (ids: string[]) => {
+  localStorage.setItem('applied_ids_cache', JSON.stringify(ids));
+};
+
+export const getCachedAppliedIds = () => {
+  try {
+    const cached = localStorage.getItem('applied_ids_cache');
+    return cached ? JSON.parse(cached) : [];
+  } catch {
+    return [];
   }
 };

@@ -82,11 +82,9 @@ const EmailOTPVerification: React.FC<EmailOTPVerificationProps> = ({
     try {
       // Use Appwrite's createSession with the OTP code as the secret
       const session = await account.createSession(userId, otpCode);
-      console.log('✅ Session created with OTP:', session);
 
       // Get updated user info
       const user = await account.get();
-      console.log('✅ User verified:', user);
 
       setSuccessMessage('Email verified successfully!');
       
@@ -110,7 +108,6 @@ const EmailOTPVerification: React.FC<EmailOTPVerificationProps> = ({
       
       // Request a new OTP
       const result = await account.createEmailToken(userId, email);
-      console.log('✅ New OTP sent to:', email);
       
       // Reset OTP inputs and timer
       setOtp(['', '', '', '', '', '']);

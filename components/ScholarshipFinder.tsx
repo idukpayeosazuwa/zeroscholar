@@ -117,7 +117,6 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
         }
       } catch (e) {
         // User not logged in or network error - silent fail
-        console.log('[ScholarshipFinder] Profile fetch skipped or failed:', e);
       } finally {
         setIsLoadingProfile(false);
       }
@@ -288,7 +287,6 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
     const fetchActiveScholarships = async () => {
       // Skip DB fetch if offline - use passed props from App.tsx cache instead
       if (!isOnline) {
-        console.log('[ScholarshipFinder] Offline - using cached data from props');
         setIsLoadingScholarships(false);
         return;
       }
@@ -357,7 +355,6 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
         setDbScholarships(transformed);
       } catch (error) {
         // Error fetching scholarships
-        console.log('[ScholarshipFinder] Scholarship fetch error:', error);
       } finally {
         setIsLoadingScholarships(false);
       }
@@ -678,12 +675,19 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
 
                     {/* Top 5 Scholarship Links */}
                     <div className="space-y-2 mt-4">
-                      {topMatches.slice(0, 5).map((s, i) => (
-                        <a
+                      {topMatches.slice(0, 5).map((s, i) => {
+                        const hasValidLink = s.link && s.link.toLowerCase() !== 'none';
+                        const Element = hasValidLink ? 'a' : 'div';
+                        const linkProps = hasValidLink ? {
+                          href: s.link,
+                          target: "_blank",
+                          rel: "noopener noreferrer"
+                        } : {};
+                        
+                        return (
+                        <Element
                           key={i}
-                          href={s.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          {...linkProps}
                           className="block p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all group"
                         >
                           <div className="flex items-center justify-between">
@@ -695,12 +699,15 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
                                 {s.provider} • {s.rewardAmount}
                               </p>
                             </div>
-                            <svg className="w-4 h-4 text-blue-500 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
+                            {hasValidLink && (
+                              <svg className="w-4 h-4 text-blue-500 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            )}
                           </div>
-                        </a>
-                      ))}
+                        </Element>
+                      );
+                      })}
                     </div>
                   </div>
                 )}

@@ -158,9 +158,14 @@ const ScholarshipCard: React.FC<ScholarshipCardProps> = ({ scholarship, isMatche
         <p className="text-gray-600 mt-3">{scholarship.description}</p>
         
         <div className="mt-4">
-            <h4 className="font-semibold text-gray-700">Key Eligibility:</h4>
-            <ul className="list-disc list-inside text-gray-600 mt-2 space-y-1">
-                {scholarship.eligibility.slice(0, 3).map((item, index) => <li key={index}>{item}</li>)}
+            <h4 className="font-semibold text-gray-700 mb-2">Key Eligibility:</h4>
+            <ul className="list-none text-gray-600 space-y-2">
+                {scholarship.eligibility.slice(0, 3).map((item, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-blue-500 mr-2 mt-0.5 flex-shrink-0">•</span>
+                    <span className="text-sm leading-relaxed break-words">{item}</span>
+                  </li>
+                ))}
             </ul>
         </div>
       </div>
@@ -205,7 +210,7 @@ const ScholarshipCard: React.FC<ScholarshipCardProps> = ({ scholarship, isMatche
             </span>
           )}
 
-          {scholarship.link && scholarship.status?.toLowerCase() === 'open' ? (
+          {scholarship.link && scholarship.link.toLowerCase() !== 'none' && scholarship.status?.toLowerCase() === 'open' ? (
               <a 
                 href={scholarship.link} 
                 target="_blank" 

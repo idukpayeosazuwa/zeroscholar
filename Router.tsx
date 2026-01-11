@@ -22,24 +22,16 @@ const Router: React.FC = () => {
       const cachedSession = getCachedUserSession();
       const cachedProfile = localStorage.getItem('user_profile');
       
-      console.log('[Router] Auth check starting...', {
-        online: navigator.onLine,
-        hasCachedSession: !!cachedSession,
-        hasCachedProfile: !!cachedProfile
-      });
-      
       // If we have cached data, allow access immediately (optimistic)
       // This enables instant offline access without waiting for network
       if (cachedSession && cachedProfile) {
-        console.log('[Router] ✅ Cached session found - allowing immediate access');
         setIsAuthenticated(true);
         
         // If online, verify session in background (don't block)
         if (navigator.onLine) {
           account.get()
-            .then(() => console.log('[Router] Session verified online'))
+            .then(() => {})
             .catch(() => {
-              console.log('[Router] Session invalid - but keeping user logged in with cache');
               // Don't log out - let App.tsx handle it if needed
             });
         }
@@ -48,7 +40,6 @@ const Router: React.FC = () => {
       
       // No cached session - must be online to authenticate
       if (!navigator.onLine) {
-        console.log('[Router] ❌ Offline with no cached session');
         setIsAuthenticated(false);
         return;
       }
@@ -56,10 +47,8 @@ const Router: React.FC = () => {
       // Online without cache - verify with Appwrite
       try {
         await account.get();
-        console.log('[Router] ✅ Online auth successful');
         setIsAuthenticated(true);
       } catch (err) {
-        console.log('[Router] ❌ Online auth failed:', err);
         setIsAuthenticated(false);
       }
     };
@@ -67,7 +56,6 @@ const Router: React.FC = () => {
     // Add timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
       if (isAuthenticated === null) {
-        console.warn('[Router] Auth check timeout - checking cache as fallback');
         // Last resort: check cache
         const cachedSession = getCachedUserSession();
         if (cachedSession) {

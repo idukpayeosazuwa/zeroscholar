@@ -1,216 +1,206 @@
-// Smart versioning: Only changes when you deploy new code
-// Uses build date so cache updates on each deployment
-const CACHE_VERSION = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-const CACHE_NAME = 'zeroscholar-v' + CACHE_VERSION;
+// Service Worker for ZeroScholar PWA
+// Version: Update this when you make breaking changes
+const CACHE_VERSION = '20260111-v2';
+const CACHE_NAME = 'zeroscholar-' + CACHE_VERSION;
 
-// Assets to pre-cache immediately - these are essential for offline
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/js/index-CkCzKB2o.js',
-  'https://cdn.tailwindcss.com'
+// Core app shell - minimal set that MUST exist
+const APP_SHELL = [
+  '/'
 ];
 
-// Dynamic assets that should be cached when fetched
-const CACHE_ON_FETCH = [
-  /\.js$/,
-  /\.css$/,
-  /\.woff2?$/,
-  /\.ttf$/,
-  /\.png$/,
-  /\.jpg$/,
-  /\.jpeg$/,
-  /\.svg$/,
-  /\.webp$/,
-  /\.ico$/
-];
-
-const OFFLINE_URL = '/'; // Redirect to home when offline
+// Skip these domains from caching
 const SKIP_DOMAINS = [
   'appwrite.io',
-  'cloud.appwrite.io',
-  'github.dev',
-  'app.github.dev'
+  'cloud.appwrite.io'
 ];
 
-// Helper: Check if we should handle this request
-const shouldHandle = (url) => {
-  // Skip non-http(s) requests
+// Install event - cache the app shell
+self.addEventListener('install', (event) => {
+
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+
+        // Use addAll for critical assets - will fail if any are missing
+        return cache.addAll(APP_SHELL);
+      })
+      .then(() => {
+
+        return self.skipWaiting(); // Activate immediately
+      })
+      .catch(() => {
+        // Still skip waiting even if cache fails
+        return self.skipWaiting();
+      })
+  );
+});
+
+// Activate event - clean up old caches
+self.addEventListener('activate', (event) => {
+
+  event.waitUntil(
+    caches.keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames
+            .filter((name) => name.startsWith('zeroscholar-') && name !== CACHE_NAME)
+            .map((name) => {
+
+              return caches.delete(name);
+            })
+        );
+      })
+      .then(() => {
+
+        return self.clients.claim(); // Take control immediately
+      })
+  );
+});
+
+// Helper: Should we handle this request?
+const shouldCache = (url) => {
+  // Skip non-http(s)
   if (!url.protocol.startsWith('http')) return false;
   
   // Skip external domains we shouldn't cache
   if (SKIP_DOMAINS.some(domain => url.hostname.includes(domain))) return false;
   
-  // Skip auth-related paths
-  if (url.pathname.includes('signin') || 
-      url.pathname.includes('auth') || 
-      url.pathname.includes('postback')) return false;
+  // Skip auth paths
+  if (url.pathname.includes('auth') || url.pathname.includes('signin')) return false;
+  
+  // Skip API calls
+  if (url.pathname.includes('/v1/') || url.pathname.includes('api')) return false;
   
   return true;
 };
 
-// Helper: Check if response is cacheable
-const isCacheable = (response) => {
-  if (!response) return false;
-  if (!response.ok) return false;
-  if (response.type === 'opaque') return false;
-  if (response.redirected) return false;
-  return true;
-};
+// Offline fallback HTML
+const OFFLINE_HTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScholarAI - Offline</title>
+  <style>
+    body { font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #f3f4f6; }
+    .container { text-align: center; padding: 2rem; }
+    h1 { color: #1f2937; margin-bottom: 1rem; }
+    p { color: #6b7280; margin-bottom: 2rem; }
+    button { background: #2563eb; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; cursor: pointer; font-size: 1rem; }
+    button:hover { background: #1d4ed8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📡 You're Offline</h1>
+    <p>Please check your internet connection and try again.</p>
+    <button onclick="location.reload()">Retry</button>
+  </div>
+</body>
+</html>
+`;
 
-// Helper: Safely cache a response
-const cacheResponse = async (request, response) => {
-  if (!isCacheable(response)) return;
-  
-  try {
-    // Check if body is already used
-    if (response.bodyUsed) return;
-    
-    const cache = await caches.open(CACHE_NAME);
-    
-    // Check if already cached to avoid unnecessary writes
-    const existing = await cache.match(request);
-    if (existing) return;
-    
-    // Clone before caching
-    await cache.put(request, response.clone());
-  } catch (err) {
-    // Silently fail - caching is best-effort
-  }
-};
-
-// Install: Pre-cache essential assets
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(STATIC_ASSETS);
-      })
-      .catch((err) => {
-        // Silent catch
-      })
-  );
-  self.skipWaiting();
-});
-
-// Activate: Clean up old caches
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name.startsWith('zeroscholar-') && name !== CACHE_NAME)
-          .map((name) => {
-            return caches.delete(name);
-          })
-      );
-    })
-  );
-  self.clients.claim();
-  console.log('[SW] Service Worker Activated');
-});
-
-// Fetch handler
+// Fetch event - network first with cache fallback
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   
   // Only handle GET requests
   if (event.request.method !== 'GET') return;
   
-  // Skip requests we shouldn't handle
-  if (!shouldHandle(url)) return;
+  // Skip requests we shouldn't cache
+  if (!shouldCache(url)) return;
 
-  // Navigation requests (page loads/refreshes)
+  // For navigation requests (HTML pages)
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      (async () => {
-        // If offline, try cache FIRST (don't waste time on network)
-        if (!navigator.onLine) {
-          const cached = await caches.match(event.request) || await caches.match('/');
-          if (cached) {
-            return cached;
-          }
-        }
-        
-        // Online: try network first
-        try {
-          const response = await fetch(event.request);
+      fetch(event.request)
+        .then((response) => {
+          // Cache successful responses
           if (response && response.ok) {
-            cacheResponse(event.request, response);
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
           }
           return response;
-        } catch (err) {
-          const cached = await caches.match(event.request) || await caches.match('/');
-          if (cached) {
-            return cached;
-          }
-          return new Response('Offline - Please check your connection', { 
-            status: 503,
+        })
+        .catch(async () => {
+          // Offline - return cached version or root
+          const cached = await caches.match(event.request);
+          if (cached) return cached;
+          
+          const rootCached = await caches.match('/');
+          if (rootCached) return rootCached;
+          
+          // No cache at all - return offline page
+          return new Response(OFFLINE_HTML, {
+            status: 200,
             headers: { 'Content-Type': 'text/html' }
           });
-        }
-      })()
+        })
     );
     return;
   }
 
-  // Static assets (JS, CSS, fonts, images): Cache first, network fallback
-  if (url.pathname.match(/\.(js|css|png|jpg|jpeg|svg|ico|woff|woff2|ttf|webp)$/)) {
+  // For static assets (JS, CSS, images, fonts)
+  if (url.pathname.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff2?|ttf|webp)$/)) {
     event.respondWith(
-      (async () => {
-        // Always check cache first for static assets
-        const cached = await caches.match(event.request);
-        if (cached) {
-          // Update cache in background if online (don't await)
-          if (navigator.onLine) {
+      caches.match(event.request)
+        .then((cached) => {
+          if (cached) {
+            // Return cached, but update in background
             fetch(event.request)
               .then((response) => {
                 if (response && response.ok) {
-                  cacheResponse(event.request, response);
+                  caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, response);
+                  });
                 }
               })
-              .catch(() => {});
+              .catch(() => {}); // Ignore fetch errors for background update
+            return cached;
           }
-          return cached;
-        }
-        
-        // No cache - must fetch from network
-        try {
-          const response = await fetch(event.request);
-          if (response && response.ok) {
-            // IMPORTANT: Cache JS/CSS bundles for offline use
-            const cache = await caches.open(CACHE_NAME);
-            cache.put(event.request, response.clone());
-          }
-          return response;
-        } catch (err) {
-          // Return empty response to avoid breaking the app
-          return new Response('', { 
-            status: 200, 
-            statusText: 'OK',
-            headers: new Headers({ 'Content-Type': 'text/plain' })
-          });
-        }
-      })()
+          
+          // Not cached - fetch and cache
+          return fetch(event.request)
+            .then((response) => {
+              if (response && response.ok) {
+                const responseClone = response.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                  cache.put(event.request, responseClone);
+                });
+              }
+              return response;
+            });
+        })
     );
     return;
   }
 
-  // Default: Network first, cache fallback
+  // Default: network first, cache fallback
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        cacheResponse(event.request, response);
+        if (response && response.ok && response.type === 'basic') {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+        }
         return response;
       })
       .catch(() => caches.match(event.request))
   );
 });
 
-// Handle messages
+// Handle messages from the app
 self.addEventListener('message', (event) => {
   if (event.data?.type === 'SKIP_WAITING') {
     self.skipWaiting();
+  }
+  
+  if (event.data?.type === 'GET_VERSION') {
+    event.ports[0].postMessage({ version: CACHE_VERSION });
   }
 });

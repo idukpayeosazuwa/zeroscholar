@@ -2,24 +2,28 @@
   "name": "ScholarAI - Find Scholarships",
   "short_name": "ScholarAI",
   "description": "Find scholarships that match your profile and CGPA",
-  "start_url": "/",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2240AF",
   "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "categories": ["education", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ],
   "screenshots": [

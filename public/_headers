@@ -3,6 +3,8 @@
 # Service worker - never cache, always revalidate
 /sw.js
   Cache-Control: public, max-age=0, must-revalidate
+  Service-Worker-Allowed: /
+  Content-Type: application/javascript
 
 # Immutable assets with content hash (cache forever)
 /js/*
@@ -23,6 +25,7 @@
 
 /manifest.json
   Cache-Control: public, max-age=86400
+  Content-Type: application/manifest+json
 
 # HTML pages - cache briefly
 /index.html
