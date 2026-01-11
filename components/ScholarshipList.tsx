@@ -66,6 +66,8 @@ const ScholarshipList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedScholarship, setSelectedScholarship] = useState<MatchedScholarship | null>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -264,6 +266,15 @@ const ScholarshipList: React.FC = () => {
     );
   }
 
+  const handleApplyClick = (scholarship: MatchedScholarship) => {
+    if (scholarship.official_link && scholarship.official_link.toLowerCase() !== 'none') {
+      window.open(scholarship.official_link, '_blank');
+    } else {
+      setSelectedScholarship(scholarship);
+      setShowModal(true);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -347,20 +358,88 @@ const ScholarshipList: React.FC = () => {
               </div>
 
               {scholarship.official_link && (
-                <a 
-                  href={scholarship.official_link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => handleApplyClick(scholarship)}
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   Apply Now
                   <LinkIcon className="ml-2 h-4 w-4" />
-                </a>
+                </button>
               )}
             </div>
           </div>
         ))}
       </div>
+
+      {/* Requirements Modal */}
+      {showModal && selectedScholarship && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+              <h3 className="text-xl font-bold text-gray-900">
+                Application Requirements
+              </h3>
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="px-6 py-4">
+              <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                {selectedScholarship.scholarship_name}
+              </h4>
+              <p className="text-sm text-gray-600 mb-4">
+                Provided by {selectedScholarship.provider}
+              </p>
+
+              {selectedScholarship.matchingTracks.length > 0 && selectedScholarship.matchingTracks[0].specific_requirements?.length > 0 ? (
+                <div>
+                  <h5 className="text-md font-semibold text-gray-700 mb-3">Requirements:</h5>
+                  <ul className="space-y-2">
+                    {selectedScholarship.matchingTracks[0].specific_requirements.map((req, idx) => (
+                      <li key={idx} className="flex items-start">
+                        <svg className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-gray-700">{req.trim()}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <p className="text-gray-600">
+                    No specific requirements listed. Please contact {selectedScholarship.provider} directly for application details.
+                  </p>
+                </div>
+              )}
+
+              <div className="mt-6 bg-blue-50 border-l-4 border-blue-500 p-4">
+                <p className="text-sm text-blue-700">
+                  <strong>Deadline:</strong> {selectedScholarship.deadline}
+                </p>
+                <p className="text-sm text-blue-700 mt-1">
+                  <strong>Award:</strong> {selectedScholarship.award_amount || 'Tuition Support'}
+                </p>
+              </div>
+            </div>
+
+            <div className="sticky bottom-0 bg-gray-50 px-6 py-4 flex justify-end border-t border-gray-200">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

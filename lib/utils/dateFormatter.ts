@@ -1,4 +1,48 @@
 /**
+ * Normalize any date format to ISO format (YYYY-MM-DD)
+ * Handles: Dec 31st, 2025 | 2025-12-31 | 12/31/2025 | December 31, 2025
+ * @param dateString - Any date format
+ * @returns ISO date string (YYYY-MM-DD) or original string if unparseable
+ */
+export function normalizeDate(dateString: string | Date | null | undefined): string {
+  if (!dateString) return '';
+
+  try {
+    // If already ISO format (YYYY-MM-DD), return as is
+    if (typeof dateString === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      return dateString;
+    }
+
+    // If special values, return as is
+    if (typeof dateString === 'string' && ['Not Specified', 'Open Deadline', ''].includes(dateString)) {
+      return dateString;
+    }
+
+    // Remove ordinal suffixes (1st, 2nd, 3rd, 4th, etc.) to help parsing
+    let cleanedDateString = dateString;
+    if (typeof dateString === 'string') {
+      cleanedDateString = dateString.replace(/(\d+)(st|nd|rd|th)/g, '$1');
+    }
+
+    // Parse the date
+    const date = new Date(cleanedDateString);
+    
+    if (isNaN(date.getTime())) {
+      return typeof dateString === 'string' ? dateString : '';
+    }
+
+    // Convert to ISO format (YYYY-MM-DD)
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  } catch {
+    return typeof dateString === 'string' ? dateString : '';
+  }
+}
+
+/**
  * Format a date string consistently across the application
  * @param dateString - ISO date string or Date object
  * @param format - 'short' | 'medium' | 'long'
@@ -9,6 +53,19 @@ export function formatDate(
   format: 'short' | 'medium' | 'long' = 'medium'
 ): string {
   if (!dateString) return 'No date';
+
+  // Handle special strings
+  if (typeof dateString === 'string') {
+    if (dateString === 'Not Specified' || dateString === 'Open Deadline') {
+      return dateString;
+    }
+    
+    // Normalize the date first to handle any format
+    const normalized = normalizeDate(dateString);
+    if (normalized && normalized !== dateString) {
+      dateString = normalized;
+    }
+  }
 
   try {
     const date = new Date(dateString);

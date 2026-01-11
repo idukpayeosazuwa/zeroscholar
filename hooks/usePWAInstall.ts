@@ -22,19 +22,15 @@ export const usePWAInstall = () => {
     setIsIOS(iOS);
     setIsAndroid(Android);
 
-    console.log('Device detected - iOS:', iOS, 'Android:', Android);
-
     // Check if app is already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsInstalled(true);
       setShowInstallButton(false);
-      console.log('App already installed');
       return;
     }
 
     // Listen for the beforeinstallprompt event (Android Chrome)
     const handleBeforeInstallPrompt = (e: Event) => {
-      console.log('beforeinstallprompt event fired');
       e.preventDefault();
       const promptEvent = e as BeforeInstallPromptEvent;
       setInstallPrompt(promptEvent);
@@ -43,7 +39,6 @@ export const usePWAInstall = () => {
 
     // Listen for app installed event
     const handleAppInstalled = () => {
-      console.log('App installed successfully');
       setIsInstalled(true);
       setShowInstallButton(false);
       setInstallPrompt(null);
@@ -61,7 +56,6 @@ export const usePWAInstall = () => {
     // Show custom prompt after 3 seconds on first visit (for all devices)
     const timer = setTimeout(() => {
       if (!isInstalled) {
-        console.log('Showing install prompt after 3 seconds');
         setShowInstallButton(true);
       }
     }, 3000);
@@ -74,24 +68,18 @@ export const usePWAInstall = () => {
   }, []);
 
   const handleInstall = async () => {
-    console.log('Install clicked, installPrompt:', !!installPrompt);
     
     if (installPrompt) {
       // Android: Use native prompt
       try {
-        console.log('Calling prompt()');
         await installPrompt.prompt();
-        console.log('Prompt shown');
         
         const { outcome } = await installPrompt.userChoice;
-        console.log('User choice:', outcome);
 
         if (outcome === 'accepted') {
-          console.log('User accepted the install prompt');
           setIsInstalled(true);
           setShowInstallButton(false);
         } else {
-          console.log('User dismissed the install prompt');
           // Don't hide the banner if they dismiss - keep showing it
         }
 
@@ -100,7 +88,6 @@ export const usePWAInstall = () => {
         console.error('Error during install:', error);
       }
     } else {
-      console.log('No install prompt available');
     }
   };
 

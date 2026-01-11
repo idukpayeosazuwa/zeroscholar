@@ -82,11 +82,9 @@ const EmailOTPVerification: React.FC<EmailOTPVerificationProps> = ({
     try {
       // Use Appwrite's createSession with the OTP code as the secret
       const session = await account.createSession(userId, otpCode);
-      console.log('✅ Session created with OTP:', session);
 
       // Get updated user info
       const user = await account.get();
-      console.log('✅ User verified:', user);
 
       setSuccessMessage('Email verified successfully!');
       
@@ -110,7 +108,6 @@ const EmailOTPVerification: React.FC<EmailOTPVerificationProps> = ({
       
       // Request a new OTP
       const result = await account.createEmailToken(userId, email);
-      console.log('✅ New OTP sent to:', email);
       
       // Reset OTP inputs and timer
       setOtp(['', '', '', '', '', '']);
@@ -196,7 +193,7 @@ const EmailOTPVerification: React.FC<EmailOTPVerificationProps> = ({
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 Enter Code
               </label>
-              <div className="flex gap-2 justify-between mb-4">
+              <div className="flex gap-1.5 sm:gap-2 justify-center mb-4">
                 {otp.map((digit, index) => (
                   <input
                     key={index}
@@ -210,7 +207,7 @@ const EmailOTPVerification: React.FC<EmailOTPVerificationProps> = ({
                     onChange={(e) => handleOtpChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     disabled={isLoading}
-                    className="w-14 h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 disabled:bg-gray-100 transition-colors"
+                    className="w-11 h-11 sm:w-14 sm:h-14 text-center text-xl sm:text-2xl font-bold border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 disabled:bg-gray-100 transition-colors"
                     placeholder="0"
                   />
                 ))}

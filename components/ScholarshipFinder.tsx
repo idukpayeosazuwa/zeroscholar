@@ -92,9 +92,15 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
   // Combined loading state - true if either is loading
   const isLoading = isLoadingScholarships || isLoadingProfile;
 
-  // Fetch current user and profile
+  // Fetch current user and profile - only when online
   useEffect(() => {
     const init = async () => {
+      // Skip DB fetch if offline - use passed props instead
+      if (!isOnline) {
+        setIsLoadingProfile(false);
+        return;
+      }
+      
       setIsLoadingProfile(true);
       try {
         const user = await account.get();
@@ -110,91 +116,181 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
           setUserProfileFromDB(profileRes.documents[0] as unknown as UserProfileFromDB);
         }
       } catch (e) {
-        // User not logged in
+        // User not logged in or network error - silent fail
       } finally {
         setIsLoadingProfile(false);
       }
     };
     init();
-  }, []);
+  }, [isOnline]);
+
+  // Helper: Check if array contains value (case-insensitive)
+  const arrayIncludesCaseInsensitive = (arr: string[] | undefined, value: string): boolean => {
+    if (!arr || arr.length === 0) return false;
+    // Filter out 'NONE' or empty values before checking
+    const validValues = arr.filter((item: string) => item && item.toUpperCase() !== 'NONE');
+    if (validValues.length === 0) return true; // If only NONE values, treat as no restriction
+    const lowerValue = value?.toLowerCase() || '';
+    return validValues.some(item => item?.toLowerCase() === lowerValue);
+  };
+
+  // Helper: Check if array has 'ALL' or 'ANY' wildcard (case-insensitive)
+  const hasAllWildcard = (arr: string[] | undefined): boolean => {
+    if (!arr || arr.length === 0) return false;
+    return arr.some(item => {
+      const upper = item?.toUpperCase();
+      return upper === 'ALL' || upper === 'ANY';
+    });
+  };
+
+  // Helper: Check if user is 100 Level
+  const isUser100Level = (level: number | string): boolean => {
+    const levelNum = typeof level === 'number' 
+      ? level 
+      : parseInt(String(level).replace(/\D/g, '')) || 0;
+    return levelNum === 100;
+  };
 
   // Check if a track matches user profile
-  const checkTrackMatch = (track: any, profile: UserProfileFromDB | null): boolean => {
+  const checkTrackMatch = (track: any, profile: UserProfileFromDB | null, scholarshipName: string = ''): { matches: boolean, reasons: string[] } => {
     if (!profile) return true; // Show all if no profile
 
-    // Level check
-    if (track.allowed_levels?.length > 0 && !track.allowed_levels.includes(profile.level)) {
-      return false;
+    const reasons: string[] = [];
+    let matches = true;
+
+    // Level check (convert to number for consistent comparison)
+    if (track.allowed_levels?.length > 0) {
+      const userLevel = Number(profile.level);
+      const levelMatch = track.allowed_levels.some((level: number) => Number(level) === userLevel);
+      if (!levelMatch) {
+        reasons.push(`❌ Level mismatch: user=${profile.level}, required=[${track.allowed_levels.join(', ')}]`);
+        matches = false;
+      } else {
+        reasons.push(`✅ Level match: ${profile.level}`);
+      }
     }
 
-    // CGPA check
-    if (track.min_cgpa > 0 && profile.cgpa < track.min_cgpa) {
-      return false;
+    // CGPA check - SKIP for 100 Level students (they don't have CGPA yet)
+    const is100Level = isUser100Level(profile.level);
+    if (track.min_cgpa > 0 && !is100Level && profile.cgpa < track.min_cgpa) {
+      reasons.push(`❌ CGPA too low: user=${profile.cgpa}, required=${track.min_cgpa}`);
+      matches = false;
+    } else if (track.min_cgpa > 0 && !is100Level) {
+      reasons.push(`✅ CGPA match: ${profile.cgpa} >= ${track.min_cgpa}`);
+    } else if (track.min_cgpa > 0 && is100Level) {
+      reasons.push(`✅ CGPA skipped (100 Level student)`);
     }
 
     // JAMB score check
     if (track.min_jamb_score > 0 && profile.jamb < track.min_jamb_score) {
-      return false;
+      reasons.push(`❌ JAMB score too low: user=${profile.jamb}, required=${track.min_jamb_score}`);
+      matches = false;
+    } else if (track.min_jamb_score > 0) {
+      reasons.push(`✅ JAMB match: ${profile.jamb} >= ${track.min_jamb_score}`);
     }
 
-    // Gender check
-    if (track.required_gender && track.required_gender !== 'ANY' && track.required_gender !== profile.gender) {
-      return false;
+    // Gender check (fully case-insensitive)
+    const genderUpper = track.required_gender?.toUpperCase();
+    const userGenderUpper = profile.gender?.toUpperCase();
+    if (track.required_gender && 
+        genderUpper !== 'ANY' && 
+        genderUpper !== 'ALL' && 
+        genderUpper !== userGenderUpper) {
+      reasons.push(`❌ Gender mismatch: user=${profile.gender}, required=${track.required_gender}`);
+      matches = false;
+    } else if (track.required_gender && genderUpper !== 'ANY' && genderUpper !== 'ALL') {
+      reasons.push(`✅ Gender match: ${profile.gender}`);
     }
 
-    // State of origin check
+    // State of origin check (case-insensitive)
     if (track.required_state_of_origin?.length > 0 && 
-        !track.required_state_of_origin.includes('ALL') &&
-        !track.required_state_of_origin.includes(profile.state)) {
-      return false;
+        !hasAllWildcard(track.required_state_of_origin) &&
+        !arrayIncludesCaseInsensitive(track.required_state_of_origin, profile.state)) {
+      reasons.push(`❌ State mismatch: user=${profile.state}, required=[${track.required_state_of_origin.join(', ')}]`);
+      matches = false;
+    } else if (track.required_state_of_origin?.length > 0 && !hasAllWildcard(track.required_state_of_origin)) {
+      reasons.push(`✅ State match: ${profile.state}`);
     }
 
-    // LGA check
+    // LGA check (case-insensitive, with ALL wildcard)
     if (track.required_lga_list?.length > 0 && 
-        !track.required_lga_list.includes(profile.lga)) {
-      return false;
+        !hasAllWildcard(track.required_lga_list) &&
+        !arrayIncludesCaseInsensitive(track.required_lga_list, profile.lga)) {
+      reasons.push(`❌ LGA mismatch: user=${profile.lga}, required=[${track.required_lga_list.join(', ')}]`);
+      matches = false;
+    } else if (track.required_lga_list?.length > 0 && !hasAllWildcard(track.required_lga_list)) {
+      reasons.push(`✅ LGA match: ${profile.lga}`);
     }
 
-    // University check
+    // University check (case-insensitive)
     if (track.required_universities?.length > 0 && 
-        !track.required_universities.includes('ALL') &&
-        !track.required_universities.includes(profile.uni)) {
-      return false;
+        !hasAllWildcard(track.required_universities) &&
+        !arrayIncludesCaseInsensitive(track.required_universities, profile.uni)) {
+      reasons.push(`❌ University mismatch: user=${profile.uni}, required=[${track.required_universities.join(', ')}]`);
+      matches = false;
+    } else if (track.required_universities?.length > 0 && !hasAllWildcard(track.required_universities)) {
+      reasons.push(`✅ University match: ${profile.uni}`);
     }
 
-    // Course category check
+    // Course category check (case-insensitive)
     if (track.course_category?.length > 0 && 
-        !track.course_category.includes('ALL') &&
-        !track.course_category.includes(profile.course)) {
-      return false;
+        !hasAllWildcard(track.course_category) &&
+        !arrayIncludesCaseInsensitive(track.course_category, profile.course)) {
+      reasons.push(`❌ Course mismatch: user=${profile.course}, required=[${track.course_category.join(', ')}]`);
+      matches = false;
+    } else if (track.course_category?.length > 0 && !hasAllWildcard(track.course_category)) {
+      reasons.push(`✅ Course match: ${profile.course}`);
     }
 
-    // Religion check
-    if (track.required_religion && track.required_religion !== 'NONE' && track.required_religion !== profile.rel) {
-      return false;
+    // Religion check (case-insensitive)
+    const religionUpper = track.required_religion?.toUpperCase();
+    if (track.required_religion && 
+        religionUpper !== 'NONE' && 
+        religionUpper !== 'ANY' &&
+        religionUpper !== 'ALL' &&
+        track.required_religion?.toLowerCase() !== profile.rel?.toLowerCase()) {
+      reasons.push(`❌ Religion mismatch: user=${profile.rel}, required=${track.required_religion}`);
+      matches = false;
+    } else if (track.required_religion && religionUpper !== 'NONE' && religionUpper !== 'ANY' && religionUpper !== 'ALL') {
+      reasons.push(`✅ Religion match: ${profile.rel}`);
     }
 
     // Financial need check
     if (track.is_financial_need_required && !profile.finance) {
-      return false;
+      reasons.push(`❌ Financial need required but user didn't select it`);
+      matches = false;
+    } else if (track.is_financial_need_required) {
+      reasons.push(`✅ Financial need match`);
     }
 
     // Orphan/single parent check
     if (track.is_orphan_or_single_parent_required && !profile.orphan) {
-      return false;
+      reasons.push(`❌ Orphan/single parent required but user isn't`);
+      matches = false;
+    } else if (track.is_orphan_or_single_parent_required) {
+      reasons.push(`✅ Orphan/single parent match`);
     }
 
     // Disability check
     if (track.is_disability_specific && !profile.chal) {
-      return false;
+      reasons.push(`❌ Disability required but user doesn't have it`);
+      matches = false;
+    } else if (track.is_disability_specific) {
+      reasons.push(`✅ Disability match`);
     }
 
-    return true;
+    return { matches, reasons };
   };
 
-  // Fetch active scholarships from database
+  // Fetch active scholarships from database - only when online
   useEffect(() => {
     const fetchActiveScholarships = async () => {
+      // Skip DB fetch if offline - use passed props from App.tsx cache instead
+      if (!isOnline) {
+        setIsLoadingScholarships(false);
+        return;
+      }
+      
       setIsLoadingScholarships(true);
       try {
         const response = await databases.listDocuments(DB_ID, SCHOLARSHIP_COL_ID, [
@@ -265,9 +361,39 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
     };
 
     fetchActiveScholarships();
-  }, []);
+  }, [isOnline]);
 
+  // Helper: Convert UserProfile prop to UserProfileFromDB format for consistent matching
+  const normalizedProfileFromProps = useMemo((): UserProfileFromDB | null => {
+    if (!userProfile) return null;
+    
+    // Extract numeric level from string like "200 Level" -> 200
+    const levelNum = typeof userProfile.level === 'number' 
+      ? userProfile.level 
+      : parseInt(String(userProfile.level).replace(/\D/g, '')) || 100;
+    
+    return {
+      $id: '',
+      uid: '',
+      level: levelNum,
+      cgpa: userProfile.cgpa || 0,
+      jamb: userProfile.jamb || 0,
+      gender: userProfile.gender || '',
+      state: userProfile.state || '',
+      lga: userProfile.lga || '',
+      uni: userProfile.uni || userProfile.university || '',
+      course: userProfile.course || '',
+      finance: userProfile.finance || false,
+      orphan: userProfile.orphan || false,
+      rel: userProfile.rel || '',
+      chal: userProfile.chal || false,
+      email: userProfile.email || '',
+      notified: userProfile.notifiedScholarships || []
+    };
+  }, [userProfile]);
 
+  // Use DB profile if available, otherwise fall back to normalized prop profile
+  const effectiveProfile = userProfileFromDB || normalizedProfileFromProps;
 
   const filteredScholarships = useMemo(() => {
     // Get IDs of applied scholarships
@@ -275,21 +401,29 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
     
     if (activeFilter === 'matched') {
       // Only show matched scholarships - wait for profile to load
-      if (!userProfileFromDB) {
+      if (!effectiveProfile) {
         return []; // Don't show all scholarships while loading - wait for user profile
       }
       
-      return dbScholarships.filter(scholarship => {
+      const matched: typeof dbScholarships = [];
+      
+      dbScholarships.forEach(scholarship => {
         // Exclude already applied scholarships
-        if (appliedIds.has(scholarship.id)) return false;
-        
+        if (appliedIds.has(scholarship.id)) {
+          return;
+        }
+
         // Check if any track matches
         const hasMatchingTrack = scholarship.tracks?.some(track => 
-          checkTrackMatch(track, userProfileFromDB)
+          checkTrackMatch(track, effectiveProfile, "").matches
         );
         
-        return hasMatchingTrack;
-      }).sort((a, b) => a.name.localeCompare(b.name));
+        if (hasMatchingTrack) {
+          matched.push(scholarship);
+        }
+      });
+      
+      return matched.sort((a, b) => a.name.localeCompare(b.name));
     } else if (activeFilter === 'applied') {
       // Show applied scholarships
       return dbScholarships
@@ -303,7 +437,7 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
     }
     
     return [];
-  }, [dbScholarships, activeFilter, userProfileFromDB, applications]);
+  }, [dbScholarships, activeFilter, effectiveProfile, applications]);
 
   const wrappedStats = useMemo(() => {
     let totalValue = 0;
@@ -400,7 +534,7 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
             {userProfileFromDB 
               ? dbScholarships.filter(s => 
                   !applications.some(a => a.scholarshipId === s.id) && 
-                  s.tracks?.some(t => checkTrackMatch(t, userProfileFromDB))
+                  s.tracks?.some(t => checkTrackMatch(t, userProfileFromDB).matches)
                 ).length
               : dbScholarships.filter(s => !applications.some(a => a.scholarshipId === s.id)).length
             }
@@ -541,12 +675,19 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
 
                     {/* Top 5 Scholarship Links */}
                     <div className="space-y-2 mt-4">
-                      {topMatches.slice(0, 5).map((s, i) => (
-                        <a
+                      {topMatches.slice(0, 5).map((s, i) => {
+                        const hasValidLink = s.link && s.link.toLowerCase() !== 'none';
+                        const Element = hasValidLink ? 'a' : 'div';
+                        const linkProps = hasValidLink ? {
+                          href: s.link,
+                          target: "_blank",
+                          rel: "noopener noreferrer"
+                        } : {};
+                        
+                        return (
+                        <Element
                           key={i}
-                          href={s.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          {...linkProps}
                           className="block p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all group"
                         >
                           <div className="flex items-center justify-between">
@@ -558,12 +699,15 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
                                 {s.provider} • {s.rewardAmount}
                               </p>
                             </div>
-                            <svg className="w-4 h-4 text-blue-500 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
+                            {hasValidLink && (
+                              <svg className="w-4 h-4 text-blue-500 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            )}
                           </div>
-                        </a>
-                      ))}
+                        </Element>
+                      );
+                      })}
                     </div>
                   </div>
                 )}

@@ -47,7 +47,6 @@ const createDocumentWithRetry = async (
     const isSchemaIssue = error.message?.includes('Unknown attribute') || error.code === 400;
     
     if (retries > 0 && isSchemaIssue) {
-      console.warn(`Write failed (likely schema latency). Retrying in ${delay}ms... (${retries} left)`);
       await new Promise(resolve => setTimeout(resolve, delay));
       // Increase delay for next attempt (backoff)
       return createDocumentWithRetry(databaseId, collectionId, documentId, data, retries - 1, delay + 1000);
@@ -121,33 +120,10 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
     setIsLoading(true);
     setError(null);
 
-    // DEBUG: Verify Client Configuration before request
-    try {
-        // @ts-ignore - Accessing internal config for debugging
-        const config = client.config;
-        console.log("Debug Client Config:", { 
-            endpoint: config?.endpoint, 
-            project: config?.project,
-            targetDatabaseId: DATABASE_ID
-        });
-        
-        if (!config?.project) {
-            throw new Error("Appwrite Client is missing Project ID. Check appwriteConfig.ts");
-        }
-    } catch (debugErr) {
-        console.error("Client Config Error:", debugErr);
-    }
-
     try {
       if (isLogin) {
         await account.createEmailPasswordSession(email, password);
         const user = await account.get();
-        
-        // DEBUG: Log the entire user object
-        console.log('🔍 USER OBJECT:', JSON.stringify(user, null, 2));
-        console.log('📧 Email Verification Status:', user.emailVerification);
-        console.log('📧 User Email:', user.email);
-        console.log('📧 User ID:', user.$id);
         
         // Check if email is verified
         if (!user.emailVerification) {
@@ -209,10 +185,6 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
             applications: []
         };
 
-        console.log("Creating User Document...");
-        console.log("Collection ID:", USERS_COLLECTION_ID);
-        console.log("Payload Keys:", Object.keys(payload));
-
         // 4. Save to Database (Using Retry Logic)
         await createDocumentWithRetry(
           DATABASE_ID,
@@ -224,8 +196,6 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
         // 5. Send OTP via Email
         try {
           const tokenResult = await account.createEmailToken(user.$id, user.email);
-          console.log('✅ OTP sent to:', user.email);
-          console.log('🔐 OTP User ID:', tokenResult.userId);
         } catch (otpErr) {
           console.error('❌ Failed to send OTP:', otpErr);
           throw new Error('Failed to send verification code. Please try again.');
@@ -266,7 +236,6 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
   };
 
   const handleOTPVerificationSuccess = (user: Models.User<Models.Preferences>, userLevel: UniversityLevel) => {
-    console.log('✅ OTP verified successfully, user:', user.email);
     onAuthSuccess(user, userLevel);
   };
 
@@ -358,6 +327,11 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
                         className={`mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm ${level.toString().includes('100') ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'bg-white'}`}
                         placeholder={level.toString().includes('100') ? "0.0" : "e.g. 4.5"}
                       />
+                      {level.toString().includes('200') && (
+                        <p className="mt-1 text-xs text-blue-600">
+                          If you don't know your results yet, select at least 3.5. You can update it later.
+                        </p>
+                      )}
                     </div>
 
                     <div>
