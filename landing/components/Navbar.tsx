@@ -15,6 +15,12 @@ export default function Navbar() {
           </div>
           <div className="flex items-center gap-4">
             <button 
+              onClick={() => navigate('/tools/cgpa-calculator')}
+              className="text-white hover:text-yellow-300 font-medium transition-colors hidden sm:block"
+            >
+              Free CGPA Calculator
+            </button>
+            <button 
               onClick={() => navigate('/login')}
               className="bg-white text-[#2240AF] px-5 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors"
             >
