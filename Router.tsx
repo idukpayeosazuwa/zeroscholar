@@ -7,6 +7,7 @@ import Landing from './pages/Landing';
 import Auth from './components/Auth';
 import EditProfile from './pages/EditProfile';
 import Privacy from './pages/Privacy';
+import CGPACalculatorPage from './pages/CGPACalculatorPage';
 import { UniversityLevel } from './types';
 import { Models } from 'appwrite';
 import AdminDashboard from './pages/AdminDashboard';
@@ -88,6 +89,8 @@ const Router: React.FC = () => {
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/" element={isAuthenticated ? <Navigate to="/app" /> : <Landing />} />
       <Route path="/privacy" element={<Privacy />} />
+      {/* Public CGPA Calculator - no auth required (lead magnet) */}
+      <Route path="/tools/cgpa-calculator" element={<CGPACalculatorPage />} />
       <Route 
         path="/login" 
         element={

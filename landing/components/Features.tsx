@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const features = [
   {
@@ -21,9 +22,31 @@ const features = [
 ];
 
 export default function Features() {
+  const navigate = useNavigate();
+  
   return (
     <section id="features" className="py-20 md:py-32 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Free Tool Highlight */}
+        <div className="mb-16 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 md:p-12 text-white shadow-xl">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <span className="inline-block bg-yellow-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full mb-4">FREE TOOL</span>
+              <h3 className="text-2xl md:text-3xl font-bold mb-3">CGPA Calculator</h3>
+              <p className="text-white/90 max-w-md">
+                Calculate your GPA instantly - no sign up required! Track courses by semester, level, or cumulative. 
+                Works offline too!
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/tools/cgpa-calculator')}
+              className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-colors whitespace-nowrap shadow-lg"
+            >
+              Try It Now →
+            </button>
+          </div>
+        </div>
+
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-[#2240AF] mb-4">Why Choose ScholarAI?</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
