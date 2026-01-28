@@ -49,7 +49,23 @@ export default function Hero() {
             Find Your Perfect Scholarship with <span className="text-yellow-300">AI</span>
           </h1>
 
-            <p>Every year students miss out millions in scholarships</p>
+            <p className="text-lg md:text-xl text-white/90 mb-8">Every year students miss out on millions in scholarships</p>
+            
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                onClick={handleGetStarted}
+                className="bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-8 py-3 rounded-lg font-bold text-lg transition-colors shadow-lg"
+              >
+                Get Started Free
+              </button>
+              <button
+                onClick={() => navigate('/tools/cgpa-calculator')}
+                className="bg-white/20 hover:bg-white/30 backdrop-blur text-white px-8 py-3 rounded-lg font-semibold text-lg transition-colors border border-white/30"
+              >
+                📊 Try Free CGPA Calculator
+              </button>
+            </div>
         </div>
 
         {/* Hero stats with animation */}
