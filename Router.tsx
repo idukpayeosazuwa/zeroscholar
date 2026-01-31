@@ -8,9 +8,11 @@ import Auth from './components/Auth';
 import EditProfile from './pages/EditProfile';
 import Privacy from './pages/Privacy';
 import CGPACalculatorPage from './pages/CGPACalculatorPage';
+import AptitudeTestPreview from './pages/AptitudeTestPreview';
 import { UniversityLevel } from './types';
 import { Models } from 'appwrite';
 import AdminDashboard from './pages/AdminDashboard';
+import VotingPage from './pages/VotingPage';
 
 const Router: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -32,8 +34,14 @@ const Router: React.FC = () => {
         if (navigator.onLine) {
           account.get()
             .then(() => {})
-            .catch(() => {
-              // Don't log out - let App.tsx handle it if needed
+            .catch((error) => {
+              // If user/session was deleted (401, 404), clear cache and logout
+              if (error?.code === 401 || error?.code === 404 || error?.type === 'user_not_found') {
+                console.error('Session invalid (user deleted or session expired). Clearing cache...');
+                localStorage.clear();
+                setIsAuthenticated(false);
+                window.location.href = '/login';
+              }
             });
         }
         return;
@@ -87,10 +95,14 @@ const Router: React.FC = () => {
   return (
     <Routes>
       <Route path="/admin" element={<AdminDashboard />} />
+      {/* CS240 Election Voting - no auth required */}
+      <Route path="/vote" element={<VotingPage />} />
       <Route path="/" element={isAuthenticated ? <Navigate to="/app" /> : <Landing />} />
       <Route path="/privacy" element={<Privacy />} />
       {/* Public CGPA Calculator - no auth required (lead magnet) */}
       <Route path="/tools/cgpa-calculator" element={<CGPACalculatorPage />} />
+      {/* Aptitude Test Preview - for testing */}
+      <Route path="/test/preview" element={<AptitudeTestPreview />} />
       <Route 
         path="/login" 
         element={

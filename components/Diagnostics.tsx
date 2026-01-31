@@ -89,7 +89,7 @@ const DiagnosticPage: React.FC = () => {
       <h1 className="text-3xl font-bold mb-6">Diagnostic Dashboard</h1>
       
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-        <h2 className="text-lg font-semibold mb-2">⚠️ Nuclear Options (Last Resort)</h2>
+        <h2 className="text-lg font-semibold mb-2">Nuclear Options (Last Resort)</h2>
         <div className="space-y-2">
           <button
             onClick={clearAllCache}

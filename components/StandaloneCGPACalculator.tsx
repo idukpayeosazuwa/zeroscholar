@@ -577,7 +577,7 @@ const StandaloneCGPACalculator: React.FC = () => {
                                 </>
                               ) : (
                                 <>
-                                  <button onClick={() => handleEditCreditUnits(course.localId, course.creditUnits)} className="px-3 py-1 text-xs bg-blue-500 text-white rounded">📝 Units</button>
+                                  <button onClick={() => handleEditCreditUnits(course.localId, course.creditUnits)} className="px-3 py-1 text-xs bg-blue-500 text-white rounded">Edit Units</button>
                                   <button onClick={() => handleDeleteCourse(course.localId)} className="p-2 text-red-600 hover:bg-red-100 rounded">
                                     <DeleteIcon className="h-5 w-5" />
                                   </button>
@@ -643,7 +643,7 @@ const StandaloneCGPACalculator: React.FC = () => {
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
             <div className="text-center mb-4">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">🎓</span>
+
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">You're doing great!</h3>
               <p className="text-gray-600 text-sm">

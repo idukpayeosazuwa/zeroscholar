@@ -65,15 +65,15 @@ export default function HowItWorks() {
         <div className="mt-16 bg-gradient-to-r from-[#2240AF]/10 to-[#5B85AA]/10 rounded-lg p-8 border border-[#2240AF]/20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-2xl font-bold text-[#2240AF] mb-3">🎓 Your 2025 Wrapped</h3>
+              <h3 className="text-2xl font-bold text-[#2240AF] mb-3">Your 2025 Wrapped</h3>
               <p className="text-gray-700 mb-4">
                 Discover the scholarships you were eligible for in 2025 but missed. Sign in to get your personalized report:
               </p>
               <ul className="space-y-2 text-gray-700">
-                <li className="flex items-center"><span className="text-[#2240AF] mr-2">📊</span> Total eligible scholarships</li>
-                <li className="flex items-center"><span className="text-[#2240AF] mr-2">💰</span> Total potential value missed</li>
-                <li className="flex items-center"><span className="text-[#2240AF] mr-2">📈</span> Breakdown by field of study</li>
-                <li className="flex items-center"><span className="text-[#2240AF] mr-2">🎯</span> Top 5 opportunities you missed</li>
+                <li className="flex items-center"><span className="text-[#2240AF] mr-2">•</span> Total eligible scholarships</li>
+                <li className="flex items-center"><span className="text-[#2240AF] mr-2">•</span> Total potential value missed</li>
+                <li className="flex items-center"><span className="text-[#2240AF] mr-2">•</span> Breakdown by field of study</li>
+                <li className="flex items-center"><span className="text-[#2240AF] mr-2">•</span> Top 5 opportunities you missed</li>
               </ul>
             </div>
             

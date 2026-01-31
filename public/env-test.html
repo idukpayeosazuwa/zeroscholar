@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Env Test</title>
+</head>
+<body>
+  <h1>Environment Variable Test</h1>
+  <pre id="output"></pre>
+  <script type="module">
+    const envCheck = {
+      VITE_APPWRITE_ENDPOINT: import.meta.env.VITE_APPWRITE_ENDPOINT,
+      VITE_APPWRITE_PROJECT_ID: import.meta.env.VITE_APPWRITE_PROJECT_ID,
+      MODE: import.meta.env.MODE,
+      DEV: import.meta.env.DEV,
+      PROD: import.meta.env.PROD,
+      allEnvVars: import.meta.env
+    };
+    
+    document.getElementById('output').textContent = JSON.stringify(envCheck, null, 2);
+    console.log('🔍 Environment Variables:', envCheck);
+  </script>
+</body>
+</html>

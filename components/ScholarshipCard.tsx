@@ -137,7 +137,7 @@ const ScholarshipCard: React.FC<ScholarshipCardProps> = ({ scholarship, isMatche
       {/* Match indicator badge */}
       {!isMatched && (
         <div className="absolute top-0 right-0 bg-yellow-500 text-white px-3 py-1 text-xs font-medium rounded-bl-lg">
-          ⚠️ Check Eligibility
+          Check Eligibility
         </div>
       )}
 

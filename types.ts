@@ -116,3 +116,62 @@ export interface Source {
   uri: string;
   title: string;
 }
+
+// Aptitude Test Types
+export interface ChartDataset {
+  name: string;
+  values: number[];
+  color?: string;
+}
+
+export interface ChartConfig {
+  type: 'bar' | 'pie' | 'line' | 'clustered-bar';
+  title?: string;
+  data: {
+    labels: string[];
+    datasets: ChartDataset[];
+  };
+  xAxisLabel?: string;
+  yAxisLabel?: string;
+  annotations?: string[];
+}
+
+export interface TableConfig {
+  type: 'table';
+  headers: string[];
+  rows: (string | null)[][];
+}
+
+export interface NumericalQuestion {
+  id: string;
+  question: string;
+  chartConfig: ChartConfig | TableConfig;
+  options: string[];
+  correctAnswer: string;
+  explanation?: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
+  timeLimit?: number;
+}
+
+export interface AbstractQuestion {
+  id: string;
+  question: string;
+  imageUrl?: string;
+  shapes?: any[];
+  options: string[];
+  correctAnswer: string;
+  explanation?: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
+  timeLimit?: number;
+}
+
+export interface VerbalQuestion {
+  id: string;
+  passage?: string;
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  explanation?: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
+  timeLimit?: number;
+}

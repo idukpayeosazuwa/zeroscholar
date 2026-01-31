@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ver_001",
+    "passage": "Although it was discovered in the 19th century that birds were closely related to dinosaurs, the current scientific consensus is that birds were, and always have been dinosaurs themselves. Fossil evidence demonstrates similarities between birds and other feathered dinosaurs, including hollow bones, nest building and similar brooding behaviours. Although the dinosaurian lineage of birds is largely undisputed, the evolution of powered flight in birds is still debated. Two theories of flight in birds are the ground-up theory, and the trees-down theory. Ground-up theorists suggest birds evolved powered flight from ground dwelling dinosaurs, and trees-down theorists suggest birds evolved from tree dwelling, gliding dinosaurs. Further research is required to conclusively verify the process in which birds evolved powered flight.",
+    "question": "The ground-up and trees-down theories are the only theories explaining flight in birds.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot Say - Although the ground-up and trees-down theories are stated to be theories of flight in birds, they are not stated to be the only two theories explaining flight in birds. Therefore, the correct answer is Cannot Say."
+  },
+  {
+    "id": "ver_002",
+    "passage": "Although it was discovered in the 19th century that birds were closely related to dinosaurs, the current scientific consensus is that birds were, and always have been dinosaurs themselves. Fossil evidence demonstrates similarities between birds and other feathered dinosaurs, including hollow bones, nest building and similar brooding behaviours. Although the dinosaurian lineage of birds is largely undisputed, the evolution of powered flight in birds is still debated. Two theories of flight in birds are the ground-up theory, and the trees-down theory. Ground-up theorists suggest birds evolved powered flight from ground dwelling dinosaurs, and trees-down theorists suggest birds evolved from tree dwelling, gliding dinosaurs. Further research is required to conclusively verify the process in which birds evolved powered flight.",
+    "question": "All dinosaurs had hollow bones.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot Say - The passage states that other feathered dinosaurs also had hollow bones, not that all dinosaurs (non-feathered) also had hollow bones. Therefore, the correct answer is Cannot Say."
+  },
+  {
+    "id": "ver_003",
+    "passage": "Although it was discovered in the 19th century that birds were closely related to dinosaurs, the current scientific consensus is that birds were, and always have been dinosaurs themselves. Fossil evidence demonstrates similarities between birds and other feathered dinosaurs, including hollow bones, nest building and similar brooding behaviours. Although the dinosaurian lineage of birds is largely undisputed, the evolution of powered flight in birds is still debated. Two theories of flight in birds are the ground-up theory, and the trees-down theory. Ground-up theorists suggest birds evolved powered flight from ground dwelling dinosaurs, and trees-down theorists suggest birds evolved from tree dwelling, gliding dinosaurs. Further research is required to conclusively verify the process in which birds evolved powered flight.",
+    "question": "There is no scientific consensus regarding how birds evolved powered flight.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - The passage states that further research is required to conclusively verify the process in which birds evolved powered flight. Similarly, it is stated that, the evolution of powered flight in birds is still debated. Therefore, the correct answer is True."
+  },
+  {
+    "id": "ver_004",
+    "passage": "Although it was discovered in the 19th century that birds were closely related to dinosaurs, the current scientific consensus is that birds were, and always have been dinosaurs themselves. Fossil evidence demonstrates similarities between birds and other feathered dinosaurs, including hollow bones, nest building and similar brooding behaviours. Although the dinosaurian lineage of birds is largely undisputed, the evolution of powered flight in birds is still debated. Two theories of flight in birds are the ground-up theory, and the trees-down theory. Ground-up theorists suggest birds evolved powered flight from ground dwelling dinosaurs, and trees-down theorists suggest birds evolved from tree dwelling, gliding dinosaurs. Further research is required to conclusively verify the process in which birds evolved powered flight.",
+    "question": "The dinosaurian origins of birds is widely rejected.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "B",
+    "explanation": "False - It is stated that the dinosaurian origins of birds is largely undisputed, and is therefore the antithesis of being widely rejected. Therefore, the correct answer is False."
+  },
+  {
+    "id": "ver_005",
+    "passage": "A feral cat is a domestic cat that was raised in the wild, without having experienced significant human contact. Feral cats differ from stray cats, in that strays were previously pets which became nomadic. Unlike strays, feral cats initially show hostility towards humans, particularly upon first contact. Feral cats may become invasive to ecosystems, particularly on insular islands, resulting in a decline in biodiversity. Non-indigenous feral cats often have few natural predators, and prey on local species unaccustomed to defending against cats. Ground nesting birds, small native mammals and even amphibian species are often impacted by invasive populations of feral cats, and have led to extinctions of these species in some cases.",
+    "question": "Both stray and feral cats exhibit hostility when first encountering humans.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "B",
+    "explanation": "False - The passage states that Unlike strays, feral cats initially show hostility towards humans. Since this distinguishes stray cats from feral cats, the correct answer is False."
+  },
+  {
+    "id": "ver_006",
+    "passage": "A feral cat is a domestic cat that was raised in the wild, without having experienced significant human contact. Feral cats differ from stray cats, in that strays were previously pets which became nomadic. Unlike strays, feral cats initially show hostility towards humans, particularly upon first contact. Feral cats may become invasive to ecosystems, particularly on insular islands, resulting in a decline in biodiversity. Non-indigenous feral cats often have few natural predators, and prey on local species unaccustomed to defending against cats. Ground nesting birds, small native mammals and even amphibian species are often impacted by invasive populations of feral cats, and have led to extinctions of these species in some cases.",
+    "question": "Biodiversity can be affected by feral cat populations.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - The passage states that feral cats can become invasive, resulting in a decline in biodiversity. Therefore, the correct answer is True."
+  },
+  {
+    "id": "ver_007",
+    "passage": "A feral cat is a domestic cat that was raised in the wild, without having experienced significant human contact. Feral cats differ from stray cats, in that strays were previously pets which became nomadic. Unlike strays, feral cats initially show hostility towards humans, particularly upon first contact. Feral cats may become invasive to ecosystems, particularly on insular islands, resulting in a decline in biodiversity. Non-indigenous feral cats often have few natural predators, and prey on local species unaccustomed to defending against cats. Ground nesting birds, small native mammals and even amphibian species are often impacted by invasive populations of feral cats, and have led to extinctions of these species in some cases.",
+    "question": "All cats prey on ground nesting birds.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot Say - The passage only discusses feral cats preying on ground nesting birds, not all cats. Therefore, the correct answer is Cannot Say."
+  },
+  {
+    "id": "ver_008",
+    "passage": "A feral cat is a domestic cat that was raised in the wild, without having experienced significant human contact. Feral cats differ from stray cats, in that strays were previously pets which became nomadic. Unlike strays, feral cats initially show hostility towards humans, particularly upon first contact. Feral cats may become invasive to ecosystems, particularly on insular islands, resulting in a decline in biodiversity. Non-indigenous feral cats often have few natural predators, and prey on local species unaccustomed to defending against cats. Ground nesting birds, small native mammals and even amphibian species are often impacted by invasive populations of feral cats, and have led to extinctions of these species in some cases.",
+    "question": "Feral cats have caused extinction of some species.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - The passage states that invasive populations of feral cats have led to extinctions of these species in some cases. Therefore, the correct answer is True."
+  },
+  {
+    "id": "ver_009",
+    "passage": "A feral cat is a domestic cat that was raised in the wild, without having experienced significant human contact. Feral cats differ from stray cats, in that strays were previously pets which became nomadic. Unlike strays, feral cats initially show hostility towards humans, particularly upon first contact. Feral cats may become invasive to ecosystems, particularly on insular islands, resulting in a decline in biodiversity. Non-indigenous feral cats often have few natural predators, and prey on local species unaccustomed to defending against cats. Ground nesting birds, small native mammals and even amphibian species are often impacted by invasive populations of feral cats, and have led to extinctions of these species in some cases.",
+    "question": "Stray cats were once pets.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - The passage states that strays were previously pets which became nomadic. Therefore, the correct answer is True."
+  },
+  {
+    "id": "ver_010",
+    "passage": "A feral cat is a domestic cat that was raised in the wild, without having experienced significant human contact. Feral cats differ from stray cats, in that strays were previously pets which became nomadic. Unlike strays, feral cats initially show hostility towards humans, particularly upon first contact. Feral cats may become invasive to ecosystems, particularly on insular islands, resulting in a decline in biodiversity. Non-indigenous feral cats often have few natural predators, and prey on local species unaccustomed to defending against cats. Ground nesting birds, small native mammals and even amphibian species are often impacted by invasive populations of feral cats, and have led to extinctions of these species in some cases.",
+    "question": "Indigenous feral cats have many natural predators.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot Say - The passage only states that non-indigenous feral cats often have few natural predators. It does not state anything about indigenous feral cats. Therefore, the correct answer is Cannot Say."
+  }
+]

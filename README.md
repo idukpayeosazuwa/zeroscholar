@@ -1,3 +1,5 @@
+<div align="center">
+</div>
 
 # ScholarAI - AI-Powered Scholarship Matching Platform
 

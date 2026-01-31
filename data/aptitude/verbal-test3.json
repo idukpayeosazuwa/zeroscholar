@@ -1,0 +1,90 @@
+[
+  {
+    "id": "ver_021",
+    "passage": "Nobody knows what life forms may exist outside our own planet. The search for extra-terrestrial life in the universe took a step nearer to fruition with the discovery in June of what are believed to be traces of water on the surface of Mars. Life on our planet requires water and its presence on Mars may point towards the existence of past life on the planet. The Phoenix Mars Lander robot landed on the plains of Mars on May 25th 2008, searching for signs that the Martian environment might once have been habitable to life. When it dug a ditch in the planet's surface, photos revealed small patches of bright material. Four days later those patches had disappeared, causing scientists to speculate that they were water ice that had previously been buried and which vaporised when exposed to the air. Scientists insisted that if the patches had been salt, they would not have disappeared and if they had been solid carbon dioxide, then they would not have vaporised.",
+    "question": "The Phoenix Mars Lander has provided proof that life once existed on Mars.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - The passage states that scientists speculate that there were ice patches on Mars, which is needed for life. We are told about the Phoenix Mars Lander and its discovery but we are not told what the Phoenix Mars Lander has proved, disproved, or failed to prove. So we cannot say if this is true or false without further information."
+  },
+  {
+    "id": "ver_022",
+    "passage": "Nobody knows what life forms may exist outside our own planet. The search for extra-terrestrial life in the universe took a step nearer to fruition with the discovery in June of what are believed to be traces of water on the surface of Mars. Life on our planet requires water and its presence on Mars may point towards the existence of past life on the planet. The Phoenix Mars Lander robot landed on the plains of Mars on May 25th 2008, searching for signs that the Martian environment might once have been habitable to life. When it dug a ditch in the planet's surface, photos revealed small patches of bright material. Four days later those patches had disappeared, causing scientists to speculate that they were water ice that had previously been buried and which vaporised when exposed to the air. Scientists insisted that if the patches had been salt, they would not have disappeared and if they had been solid carbon dioxide, then they would not have vaporised.",
+    "question": "Life forms on Mars require water in order to survive.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - The passage states that Life on our plant requires water. The passage also says that we do not know about every single life form: Nobody knows what life forms may exist outside our own planet. Given that the passage does not tell us whether all life on Mars (or any planet other than our own) does or does not require water, we cannot say whether or not this statement is true or false."
+  },
+  {
+    "id": "ver_023",
+    "passage": "Nobody knows what life forms may exist outside our own planet. The search for extra-terrestrial life in the universe took a step nearer to fruition with the discovery in June of what are believed to be traces of water on the surface of Mars. Life on our planet requires water and its presence on Mars may point towards the existence of past life on the planet. The Phoenix Mars Lander robot landed on the plains of Mars on May 25th 2008, searching for signs that the Martian environment might once have been habitable to life. When it dug a ditch in the planet's surface, photos revealed small patches of bright material. Four days later those patches had disappeared, causing scientists to speculate that they were water ice that had previously been buried and which vaporised when exposed to the air. Scientists insisted that if the patches had been salt, they would not have disappeared and if they had been solid carbon dioxide, then they would not have vaporised.",
+    "question": "Since the Phoenix Mars Lander cannot excavate it is limited to surface photography.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "B",
+    "explanation": "False - The fifth sentence says When it dug a ditch in the planet's surface meaning that the Phoenix Mars Lander is capable of some sort of excavation."
+  },
+  {
+    "id": "ver_024",
+    "passage": "Most workers in the UK over the age of 16 are legally entitled to a minimum rate of pay, called the national minimum wage. An independent body called the Low Pay Commission (LPC) each year reviews this rate and passes their recommendation to the government, who then set and enforce the rate. With few exceptions, the minimum wage is the same for all types of work and all kinds of business. The current amount for people over 22 years of age is 6.80 pounds per hour. The rates for younger workers are less. However, the following groups are not entitled to receive the minimum wage: workers under school leaving age, the genuinely self-employed, some apprentices, au pairs, armed service personnel and voluntary workers. Also agricultural workers have a separate minimum rate of pay set by the Agricultural Wages Board.",
+    "question": "The Low Pay Commission sets the rate of the national minimum wage.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "B",
+    "explanation": "False - The second sentence tells us that the Low Pay Commission passes their recommendation to the government, who then set and enforce the rate. So we are told that the LPC give a recommendation but it is actually the government who set the rate."
+  },
+  {
+    "id": "ver_025",
+    "passage": "Most workers in the UK over the age of 16 are legally entitled to a minimum rate of pay, called the national minimum wage. An independent body called the Low Pay Commission (LPC) each year reviews this rate and passes their recommendation to the government, who then set and enforce the rate. With few exceptions, the minimum wage is the same for all types of work and all kinds of business. The current amount for people over 22 years of age is 6.80 pounds per hour. The rates for younger workers are less. However, the following groups are not entitled to receive the minimum wage: workers under school leaving age, the genuinely self-employed, some apprentices, au pairs, armed service personnel and voluntary workers. Also agricultural workers have a separate minimum rate of pay set by the Agricultural Wages Board.",
+    "question": "The Agricultural Wages Board sets pay bands for different levels of agricultural workers.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - The last sentence says that agricultural workers have a separate minimum rate of pay set by the Agricultural Wages Board. So we are told that the AWG set a minimum rate but we are not told if they set rate bands for different levels of workers."
+  },
+  {
+    "id": "ver_026",
+    "passage": "Most workers in the UK over the age of 16 are legally entitled to a minimum rate of pay, called the national minimum wage. An independent body called the Low Pay Commission (LPC) each year reviews this rate and passes their recommendation to the government, who then set and enforce the rate. With few exceptions, the minimum wage is the same for all types of work and all kinds of business. The current amount for people over 22 years of age is 6.80 pounds per hour. The rates for younger workers are less. However, the following groups are not entitled to receive the minimum wage: workers under school leaving age, the genuinely self-employed, some apprentices, au pairs, armed service personnel and voluntary workers. Also agricultural workers have a separate minimum rate of pay set by the Agricultural Wages Board.",
+    "question": "The lowest wage a 16 year old is entitled to is 6.80 pounds an hour.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "B",
+    "explanation": "False - The passage states that this is the rate for people over 22 years of age, and that the rates for younger workers are less."
+  },
+  {
+    "id": "ver_027",
+    "passage": "A common difficulty faced by business managers is when the behaviour of a team-member conflicts with established desirable practice. How does a good leader handle such an issue? One effective angle is to lead by example: instead of waiting for a problem to develop, take a proactive approach in heading it off with reference to clearly laid out guidelines. If a problematic situation does develop, controlling it can be made simpler by invoking existing values from a mission statement which has been set out in advance. A good team will always put the needs of the organisation first. Taking such an approach gives the team a sense of personal involvement which encourages them to feel part of the organisation's mission, internalising the needs of the group rather than feeling a sense of externally imposed obligation. It provides team members with a greater sense of personal control, the sense that they have contributed individually, and by choice, to the well-being of their organisation. To achieve this, a manager must have a good understanding of the way individual people communicate - a flexible approach is essential, using real-life practical examples relevant to each team-member's particular experience.",
+    "question": "Leading by example is an effective approach in dealing with problematic behaviour from employees.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - this statement is correct, as the passage says: when the behaviour of a team-member conflicts with established desirable practice... one effective angle is to lead by example..."
+  },
+  {
+    "id": "ver_028",
+    "passage": "A common difficulty faced by business managers is when the behaviour of a team-member conflicts with established desirable practice. How does a good leader handle such an issue? One effective angle is to lead by example: instead of waiting for a problem to develop, take a proactive approach in heading it off with reference to clearly laid out guidelines. If a problematic situation does develop, controlling it can be made simpler by invoking existing values from a mission statement which has been set out in advance. A good team will always put the needs of the organisation first. Taking such an approach gives the team a sense of personal involvement which encourages them to feel part of the organisation's mission, internalising the needs of the group rather than feeling a sense of externally imposed obligation. It provides team members with a greater sense of personal control, the sense that they have contributed individually, and by choice, to the well-being of their organisation. To achieve this, a manager must have a good understanding of the way individual people communicate - a flexible approach is essential, using real-life practical examples relevant to each team-member's particular experience.",
+    "question": "A manager who understands how people communicate is able to take a flexible approach in dealing with problems.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - while the passage encourages both effective communication and a flexible approach, it does not explicitly state that individual communication leads to a flexible approach."
+  },
+  {
+    "id": "ver_029",
+    "passage": "A common difficulty faced by business managers is when the behaviour of a team-member conflicts with established desirable practice. How does a good leader handle such an issue? One effective angle is to lead by example: instead of waiting for a problem to develop, take a proactive approach in heading it off with reference to clearly laid out guidelines. If a problematic situation does develop, controlling it can be made simpler by invoking existing values from a mission statement which has been set out in advance. A good team will always put the needs of the organisation first. Taking such an approach gives the team a sense of personal involvement which encourages them to feel part of the organisation's mission, internalising the needs of the group rather than feeling a sense of externally imposed obligation. It provides team members with a greater sense of personal control, the sense that they have contributed individually, and by choice, to the well-being of their organisation. To achieve this, a manager must have a good understanding of the way individual people communicate - a flexible approach is essential, using real-life practical examples relevant to each team-member's particular experience.",
+    "question": "In a good team, the needs of the organisation are secondary to the needs of the individual.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "B",
+    "explanation": "False - while the passage generally stresses the importance of understanding individual styles, it states explicitly that A good team will always put the needs of the organisation first."
+  },
+  {
+    "id": "ver_030",
+    "passage": "An effective PR campaign requires precise, clear communication between the client and PR officer. The client should disclose detailed information to the PR officer, including the company's history, goals, and current business plan. It is especially important to disclose any potentially problematic issues. The company should be prepared to dedicate the necessary time and resources of its senior management, as well as sufficient finances, to the campaign. The perfect PR message will be consistent, with each new approach reinforcing the key objectives of the company. If new developments do arise, the PR officer should be fully briefed as soon as possible. It is essential to keep to a clear schedule, leaving adequate time available for approval of copy. Seizing opportunities when they arise is key to the success of the campaign.",
+    "question": "The best approach to PR is to be flexible, regularly changing the company's goals to keep the public interested.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "B",
+    "explanation": "False - while accepting that changes in approach are sometimes necessary, the passage states that: The perfect PR message will be consistent, with each new approach reinforcing the key objectives of the company."
+  },
+  {
+    "id": "ver_031",
+    "passage": "An effective PR campaign requires precise, clear communication between the client and PR officer. The client should disclose detailed information to the PR officer, including the company's history, goals, and current business plan. It is especially important to disclose any potentially problematic issues. The company should be prepared to dedicate the necessary time and resources of its senior management, as well as sufficient finances, to the campaign. The perfect PR message will be consistent, with each new approach reinforcing the key objectives of the company. If new developments do arise, the PR officer should be fully briefed as soon as possible. It is essential to keep to a clear schedule, leaving adequate time available for approval of copy. Seizing opportunities when they arise is key to the success of the campaign.",
+    "question": "Not disclosing a full company history to the PR officer will result in a failed campaign.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - while the passage states that disclosure of company history is important, it is not explicitly stated anywhere that failing to do this will directly and by itself result in the failure of the PR campaign."
+  }
+]
