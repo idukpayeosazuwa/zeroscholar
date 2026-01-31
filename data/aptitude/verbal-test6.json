@@ -1,0 +1,146 @@
+[
+  {
+    "id": "ver_059",
+    "passage": "Successful and cost-effective advertising is an important issue to consider when starting up a business. A comprehensive business plan should include details of advertising strategies, a helpful starting point for which is an analysis of the advertising currently being used by competitors in the same line of business. The rise of the internet has provided a variety of new opportunities for advertising, of which an innovative business should take full advantage. A well-designed website should ideally combine a professional appearance with user-friendly functionality, and be widely promoted to draw as much traffic as possible. This not only increases the visibility of a company, but assures potential clients that the company has a forward-thinking, enterprising outlook, and is willing to embrace as well as exploit the latest technological developments.",
+    "question": "An analysis of competitors' advertisements is helpful in laying out advertising strategies for a new business",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "A",
+    "explanation": "True – the passage states, \"a helpful starting point for [planning advertising strategies] is an analysis of the advertising currently being used by competitors\". The statement is therefore correct."
+  },
+  {
+    "id": "ver_060",
+    "passage": "Successful and cost-effective advertising is an important issue to consider when starting up a business. A comprehensive business plan should include details of advertising strategies, a helpful starting point for which is an analysis of the advertising currently being used by competitors in the same line of business. The rise of the internet has provided a variety of new opportunities for advertising, of which an innovative business should take full advantage. A well-designed website should ideally combine a professional appearance with user-friendly functionality, and be widely promoted to draw as much traffic as possible. This not only increases the visibility of a company, but assures potential clients that the company has a forward-thinking, enterprising outlook, and is willing to embrace as well as exploit the latest technological developments.",
+    "question": "A professional and user-friendly website will attract a lot of traffic.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Cannot say – the passage states that \"A well-designed website\" should \"combine a professional appearance with user-friendly functionality\", but adds that the site should be \"widely promoted to draw as much traffic as possible.\" There is no explicit relationship, positive or negative, suggested to exist between the design of the website and the traffic it attracts."
+  },
+  {
+    "id": "ver_061",
+    "passage": "Open-source software should not be confused with freeware, or software that is available to install free of charge. While most open-source software is free, there are many other criteria – namely that the source code must be available to the general public via an open-source license, and that anyone is allowed to modify it. Any modifications made must also be distributed under the same terms as the original software. Proponents of the open-source movement believe this collaborative development methodology results in quicker improvements and software that can be easily adapted to users' needs. Financial savings are another main benefit of open-source software. Because numerous programmers are able to identify and fix problems, advocates believe open-source software is more reliable than proprietary software. The majority of commercial software protects its source code to prevent competitors from developing a competing product. By only making a compiled, ready-to-run version available, software manufacturers retain full control over their product, which they argue ensures higher levels of quality and security. End-users must purchase a license fee, and typically benefit from a warranty and technical support. Although open-source software does not charge license fees to fund its development, it does not follow that it cannot be commercially viable. Developers charge for installation, training and technical support. Alternatively, licenses for add-ons and additional software may be sold.",
+    "question": "Open-source software is free, and is not released under a license.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "B",
+    "explanation": "False – the second sentence states that \"most\" (not all) open-source software is available free. The same sentence states that open-source software is available to the public via \"an open-source license\". Any modifications must also be distributed under the same terms as the original software."
+  },
+  {
+    "id": "ver_062",
+    "passage": "Open-source software should not be confused with freeware, or software that is available to install free of charge. While most open-source software is free, there are many other criteria – namely that the source code must be available to the general public via an open-source license, and that anyone is allowed to modify it. Any modifications made must also be distributed under the same terms as the original software. Proponents of the open-source movement believe this collaborative development methodology results in quicker improvements and software that can be easily adapted to users' needs. Financial savings are another main benefit of open-source software. Because numerous programmers are able to identify and fix problems, advocates believe open-source software is more reliable than proprietary software. The majority of commercial software protects its source code to prevent competitors from developing a competing product. By only making a compiled, ready-to-run version available, software manufacturers retain full control over their product, which they argue ensures higher levels of quality and security. End-users must purchase a license fee, and typically benefit from a warranty and technical support. Although open-source software does not charge license fees to fund its development, it does not follow that it cannot be commercially viable. Developers charge for installation, training and technical support. Alternatively, licenses for add-ons and additional software may be sold.",
+    "question": "Because it is developed collaboratively, open-source software is of better quality than proprietary software.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Cannot say – the passage presents arguments both for and against this. The first paragraph highlights \"quicker improvements\" and says that open-source software is \"more reliable\" than proprietary software. However, the second paragraph states controlling the source code ensures \"higher levels of quality\"."
+  },
+  {
+    "id": "ver_063",
+    "passage": "Open-source software should not be confused with freeware, or software that is available to install free of charge. While most open-source software is free, there are many other criteria – namely that the source code must be available to the general public via an open-source license, and that anyone is allowed to modify it. Any modifications made must also be distributed under the same terms as the original software. Proponents of the open-source movement believe this collaborative development methodology results in quicker improvements and software that can be easily adapted to users' needs. Financial savings are another main benefit of open-source software. Because numerous programmers are able to identify and fix problems, advocates believe open-source software is more reliable than proprietary software. The majority of commercial software protects its source code to prevent competitors from developing a competing product. By only making a compiled, ready-to-run version available, software manufacturers retain full control over their product, which they argue ensures higher levels of quality and security. End-users must purchase a license fee, and typically benefit from a warranty and technical support. Although open-source software does not charge license fees to fund its development, it does not follow that it cannot be commercially viable. Developers charge for installation, training and technical support. Alternatively, licenses for add-ons and additional software may be sold.",
+    "question": "One claimed advantage of open-source software over licenced software is greater flexibility.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "A",
+    "explanation": "True – the first paragraph states that (open-source software) \"can be easily adapted to users' needs.\""
+  },
+  {
+    "id": "ver_064",
+    "passage": "Open-source software should not be confused with freeware, or software that is available to install free of charge. While most open-source software is free, there are many other criteria – namely that the source code must be available to the general public via an open-source license, and that anyone is allowed to modify it. Any modifications made must also be distributed under the same terms as the original software. Proponents of the open-source movement believe this collaborative development methodology results in quicker improvements and software that can be easily adapted to users' needs. Financial savings are another main benefit of open-source software. Because numerous programmers are able to identify and fix problems, advocates believe open-source software is more reliable than proprietary software. The majority of commercial software protects its source code to prevent competitors from developing a competing product. By only making a compiled, ready-to-run version available, software manufacturers retain full control over their product, which they argue ensures higher levels of quality and security. End-users must purchase a license fee, and typically benefit from a warranty and technical support. Although open-source software does not charge license fees to fund its development, it does not follow that it cannot be commercially viable. Developers charge for installation, training and technical support. Alternatively, licenses for add-ons and additional software may be sold.",
+    "question": "Technical support is not available for open-source software.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "B",
+    "explanation": "False – the second paragraph states, \"Developers charge for installation, training and technical support.\""
+  },
+  {
+    "id": "ver_065",
+    "passage": "Open-source software should not be confused with freeware, or software that is available to install free of charge. While most open-source software is free, there are many other criteria – namely that the source code must be available to the general public via an open-source license, and that anyone is allowed to modify it. Any modifications made must also be distributed under the same terms as the original software. Proponents of the open-source movement believe this collaborative development methodology results in quicker improvements and software that can be easily adapted to users' needs. Financial savings are another main benefit of open-source software. Because numerous programmers are able to identify and fix problems, advocates believe open-source software is more reliable than proprietary software. The majority of commercial software protects its source code to prevent competitors from developing a competing product. By only making a compiled, ready-to-run version available, software manufacturers retain full control over their product, which they argue ensures higher levels of quality and security. End-users must purchase a license fee, and typically benefit from a warranty and technical support. Although open-source software does not charge license fees to fund its development, it does not follow that it cannot be commercially viable. Developers charge for installation, training and technical support. Alternatively, licenses for add-ons and additional software may be sold.",
+    "question": "It is prohibited to modify free open-source software and then license it for a fee.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "A",
+    "explanation": "True – while it is possible for anyone to modify open-source software, the first paragraph states: \"Any modifications made must also be distributed under the same terms as the original software.\""
+  },
+  {
+    "id": "ver_066",
+    "passage": "The Ring of Fire is an area of frequent seismic and volcanic activity that encircles the Pacific basin. Approximately 90% of the world's earthquakes occur in this zone, including the largest ever recorded – Chile's 1960 Valdivia earthquake. There are an estimated 452 volcanoes – 75% of the world's total – located in this 40,000 km belt. On its Eastern side, the Ring of Fire stretches along South and Central America up to Canada and Alaska, and includes California's well-known San Andreas fault zone. To the west of the Pacific, it extends from Russia down to Japan, the Philippines, Indonesia and New Zealand. The Ring of Fire finishes in Antarctica, which is home to Mount Erebus, the world's southern-most active volcano. The volcanic eruptions and earthquakes that characterise the Ring of Fire can be explained by plate tectonics, a unifying geological theory first expounded in the 1960s. The Earth's surface is comprised of tectonic plates that change size and shift over time. Earthquakes are caused when plates that are pushing against each other suddenly slip. Volcanoes occur only when two adjacent plates converge and one plate slides under the other, a process known as subduction. As it is pushed deeper into the Earth, the subducted plate encounters high temperatures and eventually molten rock rises to the surface and erupts.",
+    "question": "Mexico is located along the eastern side of the Ring of Fire.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Cannot say – while it is correct that Mexico is part of the Ring of Fire, this is not a fact that is included in the passage and depends on knowledge gained outside of the passage."
+  },
+  {
+    "id": "ver_067",
+    "passage": "The Ring of Fire is an area of frequent seismic and volcanic activity that encircles the Pacific basin. Approximately 90% of the world's earthquakes occur in this zone, including the largest ever recorded – Chile's 1960 Valdivia earthquake. There are an estimated 452 volcanoes – 75% of the world's total – located in this 40,000 km belt. On its Eastern side, the Ring of Fire stretches along South and Central America up to Canada and Alaska, and includes California's well-known San Andreas fault zone. To the west of the Pacific, it extends from Russia down to Japan, the Philippines, Indonesia and New Zealand. The Ring of Fire finishes in Antarctica, which is home to Mount Erebus, the world's southern-most active volcano. The volcanic eruptions and earthquakes that characterise the Ring of Fire can be explained by plate tectonics, a unifying geological theory first expounded in the 1960s. The Earth's surface is comprised of tectonic plates that change size and shift over time. Earthquakes are caused when plates that are pushing against each other suddenly slip. Volcanoes occur only when two adjacent plates converge and one plate slides under the other, a process known as subduction. As it is pushed deeper into the Earth, the subducted plate encounters high temperatures and eventually molten rock rises to the surface and erupts.",
+    "question": "Subduction occurs whenever two tectonic plates move in opposite directions.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Cannot say – the passage tells us that subduction is where two adjacent plates converge and one is pushed beneath the other. The passage does not say that this definitely will or will not happen when two plates move in opposite directions (for example other parts of the moving plate may collide with a separate tectonic plate). Since we are not told explicitly if this is the case we have to respond cannot say."
+  },
+  {
+    "id": "ver_068",
+    "passage": "The Ring of Fire is an area of frequent seismic and volcanic activity that encircles the Pacific basin. Approximately 90% of the world's earthquakes occur in this zone, including the largest ever recorded – Chile's 1960 Valdivia earthquake. There are an estimated 452 volcanoes – 75% of the world's total – located in this 40,000 km belt. On its Eastern side, the Ring of Fire stretches along South and Central America up to Canada and Alaska, and includes California's well-known San Andreas fault zone. To the west of the Pacific, it extends from Russia down to Japan, the Philippines, Indonesia and New Zealand. The Ring of Fire finishes in Antarctica, which is home to Mount Erebus, the world's southern-most active volcano. The volcanic eruptions and earthquakes that characterise the Ring of Fire can be explained by plate tectonics, a unifying geological theory first expounded in the 1960s. The Earth's surface is comprised of tectonic plates that change size and shift over time. Earthquakes are caused when plates that are pushing against each other suddenly slip. Volcanoes occur only when two adjacent plates converge and one plate slides under the other, a process known as subduction. As it is pushed deeper into the Earth, the subducted plate encounters high temperatures and eventually molten rock rises to the surface and erupts.",
+    "question": "There are no volcanoes further south than Mount Erebus.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Cannot say – while the passage states that Mount Erebus is \"the world's southern-most active volcano\" there may be dormant volcanoes further south in Antarctica."
+  },
+  {
+    "id": "ver_069",
+    "passage": "The Ring of Fire is an area of frequent seismic and volcanic activity that encircles the Pacific basin. Approximately 90% of the world's earthquakes occur in this zone, including the largest ever recorded – Chile's 1960 Valdivia earthquake. There are an estimated 452 volcanoes – 75% of the world's total – located in this 40,000 km belt. On its Eastern side, the Ring of Fire stretches along South and Central America up to Canada and Alaska, and includes California's well-known San Andreas fault zone. To the west of the Pacific, it extends from Russia down to Japan, the Philippines, Indonesia and New Zealand. The Ring of Fire finishes in Antarctica, which is home to Mount Erebus, the world's southern-most active volcano. The volcanic eruptions and earthquakes that characterise the Ring of Fire can be explained by plate tectonics, a unifying geological theory first expounded in the 1960s. The Earth's surface is comprised of tectonic plates that change size and shift over time. Earthquakes are caused when plates that are pushing against each other suddenly slip. Volcanoes occur only when two adjacent plates converge and one plate slides under the other, a process known as subduction. As it is pushed deeper into the Earth, the subducted plate encounters high temperatures and eventually molten rock rises to the surface and erupts.",
+    "question": "Molten rock rises during a volcanic eruption.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "A",
+    "explanation": "True – the last sentence tells us that \"molten rock rises to the surface and erupts\" during a volcanic eruption."
+  },
+  {
+    "id": "ver_070",
+    "passage": "The Ring of Fire is an area of frequent seismic and volcanic activity that encircles the Pacific basin. Approximately 90% of the world's earthquakes occur in this zone, including the largest ever recorded – Chile's 1960 Valdivia earthquake. There are an estimated 452 volcanoes – 75% of the world's total – located in this 40,000 km belt. On its Eastern side, the Ring of Fire stretches along South and Central America up to Canada and Alaska, and includes California's well-known San Andreas fault zone. To the west of the Pacific, it extends from Russia down to Japan, the Philippines, Indonesia and New Zealand. The Ring of Fire finishes in Antarctica, which is home to Mount Erebus, the world's southern-most active volcano. The volcanic eruptions and earthquakes that characterise the Ring of Fire can be explained by plate tectonics, a unifying geological theory first expounded in the 1960s. The Earth's surface is comprised of tectonic plates that change size and shift over time. Earthquakes are caused when plates that are pushing against each other suddenly slip. Volcanoes occur only when two adjacent plates converge and one plate slides under the other, a process known as subduction. As it is pushed deeper into the Earth, the subducted plate encounters high temperatures and eventually molten rock rises to the surface and erupts.",
+    "question": "The world's most severe earthquakes and volcanic eruptions occur within the Ring of Fire.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Cannot say – while the majority of the world's earthquakes (90%) and volcanoes (75%) occur within the Ring of Fire, and the world's largest earthquake (Valdivia) occurred within the Ring of Fire, the passage does not state whether the most severe volcanic eruption happened within this zone, or if they will in the future."
+  }
+]

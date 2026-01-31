@@ -82,7 +82,7 @@ const PWAInstallPrompt: React.FC = () => {
                 {installPrompt ? (
                   <>
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-gray-800 mb-2">🤖 For Android:</h4>
+                      <h4 className="font-semibold text-gray-800 mb-2">For Android:</h4>
                       <p className="text-sm text-gray-700 mb-3">Click the Install button to add the app to your home screen</p>
                     </div>
                     <button
@@ -95,7 +95,7 @@ const PWAInstallPrompt: React.FC = () => {
                 ) : (
                   <>
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-gray-800 mb-2">🤖 For Android:</h4>
+                      <h4 className="font-semibold text-gray-800 mb-2">For Android:</h4>
                       <ol className="text-sm text-gray-700 space-y-2 list-decimal list-inside">
                         <li>Tap the <span className="font-semibold">menu</span> button (three dots)</li>
                         <li>Tap <span className="font-semibold">Install app</span> or <span className="font-semibold">Add to Home Screen</span></li>
@@ -136,14 +136,14 @@ const PWAInstallPrompt: React.FC = () => {
       {showSuccessMessage && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-8 shadow-2xl max-w-sm mx-auto text-center transform transition-all">
-            <div className="text-5xl mb-4">🎉</div>
+
             <h2 className="text-2xl font-bold text-gray-800 mb-2">Installation Successful!</h2>
             <p className="text-gray-600 mb-4">
               Go to your home screen and tap the ScholarAI icon to unlock the full app experience.
             </p>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
               <p className="text-sm text-blue-800">
-                💡 <span className="font-semibold">Tip:</span> The app will now work without an internet connection!
+                <span className="font-semibold">Tip:</span> The app will now work without an internet connection!
               </p>
             </div>
             <p className="text-xs text-gray-500">This message will close automatically...</p>

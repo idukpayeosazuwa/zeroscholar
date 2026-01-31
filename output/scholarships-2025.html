@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scholarships Report</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.5;
+      padding: 12px;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { 
+      color: #2563eb; 
+      text-align: center; 
+      font-size: 1.5rem; 
+      margin-bottom: 8px;
+    }
+    .meta { 
+      text-align: center; 
+      color: #666; 
+      font-size: 0.85rem;
+      margin-bottom: 16px; 
+    }
+    
+    /* Table Styles */
+    .table-wrapper {
+      overflow-x: auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    table { 
+      width: 100%; 
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th, td { 
+      padding: 10px 8px; 
+      text-align: left; 
+      border-bottom: 1px solid #eee;
+    }
+    th { 
+      background: #2563eb; 
+      color: white; 
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      white-space: nowrap;
+    }
+    tr:hover { background: #f0f7ff; }
+    
+    /* Details Button */
+    .details-btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .details-btn:hover { background: #1d4ed8; }
+    
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      padding: 16px;
+      overflow-y: auto;
+    }
+    .modal-overlay.active { display: flex; align-items: flex-start; justify-content: center; }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      margin-top: 20px;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-header {
+      padding: 16px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      background: white;
+      border-radius: 16px 16px 0 0;
+    }
+    .modal-title { 
+      font-size: 1rem; 
+      font-weight: 700; 
+      color: #1e3a8a;
+      flex: 1;
+    }
+    .close-btn {
+      background: #f3f4f6;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .close-btn:hover { background: #e5e7eb; }
+    .modal-body { padding: 16px; }
+    
+    /* Modal Info Grid */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #f3f4f6;
+      gap: 8px;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { 
+      color: #64748b; 
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    .info-value { 
+      font-weight: 600; 
+      color: #1e293b;
+      font-size: 0.85rem;
+      text-align: right;
+    }
+    
+    /* Requirements Section */
+    .req-section {
+      background: #f0f9ff;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+    .req-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #0369a1;
+      margin-bottom: 10px;
+    }
+    .req-badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      margin: 2px;
+      font-weight: 500;
+    }
+    .req-badge.warning { background: #fef3c7; color: #92400e; }
+    .req-badge.success { background: #dcfce7; color: #166534; }
+    .req-badge.danger { background: #fee2e2; color: #991b1b; }
+    
+    /* Apply Button */
+    .apply-btn {
+      display: block;
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      text-align: center;
+      padding: 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      margin-top: 16px;
+      transition: background 0.2s;
+    }
+    .apply-btn:hover { background: #1d4ed8; }
+    
+    /* Mobile-first responsive */
+    @media (max-width: 600px) {
+      body { padding: 8px; }
+      h1 { font-size: 1.25rem; }
+      table { font-size: 0.75rem; }
+      th, td { padding: 8px 6px; }
+      .hide-mobile { display: none; }
+      .modal { margin-top: 10px; }
+    }
+    
+    @media print {
+      .details-btn, .modal-overlay { display: none !important; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📚 Scholarships Report</h1>
+    <p class="meta">
+      Jan 20, 2026 • 102 scholarships
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th class="hide-mobile">Amount</th>
+            <th class="hide-mobile">Deadline</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>WAAW Foundation Scholarship 2025 for ...</td>
+            <td class="hide-mobile">USD500</td>
+            <td class="hide-mobile">2025-12-31</td>
+            <td><button class="details-btn" onclick="openModal(0)">Details</button></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Young Legend Foundation Scholarship 2...</td>
+            <td class="hide-mobile">NGN300000</td>
+            <td class="hide-mobile">2025-11-28</td>
+            <td><button class="details-btn" onclick="openModal(1)">Details</button></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Jim Ovia Foundation Scholarship for U...</td>
+            <td class="hide-mobile">NGN150000 + Tuition</td>
+            <td class="hide-mobile">2025-12-03</td>
+            <td><button class="details-btn" onclick="openModal(2)">Details</button></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>FON Emerging Leaders Scholarship 2025...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-12-01</td>
+            <td><button class="details-btn" onclick="openModal(3)">Details</button></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>MATHFELIC Foundation Scholarship for ...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(4)">Details</button></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>AgriTech Scholarship Program for Unde...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(5)">Details</button></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Christopher Kolade Foundation (CKF) S...</td>
+            <td class="hide-mobile">NGN300000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(6)">Details</button></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Egbe Omo Yoruba Scholarship for Under...</td>
+            <td class="hide-mobile">USD250</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(7)">Details</button></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Rasheedat Ajibade Foundation Scholars...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(8)">Details</button></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Airtel Foundation Tech Scholarship Fo...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(9)">Details</button></td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td>Bet9ja Foundation Scholarship 2025 Fo...</td>
+            <td class="hide-mobile">NGN250000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(10)">Details</button></td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>₦100,000 Afro-Tech Girls Undergraduat...</td>
+            <td class="hide-mobile">NGN100000</td>
+            <td class="hide-mobile">2025-10-20</td>
+            <td><button class="details-btn" onclick="openModal(11)">Details</button></td>
+          </tr>
+          <tr>
+            <td>13</td>
+            <td>Moniepoint Future Builders STEM Schol...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-10-16</td>
+            <td><button class="details-btn" onclick="openModal(12)">Details</button></td>
+          </tr>
+          <tr>
+            <td>14</td>
+            <td>Funmike Empowerment Foundation Schola...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-10-20</td>
+            <td><button class="details-btn" onclick="openModal(13)">Details</button></td>
+          </tr>
+          <tr>
+            <td>15</td>
+            <td>2025 LCA Scholarships by Liberty Care...</td>
+            <td class="hide-mobile">NGN150000 - NGN200000</td>
+            <td class="hide-mobile">2025-10-22</td>
+            <td><button class="details-btn" onclick="openModal(14)">Details</button></td>
+          </tr>
+          <tr>
+            <td>16</td>
+            <td>Fajim Medicare Foundation Scholarship...</td>
+            <td class="hide-mobile">NGN100000</td>
+            <td class="hide-mobile">2025-10-12</td>
+            <td><button class="details-btn" onclick="openModal(15)">Details</button></td>
+          </tr>
+          <tr>
+            <td>17</td>
+            <td>2026 RTEF Scholarship (Ruth Titilayo ...</td>
+            <td class="hide-mobile">NGN 120000</td>
+            <td class="hide-mobile">2025-10-31</td>
+            <td><button class="details-btn" onclick="openModal(16)">Details</button></td>
+          </tr>
+          <tr>
+            <td>18</td>
+            <td>Fast Credit Scholarship Program 2025 ...</td>
+            <td class="hide-mobile">NGN250000</td>
+            <td class="hide-mobile">2025-09-30</td>
+            <td><button class="details-btn" onclick="openModal(17)">Details</button></td>
+          </tr>
+          <tr>
+            <td>19</td>
+            <td>TKM Foundation Scholarship 2025 for N...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-11-03</td>
+            <td><button class="details-btn" onclick="openModal(18)">Details</button></td>
+          </tr>
+          <tr>
+            <td>20</td>
+            <td>SOHCAHTOA Foundation Scholarship 2025...</td>
+            <td class="hide-mobile">NGN250000</td>
+            <td class="hide-mobile">2025-09-30</td>
+            <td><button class="details-btn" onclick="openModal(19)">Details</button></td>
+          </tr>
+          <tr>
+            <td>21</td>
+            <td>One Youth Young Leaders Scholarship 2...</td>
+            <td class="hide-mobile">NGN1000000</td>
+            <td class="hide-mobile">2025-11-30</td>
+            <td><button class="details-btn" onclick="openModal(20)">Details</button></td>
+          </tr>
+          <tr>
+            <td>22</td>
+            <td>Stanbic IBTC University Scholarship 2...</td>
+            <td class="hide-mobile">NGN200000</td>
+            <td class="hide-mobile">2025-09-16</td>
+            <td><button class="details-btn" onclick="openModal(21)">Details</button></td>
+          </tr>
+          <tr>
+            <td>23</td>
+            <td>THRiVE Scholarships 2025 for Undergra...</td>
+            <td class="hide-mobile">NGN50000</td>
+            <td class="hide-mobile">2025-09-15</td>
+            <td><button class="details-btn" onclick="openModal(22)">Details</button></td>
+          </tr>
+          <tr>
+            <td>24</td>
+            <td>FCM Foundation Scholarship 2025 for N...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-09-10</td>
+            <td><button class="details-btn" onclick="openModal(23)">Details</button></td>
+          </tr>
+          <tr>
+            <td>25</td>
+            <td>Julius Berger Scholarship 2025 Award ...</td>
+            <td class="hide-mobile">NGN200000</td>
+            <td class="hide-mobile">2025-09-15</td>
+            <td><button class="details-btn" onclick="openModal(24)">Details</button></td>
+          </tr>
+          <tr>
+            <td>26</td>
+            <td>SieDiHub Educational Scholarship Prog...</td>
+            <td class="hide-mobile">NGN250000</td>
+            <td class="hide-mobile">2025-08-31</td>
+            <td><button class="details-btn" onclick="openModal(25)">Details</button></td>
+          </tr>
+          <tr>
+            <td>27</td>
+            <td>Anthony Udokwu Foundation Scholarship...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-11-14</td>
+            <td><button class="details-btn" onclick="openModal(26)">Details</button></td>
+          </tr>
+          <tr>
+            <td>28</td>
+            <td>Joseph Adekunle Adegbite Foundation S...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-08-20</td>
+            <td><button class="details-btn" onclick="openModal(27)">Details</button></td>
+          </tr>
+          <tr>
+            <td>29</td>
+            <td>Nagas Group Undergraduate Scholarship...</td>
+            <td class="hide-mobile">NGN50000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(28)">Details</button></td>
+          </tr>
+          <tr>
+            <td>30</td>
+            <td>WomanUp Scholarship Program 2025 (Mkp...</td>
+            <td class="hide-mobile">NGN250000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(29)">Details</button></td>
+          </tr>
+          <tr>
+            <td>31</td>
+            <td>ASMAF Scholarship 2025 (Ajesola Solar...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-09-12</td>
+            <td><button class="details-btn" onclick="openModal(30)">Details</button></td>
+          </tr>
+          <tr>
+            <td>32</td>
+            <td>Wigwe University Merit Scholarship 20...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(31)">Details</button></td>
+          </tr>
+          <tr>
+            <td>33</td>
+            <td>Female Scholars Foundation Scholarshi...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-12-01</td>
+            <td><button class="details-btn" onclick="openModal(32)">Details</button></td>
+          </tr>
+          <tr>
+            <td>34</td>
+            <td>Global Youth Foundation (GYF) Scholar...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-08-07</td>
+            <td><button class="details-btn" onclick="openModal(33)">Details</button></td>
+          </tr>
+          <tr>
+            <td>35</td>
+            <td>Nile University of Nigeria Scholarshi...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(34)">Details</button></td>
+          </tr>
+          <tr>
+            <td>36</td>
+            <td>Bridge Scholarship Award 2025 for Und...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-09-12</td>
+            <td><button class="details-btn" onclick="openModal(35)">Details</button></td>
+          </tr>
+          <tr>
+            <td>37</td>
+            <td>PICFI Undergraduate Scholarship 2025 ...</td>
+            <td class="hide-mobile">NGN200000</td>
+            <td class="hide-mobile">2025-08-16</td>
+            <td><button class="details-btn" onclick="openModal(36)">Details</button></td>
+          </tr>
+          <tr>
+            <td>38</td>
+            <td>Bloom Scholars Program For Africans: ...</td>
+            <td class="hide-mobile">$500</td>
+            <td class="hide-mobile">2025-08-01</td>
+            <td><button class="details-btn" onclick="openModal(37)">Details</button></td>
+          </tr>
+          <tr>
+            <td>39</td>
+            <td>Karen and Edward Adebanjo Scholarship...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-07-31</td>
+            <td><button class="details-btn" onclick="openModal(38)">Details</button></td>
+          </tr>
+          <tr>
+            <td>40</td>
+            <td>Stethoscopes and Sacrifices Scholarsh...</td>
+            <td class="hide-mobile">NGN400000</td>
+            <td class="hide-mobile">2025-09-01</td>
+            <td><button class="details-btn" onclick="openModal(39)">Details</button></td>
+          </tr>
+          <tr>
+            <td>41</td>
+            <td>Dominican University Scholarships 202...</td>
+            <td class="hide-mobile">NGN200000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(40)">Details</button></td>
+          </tr>
+          <tr>
+            <td>42</td>
+            <td>National Higher Institution Scholarsh...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-07-31</td>
+            <td><button class="details-btn" onclick="openModal(41)">Details</button></td>
+          </tr>
+          <tr>
+            <td>43</td>
+            <td>OA Foundation ARASH Scholarship 2025 ...</td>
+            <td class="hide-mobile">NGN265000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(42)">Details</button></td>
+          </tr>
+          <tr>
+            <td>44</td>
+            <td>Long Empowerment Foundation Scholarsh...</td>
+            <td class="hide-mobile">NGN350000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(43)">Details</button></td>
+          </tr>
+          <tr>
+            <td>45</td>
+            <td>TotalEnergies National Merit Scholars...</td>
+            <td class="hide-mobile">NGN250000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(44)">Details</button></td>
+          </tr>
+          <tr>
+            <td>46</td>
+            <td>Abdul-Lateef and Sanni Foundation Sch...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(45)">Details</button></td>
+          </tr>
+          <tr>
+            <td>47</td>
+            <td>Summit University Scholarship Program...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-08-15</td>
+            <td><button class="details-btn" onclick="openModal(46)">Details</button></td>
+          </tr>
+          <tr>
+            <td>48</td>
+            <td>PTDF In-Country Scholarship 2025 (Und...</td>
+            <td class="hide-mobile">NGN500000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(47)">Details</button></td>
+          </tr>
+          <tr>
+            <td>49</td>
+            <td>BOVAS Scholarship 2025 for Undergradu...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2024-07-25</td>
+            <td><button class="details-btn" onclick="openModal(48)">Details</button></td>
+          </tr>
+          <tr>
+            <td>50</td>
+            <td>Society of Petroleum Engineers SPE Sc...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-06-21</td>
+            <td><button class="details-btn" onclick="openModal(49)">Details</button></td>
+          </tr>
+          <tr>
+            <td>51</td>
+            <td>KPMG Nigeria University Scholarship 2...</td>
+            <td class="hide-mobile">NGN400000</td>
+            <td class="hide-mobile">2025-07-03</td>
+            <td><button class="details-btn" onclick="openModal(50)">Details</button></td>
+          </tr>
+          <tr>
+            <td>52</td>
+            <td>ElRazi Medical University Scholarship...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(51)">Details</button></td>
+          </tr>
+          <tr>
+            <td>53</td>
+            <td>Michael Olusoji Foundation Scholarshi...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(52)">Details</button></td>
+          </tr>
+          <tr>
+            <td>54</td>
+            <td>NIPES Chinwe Foundation Scholarship 2...</td>
+            <td class="hide-mobile">NGN200000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(53)">Details</button></td>
+          </tr>
+          <tr>
+            <td>55</td>
+            <td>Sterling Bank Private University Scho...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(54)">Details</button></td>
+          </tr>
+          <tr>
+            <td>56</td>
+            <td>NNPC Chevron Scholarship 2025: ₦200,0...</td>
+            <td class="hide-mobile">NGN200000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(55)">Details</button></td>
+          </tr>
+          <tr>
+            <td>57</td>
+            <td>EO Foundation Scholarship (Etinosa Og...</td>
+            <td class="hide-mobile">NGN150000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(56)">Details</button></td>
+          </tr>
+          <tr>
+            <td>58</td>
+            <td>David Oyedepo Foundation Scholarship ...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(57)">Details</button></td>
+          </tr>
+          <tr>
+            <td>59</td>
+            <td>Intellectual Oasis Scholarship 2025 f...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(58)">Details</button></td>
+          </tr>
+          <tr>
+            <td>60</td>
+            <td>FBM Scholarship 2025/26 (Florence Bam...</td>
+            <td class="hide-mobile">NGN650000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(59)">Details</button></td>
+          </tr>
+          <tr>
+            <td>61</td>
+            <td>2025 Dreamers College Fund Scholarshi...</td>
+            <td class="hide-mobile">NGN1000000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(60)">Details</button></td>
+          </tr>
+          <tr>
+            <td>62</td>
+            <td>AGIF Undergraduate Scholarship 2025 (...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(61)">Details</button></td>
+          </tr>
+          <tr>
+            <td>63</td>
+            <td>NNPC SNEPCo Scholarship 2025 (Shell N...</td>
+            <td class="hide-mobile">NGN250000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(62)">Details</button></td>
+          </tr>
+          <tr>
+            <td>64</td>
+            <td>Pan Atlantic University PAU Mastercar...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(63)">Details</button></td>
+          </tr>
+          <tr>
+            <td>65</td>
+            <td>HillCity Foundation Bright Scholarshi...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(64)">Details</button></td>
+          </tr>
+          <tr>
+            <td>66</td>
+            <td>Toriola Stephen Excellence Scholarshi...</td>
+            <td class="hide-mobile">NGN 50000</td>
+            <td class="hide-mobile">2025-07-31</td>
+            <td><button class="details-btn" onclick="openModal(65)">Details</button></td>
+          </tr>
+          <tr>
+            <td>67</td>
+            <td>NBF Undergraduate Scholarship 2025 (N...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-06-30</td>
+            <td><button class="details-btn" onclick="openModal(66)">Details</button></td>
+          </tr>
+          <tr>
+            <td>68</td>
+            <td>AOS Orwell Tertiary Scholarship Schem...</td>
+            <td class="hide-mobile">NGN150000</td>
+            <td class="hide-mobile">2025-05-29</td>
+            <td><button class="details-btn" onclick="openModal(67)">Details</button></td>
+          </tr>
+          <tr>
+            <td>69</td>
+            <td>Kenyon Undergraduate Scholarship 2025...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-05-10</td>
+            <td><button class="details-btn" onclick="openModal(68)">Details</button></td>
+          </tr>
+          <tr>
+            <td>70</td>
+            <td>Federal Government FSB Scholarship 20...</td>
+            <td class="hide-mobile">NGN250000</td>
+            <td class="hide-mobile">2025-05-29</td>
+            <td><button class="details-btn" onclick="openModal(69)">Details</button></td>
+          </tr>
+          <tr>
+            <td>71</td>
+            <td>Rev Tony Akinyemi Foundation Scholars...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-05-16</td>
+            <td><button class="details-btn" onclick="openModal(70)">Details</button></td>
+          </tr>
+          <tr>
+            <td>72</td>
+            <td>Opay FUTMINNA Scholarship 2025: ₦300,...</td>
+            <td class="hide-mobile">NGN300000</td>
+            <td class="hide-mobile">2025-04-12</td>
+            <td><button class="details-btn" onclick="openModal(71)">Details</button></td>
+          </tr>
+          <tr>
+            <td>73</td>
+            <td>Bode Amao Foundation Scholarship (BAF...</td>
+            <td class="hide-mobile">NGN100000</td>
+            <td class="hide-mobile">2025-12-31</td>
+            <td><button class="details-btn" onclick="openModal(72)">Details</button></td>
+          </tr>
+          <tr>
+            <td>74</td>
+            <td>Akoka Study Centre PWC Scholarship 20...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-04-14</td>
+            <td><button class="details-btn" onclick="openModal(73)">Details</button></td>
+          </tr>
+          <tr>
+            <td>75</td>
+            <td>Apex Foundation Scholarship 2025: How...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-04-30</td>
+            <td><button class="details-btn" onclick="openModal(74)">Details</button></td>
+          </tr>
+          <tr>
+            <td>76</td>
+            <td>Rehoboth Dream Solid Foundation Schol...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-04-30</td>
+            <td><button class="details-btn" onclick="openModal(75)">Details</button></td>
+          </tr>
+          <tr>
+            <td>77</td>
+            <td>MTN Scholarship 2025 for Undergraduat...</td>
+            <td class="hide-mobile">NGN300000</td>
+            <td class="hide-mobile">2025-04-25</td>
+            <td><button class="details-btn" onclick="openModal(76)">Details</button></td>
+          </tr>
+          <tr>
+            <td>78</td>
+            <td>NNPC Seplat Scholarship 2025 for Nige...</td>
+            <td class="hide-mobile">NGN200000</td>
+            <td class="hide-mobile">2025-04-21</td>
+            <td><button class="details-btn" onclick="openModal(77)">Details</button></td>
+          </tr>
+          <tr>
+            <td>79</td>
+            <td>UNIFEMGA Scholarship Fund 2025: Step-...</td>
+            <td class="hide-mobile">NGN100000</td>
+            <td class="hide-mobile">2025-03-31</td>
+            <td><button class="details-btn" onclick="openModal(78)">Details</button></td>
+          </tr>
+          <tr>
+            <td>80</td>
+            <td>KadaraBrite Scholarship 2025 For Nige...</td>
+            <td class="hide-mobile">₦800000</td>
+            <td class="hide-mobile">2025-05-15</td>
+            <td><button class="details-btn" onclick="openModal(79)">Details</button></td>
+          </tr>
+          <tr>
+            <td>81</td>
+            <td>Karen Chukwu Scholarship Fund 2025 Fo...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-03-31</td>
+            <td><button class="details-btn" onclick="openModal(80)">Details</button></td>
+          </tr>
+          <tr>
+            <td>82</td>
+            <td>FATE Scholarship 2025 For Nigerians: ...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-05-16</td>
+            <td><button class="details-btn" onclick="openModal(81)">Details</button></td>
+          </tr>
+          <tr>
+            <td>83</td>
+            <td>2025 NWAG Scholarship Opportunity (Ni...</td>
+            <td class="hide-mobile">$300</td>
+            <td class="hide-mobile">2025-05-31</td>
+            <td><button class="details-btn" onclick="openModal(82)">Details</button></td>
+          </tr>
+          <tr>
+            <td>84</td>
+            <td>Sigma Club Scholarship 2025 | Full Ap...</td>
+            <td class="hide-mobile">NGN100000</td>
+            <td class="hide-mobile">2025-03-10</td>
+            <td><button class="details-btn" onclick="openModal(83)">Details</button></td>
+          </tr>
+          <tr>
+            <td>85</td>
+            <td>2025 Wilson and Yinka Badejo Scholars...</td>
+            <td class="hide-mobile">NGN70000</td>
+            <td class="hide-mobile">2025-04-30</td>
+            <td><button class="details-btn" onclick="openModal(84)">Details</button></td>
+          </tr>
+          <tr>
+            <td>86</td>
+            <td>2025 OCI Foundation Scholarship: Prov...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-04-26</td>
+            <td><button class="details-btn" onclick="openModal(85)">Details</button></td>
+          </tr>
+          <tr>
+            <td>87</td>
+            <td>Learnpally Undergraduate Scholarship ...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-02-28</td>
+            <td><button class="details-btn" onclick="openModal(86)">Details</button></td>
+          </tr>
+          <tr>
+            <td>88</td>
+            <td>FCM Foundation SEED Scholarship For N...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-03-20</td>
+            <td><button class="details-btn" onclick="openModal(87)">Details</button></td>
+          </tr>
+          <tr>
+            <td>89</td>
+            <td>Selar Tuition Fund for Nigerian Under...</td>
+            <td class="hide-mobile">NGN100000</td>
+            <td class="hide-mobile">2025-03-03</td>
+            <td><button class="details-btn" onclick="openModal(88)">Details</button></td>
+          </tr>
+          <tr>
+            <td>90</td>
+            <td>2025 Foursquare National Scholarship:...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-03-25</td>
+            <td><button class="details-btn" onclick="openModal(89)">Details</button></td>
+          </tr>
+          <tr>
+            <td>91</td>
+            <td>2025 Rotary DEWEF Undergraduate Schol...</td>
+            <td class="hide-mobile">NGN100000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(90)">Details</button></td>
+          </tr>
+          <tr>
+            <td>92</td>
+            <td>NIPES Daniel Ejike Ewim Foundation Sc...</td>
+            <td class="hide-mobile">₦200,000</td>
+            <td class="hide-mobile">2025-06-30</td>
+            <td><button class="details-btn" onclick="openModal(91)">Details</button></td>
+          </tr>
+          <tr>
+            <td>93</td>
+            <td>2025 Pody Student Scholarship (PSS) P...</td>
+            <td class="hide-mobile">₦240,000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(92)">Details</button></td>
+          </tr>
+          <tr>
+            <td>94</td>
+            <td>2025 KPMG Seyi Bickersteth Scholarshi...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-02-03</td>
+            <td><button class="details-btn" onclick="openModal(93)">Details</button></td>
+          </tr>
+          <tr>
+            <td>95</td>
+            <td>2025 NHEF Scholars Program (Nigeria H...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">2025-03-07</td>
+            <td><button class="details-btn" onclick="openModal(94)">Details</button></td>
+          </tr>
+          <tr>
+            <td>96</td>
+            <td>Wells Mountain Initiative – WMI Schol...</td>
+            <td class="hide-mobile">$1500</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(95)">Details</button></td>
+          </tr>
+          <tr>
+            <td>97</td>
+            <td>Cowrywise Ambassadors Scholarship</td>
+            <td class="hide-mobile">N200,000</td>
+            <td class="hide-mobile">2026-12-31</td>
+            <td><button class="details-btn" onclick="openModal(96)">Details</button></td>
+          </tr>
+          <tr>
+            <td>98</td>
+            <td>NLNG Undergraduate Scholarship Scheme...</td>
+            <td class="hide-mobile">₦300,000</td>
+            <td class="hide-mobile">2025-12-12</td>
+            <td><button class="details-btn" onclick="openModal(97)">Details</button></td>
+          </tr>
+          <tr>
+            <td>99</td>
+            <td>Airtel Africa Scholarship 2025 for Un...</td>
+            <td class="hide-mobile">Tuition support</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(98)">Details</button></td>
+          </tr>
+          <tr>
+            <td>100</td>
+            <td>NIPES Engineering and Science Scholar...</td>
+            <td class="hide-mobile">₦200,000</td>
+            <td class="hide-mobile">2026-04-30</td>
+            <td><button class="details-btn" onclick="openModal(99)">Details</button></td>
+          </tr>
+          <tr>
+            <td>101</td>
+            <td>West Africa Oil and Gas Scholarship 2...</td>
+            <td class="hide-mobile">₦250,000</td>
+            <td class="hide-mobile">2025-12-23</td>
+            <td><button class="details-btn" onclick="openModal(100)">Details</button></td>
+          </tr>
+          <tr>
+            <td>102</td>
+            <td>ASUU Scholarship Scheme for Undergrad...</td>
+            <td class="hide-mobile">N2000000</td>
+            <td class="hide-mobile">Not Specified</td>
+            <td><button class="details-btn" onclick="openModal(101)">Details</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal Overlay -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle"></div>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const scholarships = [{"name":"WAAW Foundation Scholarship 2025 for Undergraduates","provider":"WAAW Foundation","amount":"USD500","deadline":"2025-12-31","link":"https://scholarsworld.ng/waaw-foundation-scholarship/","is_active":false,"done_for_the_year":true,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[200,300],"gender":"F","religion":"NONE","courses":["ENG","ICT","SCI","MED"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Young Legend Foundation Scholarship 2025 for Nigerians (₦10m Grant)","provider":"Young Legend Foundation","amount":"NGN300000","deadline":"2025-11-28","link":"https://scholarsworld.ng/young-legend-foundation-scholarship-grant/","is_active":false,"done_for_the_year":true,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Jim Ovia Foundation Scholarship for Undergraduate Students 2025: APPLY NOW","provider":"Jim Ovia Foundation","amount":"NGN150000 + Tuition","deadline":"2025-12-03","link":"https://scholarsworld.ng/jim-ovia-foundation-scholarship/","is_active":false,"done_for_the_year":true,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"FON Emerging Leaders Scholarship 2025: How To Apply","provider":"Flourish Opportunities Network","amount":"Tuition support","deadline":"2025-12-01","link":"https://scholarsworld.ng/fon-emerging-leaders-scholarship/","is_active":false,"done_for_the_year":true,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300],"gender":"ANY","religion":"NONE","courses":["BUS"],"universities":["UNILAG"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"MATHFELIC Foundation Scholarship for Undergraduates 2025: How To Apply","provider":"Matthew and Felicia Egunyomi Scholarship Foundation (MATHFELIC)","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/mathfelic-foundation-scholarship-for-undergraduates/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["MED","ENG","LAW"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"AgriTech Scholarship Program for Undergraduates 2025/26: Fully Funded Opportunity","provider":"AgricTech Empowerment Network","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/agritech-scholarship-program/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["SCI"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Christopher Kolade Foundation (CKF) SHE Soars Scholarship 2025: Exciting Opportunity","provider":"Christopher Kolade Foundation","amount":"NGN300000","deadline":"Not Specified","link":"https://scholarsworld.ng/christopher-kolade-she-soars-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"F","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Egbe Omo Yoruba Scholarship for Undergraduates: $250 Opportunity for Nigerians 2025","provider":"Egbe Omo Yoruba of Greater Miami Valley","amount":"USD250","deadline":"Not Specified","link":"https://scholarsworld.ng/egbe-omo-yoruba-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.75,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Rasheedat Ajibade Foundation Scholarship 2025 For Nigerians: How To Apply","provider":"Rasheedat Ajibade Foundation","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/rasheedat-ajibade-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Airtel Foundation Tech Scholarship For Nigerians 2025: Fully Funded","provider":"Airtel Africa Foundation","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/airtel-foundation-tech-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ICT"],"universities":["UNILAG","UNN","ABU","UNIBEN","OAU","UNILORIN","TASUED"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Bet9ja Foundation Scholarship 2025 For Nigerians: How To Apply","provider":"Bet9ja Foundation","amount":"NGN250000","deadline":"Not Specified","link":"https://scholarsworld.ng/bet9ja-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":4,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ARTS/HUM","BUS","LAW","MED","SCI","ICT","ENG"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"₦100,000 Afro-Tech Girls Undergraduate Scholarship (Project 100 for 50)","provider":"Afro-Tech Girls","amount":"NGN100000","deadline":"2025-10-20","link":"https://scholarsworld.ng/afro-tech-girls-undergraduate-scholarship-project-100-for-50/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":2.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"F","religion":"NONE","courses":["SCI","ENG","ICT","MED"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Moniepoint Future Builders STEM Scholarship by Tosin Eniolorunda Foundation (TEF) 2025: Fully Funded Opportunity","provider":"Tosin Eniolorunda Foundation (TEF)","amount":"Tuition support","deadline":"2025-10-16","link":"https://scholarsworld.ng/moniepoint-future-builders-stem-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200],"gender":"ANY","religion":"NONE","courses":["SCI","ENG","ICT","MED"],"universities":["OAU","UNIABUJA","UNN","ABU","UNIMAID","UNILAG","UNICAL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Funmike Empowerment Foundation Scholarship 2025: How To Apply","provider":"Funmike Empowerment Foundation","amount":"Tuition support","deadline":"2025-10-20","link":"https://scholarsworld.ng/funmike-empowerment-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":230,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false},{"min_cgpa":3.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"2025 LCA Scholarships by Liberty Career Academy For Nigerians: APPLY NOW","provider":"Liberty Career Academy","amount":"NGN150000 - NGN200000","deadline":"2025-10-22","link":"https://scholarsworld.ng/lca-scholarships/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":220,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":true,"disability":false},{"min_cgpa":3.7,"min_jamb":240,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Fajim Medicare Foundation Scholarship for Undergraduates 2025 (₦100,000 Fund)","provider":"Fajim Medicare Foundation","amount":"NGN100000","deadline":"2025-10-12","link":"https://scholarsworld.ng/fajim-medicare-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":5,"min_jamb":0,"levels":[200],"gender":"ANY","religion":"NONE","courses":["MED"],"universities":["ALL"],"test":true,"financial":true,"orphan":false,"disability":false}]},{"name":"2026 RTEF Scholarship (Ruth Titilayo Educational Foundation) for Nigerian Students","provider":"Ruth Titilayo Educational Foundation","amount":"NGN 120000","deadline":"2025-10-31","link":"https://scholarsworld.ng/rtef-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Fast Credit Scholarship Program 2025 for Undergraduates: ₦250K Opportunity","provider":"Fast Credit Finance Company Limited","amount":"NGN250000","deadline":"2025-09-30","link":"https://scholarsworld.ng/fast-credit-scholarship-program/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.7,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"TKM Foundation Scholarship 2025 for Nigerians: Fully Funded Opportunity","provider":"TKM Foundation","amount":"Tuition support","deadline":"2025-11-03","link":"https://scholarsworld.ng/tkm-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"F","religion":"NONE","courses":["ALL"],"universities":[],"test":false,"financial":true,"orphan":true,"disability":false},{"min_cgpa":3,"min_jamb":0,"levels":[200,300,400,500],"gender":"F","religion":"NONE","courses":["ALL"],"universities":[],"test":false,"financial":true,"orphan":true,"disability":false}]},{"name":"SOHCAHTOA Foundation Scholarship 2025: Opportunity for Nigerian Undergraduates","provider":"SOHCAHTOA Foundation","amount":"NGN250000","deadline":"2025-09-30","link":"https://scholarsworld.ng/sohcahtoa-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ENG","SCI","ICT","BUS","LAW","ARTS/HUM","MED"],"universities":["ALL"],"test":true,"financial":false,"orphan":false,"disability":false}]},{"name":"One Youth Young Leaders Scholarship 2025 for Undergraduates: Fully Funded Opportunity","provider":"One Youth Global Foundation","amount":"NGN1000000","deadline":"2025-11-30","link":"https://scholarsworld.ng/one-youth-young-leaders-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":4.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Stanbic IBTC University Scholarship 2025 For Nigerians: ₦800K Opportunity","provider":"Stanbic IBTC","amount":"NGN200000","deadline":"2025-09-16","link":"https://scholarsworld.ng/stanbic-ibtc-university-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":250,"levels":[100,200],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"THRiVE Scholarships 2025 for Undergraduates: How To Apply","provider":"THRiVE NG","amount":"NGN50000","deadline":"2025-09-15","link":"https://scholarsworld.ng/thrive-scholarships-for-undergraduates/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"FCM Foundation Scholarship 2025 for Nigerians: Undergraduate Opportunity","provider":"First Class Muslim Foundation","amount":"Tuition support","deadline":"2025-09-10","link":"https://scholarsworld.ng/fcm-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":4.5,"min_jamb":0,"levels":[200,300],"gender":"F","religion":"Muslim","courses":["ALL"],"universities":["FUTA","OAU","FUNAAB","UI","AAUA","EKSU","LAUTECH","OSUSTECH","OOU","TASUED","UNIOSUN","UNIMED","UNILESA","FUOYE"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Julius Berger Scholarship 2025 Award for Undergraduates (APPLY)","provider":"Julius Berger Nigeria Plc","amount":"NGN200000","deadline":"2025-09-15","link":"https://scholarsworld.ng/julius-berger-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200],"gender":"F","religion":"NONE","courses":["ENG","BLD"],"universities":[],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"SieDiHub Educational Scholarship Program 2025: ₦250,000 per year","provider":"Innovation Hub for Inclusiveness, Empowerment, and Social Development (SieDi-Hub)","amount":"NGN250000","deadline":"2025-08-31","link":"https://scholarsworld.ng/siedihub-educational-scholarship-program/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":true,"disability":false}]},{"name":"Anthony Udokwu Foundation Scholarship 2026 (YAHWEH): How To Apply","provider":"Anthony Udokwu Foundation","amount":"Tuition support","deadline":"2025-11-14","link":"https://scholarsworld.ng/anthony-udokwu-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":true,"disability":true}]},{"name":"Joseph Adekunle Adegbite Foundation Scholarship 2025 For Nigerians: How To Apply","provider":"Joseph Adekunle Adegbite Foundation","amount":"Tuition support","deadline":"2025-08-20","link":"https://scholarsworld.ng/joseph-adekunle-adegbite-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":250,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false},{"min_cgpa":3.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Nagas Group Undergraduate Scholarship 2025 For Nigerians: How To Apply","provider":"Nagas Group","amount":"NGN50000","deadline":"Not Specified","link":"https://scholarsworld.ng/nagas-group-undergraduate-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"WomanUp Scholarship Program 2025 (Mkpouto Pius Foundation)","provider":"Mkpouto Pius Foundation","amount":"NGN250000","deadline":"Not Specified","link":"https://scholarsworld.ng/womanup-scholarship-mkpouto-pius-foundation/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"F","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":true,"financial":true,"orphan":false,"disability":false}]},{"name":"ASMAF Scholarship 2025 (Ajesola Solarin Majekodunmi) for Undergraduates: Fully Funded","provider":"Ajesola Solarin Majekodunmi Foundation (ASMAF)","amount":"Tuition support","deadline":"2025-09-12","link":"https://scholarsworld.ng/asmaf-scholarship-ajesola-solarin-majekodunmi/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"F","religion":"NONE","courses":["BLD","BUS","ENG","LAW","MED"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Wigwe University Merit Scholarship 2025: Opportunity for Undergraduates","provider":"Wigwe University","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/wigwe-university-merit-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":300,"levels":[100],"gender":"ANY","religion":"NONE","courses":["SCI","ICT","ENG","ARTS/HUM","BUS"],"universities":["Wigwe University"],"test":false,"financial":false,"orphan":false,"disability":false},{"min_cgpa":0,"min_jamb":250,"levels":[100],"gender":"ANY","religion":"NONE","courses":["SCI","ICT","ENG","ARTS/HUM","BUS"],"universities":["Wigwe University"],"test":false,"financial":false,"orphan":false,"disability":false},{"min_cgpa":0,"min_jamb":220,"levels":[100],"gender":"ANY","religion":"NONE","courses":["SCI","ICT","ENG","ARTS/HUM","BUS"],"universities":["Wigwe University"],"test":false,"financial":false,"orphan":false,"disability":false},{"min_cgpa":0,"min_jamb":180,"levels":[100],"gender":"ANY","religion":"NONE","courses":["SCI","ICT","ENG","ARTS/HUM","BUS"],"universities":["Wigwe University"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Female Scholars Foundation Scholarship 2025 for Nigerians: Fully Funded Opportunity","provider":"Female Scholars Foundation","amount":"Tuition support","deadline":"2025-12-01","link":"https://scholarsworld.ng/female-scholars-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":240,"levels":[100],"gender":"F","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Global Youth Foundation (GYF) Scholarship 2025/26 For Undergraduates","provider":"Global Youth Foundation (GYF)","amount":"Tuition support","deadline":"2025-08-07","link":"https://scholarsworld.ng/global-youth-foundation-gyf-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":280,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false},{"min_cgpa":4,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false},{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Nile University of Nigeria Scholarship 2025/26: Full Application Guide","provider":"Nile University of Nigeria","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/nile-university-of-nigeria-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":320,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["Nile University of Nigeria"],"test":false,"financial":false,"orphan":false,"disability":false},{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["Nile University of Nigeria"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Bridge Scholarship Award 2025 for Undergraduates: Fully Funded Opportunity","provider":"The Bridge Scholarship Foundation","amount":"Tuition support","deadline":"2025-09-12","link":"https://scholarsworld.ng/bridge-scholarship-award/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[100,200,300,400],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"PICFI Undergraduate Scholarship 2025 (Petroleum Industry Christian Fellowship International)","provider":"Petroleum Industry Christian Fellowship International (PICFI)","amount":"NGN200000","deadline":"2025-08-16","link":"https://scholarsworld.ng/picfi-undergraduate-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200],"gender":"ANY","religion":"Christian","courses":["SCI","ENG","LAW","BUS"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Bloom Scholars Program For Africans: $500 Award","provider":"The Bloom Africa","amount":"$500","deadline":"2025-08-01","link":"https://scholarsworld.ng/bloom-scholars-program-for-africans/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"F","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":true,"financial":true,"orphan":false,"disability":false}]},{"name":"Karen and Edward Adebanjo Scholarships 2025","provider":"Karen and Edward Adebanjo Foundation","amount":"Tuition support","deadline":"2025-07-31","link":"https://scholarsworld.ng/karen-and-edward-adebanjo-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Stethoscopes and Sacrifices Scholarship for Medical Students: ₦400,000 Award","provider":"Stethoscopes and Sacrifices Inc.","amount":"NGN400000","deadline":"2025-09-01","link":"https://scholarsworld.ng/stethoscopes-and-sacrifices-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"NONE","courses":["MED"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Dominican University Scholarships 2025/26 For Undergraduates: ₦200,000 Award","provider":"Dominican University","amount":"NGN200000","deadline":"Not Specified","link":"https://scholarsworld.ng/dominican-university-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":200,"levels":[100],"gender":"ANY","religion":"NONE","courses":["BUS","SCI","ICT","ARTS/HUM"],"universities":["Dominican University"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"National Higher Institution Scholarship 2025 by AlFulk Dawah Forum For Nigerians (APPLY)","provider":"AlFulk Dawah Forum Foundation","amount":"Tuition support","deadline":"2025-07-31","link":"https://scholarsworld.ng/national-higher-institution-scholarship-alfulk/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":4.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"OA Foundation ARASH Scholarship 2025 for Nigerians: Fully Funded","provider":"OA Foundation","amount":"NGN265000","deadline":"Not Specified","link":"https://scholarsworld.ng/oa-foundation-arash-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["All Federal Universities","All State Universities"],"test":true,"financial":true,"orphan":false,"disability":false}]},{"name":"Long Empowerment Foundation Scholarship 2025 for Undergraduates","provider":"Long Empowerment Foundation","amount":"NGN350000","deadline":"Not Specified","link":"https://scholarsworld.ng/long-empowerment-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"TotalEnergies National Merit Scholarship 2025 Scheme For Nigerians: Fully Funded","provider":"NNPC / SNEPCo","amount":"NGN250000","deadline":"Not Specified","link":"https://csr-ngscholarship.totalenergies.com/","is_active":false,"done_for_the_year":true,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":true,"financial":false,"orphan":false,"disability":false}]},{"name":"Abdul-Lateef and Sanni Foundation Scholarship 2025: How To Apply","provider":"Abdul-Lateef and Sanni Foundation","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/abdul-lateef-and-sanni-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Summit University Scholarship Program For Nigerians 2025: Fully Funded","provider":"ISIAQ Family Foundation (IFF)","amount":"Tuition support","deadline":"2025-08-15","link":"https://scholarsworld.ng/summit-university-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":180,"levels":[100],"gender":"ANY","religion":"NONE","courses":["BUS"],"universities":["SUMMIT"],"test":true,"financial":true,"orphan":false,"disability":false}]},{"name":"PTDF In-Country Scholarship 2025 (Undergraduate and Postgraduate): Complete Application Guide","provider":"Petroleum Development Trust Fund (PTDF)","amount":"NGN500000","deadline":"Not Specified","link":"https://scholarsworld.ng/ptdf-in-country-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ENG","SCI","BUS"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"BOVAS Scholarship 2025 for Undergraduates: Fully Funded Opportunity","provider":"BOVAS Charitable Foundation","amount":"Tuition support","deadline":"2024-07-25","link":"https://scholarsworld.ng/bovas-scholarship-for-undergraduates/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200],"gender":"ANY","religion":"NONE","courses":["MED","ENG","ICT","SCI"],"universities":["UI"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Society of Petroleum Engineers SPE Scholarship 2025 For Undergraduates: How To Apply","provider":"Society of Petroleum Engineers (SPE) Lagos Section","amount":"Tuition support","deadline":"2025-06-21","link":"https://scholarsworld.ng/society-of-petroleum-engineers-spe-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[400],"gender":"ANY","religion":"NONE","courses":["ENG","SCI"],"universities":[],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"KPMG Nigeria University Scholarship 2025 Program: Fully Funded Opportunity","provider":"KPMG Nigeria","amount":"NGN400000","deadline":"2025-07-03","link":"https://kpmg.seamlesshiring.com/job/view/187?application_source=Direct#/","is_active":false,"done_for_the_year":true,"tracks":[{"min_cgpa":3.5,"min_jamb":230,"levels":[100,200],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":[],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"ElRazi Medical University Scholarship 2025: Opportunity For Nigerians","provider":"ElRazi Medical University","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/elrazi-medical-university-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":150,"levels":[100],"gender":"ANY","religion":"NONE","courses":["MED"],"universities":["ElRazi Medical University"],"test":true,"financial":false,"orphan":false,"disability":false},{"min_cgpa":2.7,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["MED"],"universities":["ElRazi Medical University"],"test":true,"financial":false,"orphan":false,"disability":false}]},{"name":"Michael Olusoji Foundation Scholarship 2025: Fully Funded Opportunity","provider":"Michael Olusoji Foundation","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/michael-olusoji-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":250,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"NIPES Chinwe Foundation Scholarship 2025 For Undergraduates: ₦1 million Award","provider":"Nigerian Institute of Professional Engineers and Scientists (NIPES) & Chinwe Chinonso Iwuanyanwu Foundation","amount":"NGN200000","deadline":"Not Specified","link":"https://scholarsworld.ng/nipes-chinwe-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ENG","SCI","MED"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Sterling Bank Private University Scholarship 2025 with MIVA: Fully Funded Opportunity","provider":"Sterling Bank","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/sterling-bank-private-university-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["Miva Open University"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"NNPC Chevron Scholarship 2025: ₦200,000 Opportunity for Nigerian","provider":"NNPC/Chevron","amount":"NGN200000","deadline":"Not Specified","link":"https://candidate.scholastica.ng/schemes/2025cnlawards","is_active":false,"done_for_the_year":true,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200],"gender":"ANY","religion":"NONE","courses":["BUS","SCI","BLD","ICT","LAW","ARTS/HUM","ENG","MED"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false},{"min_cgpa":2.5,"min_jamb":0,"levels":[200],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":true}]},{"name":"EO Foundation Scholarship (Etinosa Oghogho): ₦150,000 Opportunity 2025","provider":"Etinosa Oghogho Foundation","amount":"NGN150000","deadline":"Not Specified","link":"https://scholarsworld.ng/eo-foundation-scholarship-etinosa-oghogho/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"David Oyedepo Foundation Scholarship 2025: Step-by-Step Guide","provider":"David Oyedepo Foundation","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/david-oyedepo-foundation-scholarship-dof/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"NONE","courses":["BUS","ENG","ICT","ARTS/HUM","BLD","SCI","MED"],"universities":["Covenant University","Landmark University"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Intellectual Oasis Scholarship 2025 for Undergraduates:  How To Apply","provider":"Intellectual Oasis Fellowship","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/intellectual-oasis-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ARTS/HUM"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"FBM Scholarship 2025/26 (Florence Bamidele Makanjuola Scholarship) for Nigerian Undergraduates","provider":"Opekete Foundation","amount":"NGN650000","deadline":"Not Specified","link":"https://scholarsworld.ng/fbm-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"F","religion":"NONE","courses":["ENG","SCI","ICT","MED"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"2025 Dreamers College Fund Scholarship: ₦1m Fund Award","provider":"Dreamrite Foundation","amount":"NGN1000000","deadline":"Not Specified","link":"https://scholarsworld.ng/dreamers-college-fund-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"AGIF Undergraduate Scholarship 2025 (Project A500) For Nigerians","provider":"Alex and Grace Izinyon Foundation","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/agif-undergraduate-scholarship-project-a500/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":true,"disability":false},{"min_cgpa":0,"min_jamb":220,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":true,"disability":false}]},{"name":"NNPC SNEPCo Scholarship 2025 (Shell Nigeria Exploration Company): Opportunities for Nigerian Students","provider":"NNPC / SNEPCo","amount":"NGN250000","deadline":"Not Specified","link":"https://candidate.scholastica.ng/schemes/NNPCLTDSNEPCo25","is_active":false,"done_for_the_year":true,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":true,"financial":false,"orphan":false,"disability":false}]},{"name":"Pan Atlantic University PAU Mastercard Scholarship 2025 For Undergraduates: Fully Funded Opportunity","provider":"Mastercard Foundation | Pan Atlantic University","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/pan-atlantic-university-pau-mastercard-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":220,"levels":[100],"gender":"ANY","religion":"NONE","courses":["BUS","ARTS/HUM","ICT","SCI","ENG"],"universities":["PAU"],"test":true,"financial":true,"orphan":false,"disability":true}]},{"name":"HillCity Foundation Bright Scholarship 2025: Empowering Exceptional Students","provider":"HillCity Foundation","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/hillcity-foundation-bright-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":4.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Toriola Stephen Excellence Scholarship 2025: Apply Now","provider":"Toriola Stephen","amount":"NGN 50000","deadline":"2025-07-31","link":"https://scholarsworld.ng/toriola-stephen-excellence-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":4,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":true,"disability":false}]},{"name":"NBF Undergraduate Scholarship 2025 (Nifemi Brown Foundation): Unlocking Opportunities","provider":"Nifemi Brown Foundation","amount":"Tuition support","deadline":"2025-06-30","link":"https://scholarsworld.ng/nbf-undergraduate-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false},{"min_cgpa":3.5,"min_jamb":0,"levels":[200,300],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"AOS Orwell Tertiary Scholarship Scheme 2025: How To Apply","provider":"AOS Orwell","amount":"NGN150000","deadline":"2025-05-29","link":"https://scholarsworld.ng/aos-orwell-tertiary-scholarship-scheme/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200],"gender":"ANY","religion":"NONE","courses":["ENG"],"universities":["RSU"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Kenyon Undergraduate Scholarship 2025 For Nigerians: Fully Funded","provider":"Kenyon International West Africa Company Limited","amount":"Tuition support","deadline":"2025-05-10","link":"https://scholarsworld.ng/kenyon-undergraduate-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":2.5,"min_jamb":0,"levels":[300],"gender":"ANY","religion":"NONE","courses":["ENG","SCI"],"universities":["ABU","UNIZIK","PTI","UNIABUJA","UI","UNILAG","UNIMAID","UNN","UNIPORT","UNIUYO"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Federal Government FSB Scholarship 2025: How To Apply","provider":"Federal Ministry of Education","amount":"NGN250000","deadline":"2025-05-29","link":"https://scholarsworld.ng/federal-government-fsb-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["MED","ARTS/HUM","BUS","SCI","ENG","ICT","BLD","LAW"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Rev Tony Akinyemi Foundation Scholarship 2025 (RTSF) For Nigerians:","provider":"Rev Tony Akinyemi Foundation","amount":"Tuition support","deadline":"2025-05-16","link":"https://scholarsworld.ng/rev-tony-akinyemi-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":true,"financial":true,"orphan":false,"disability":false}]},{"name":"Opay FUTMINNA Scholarship 2025: ₦300,000 Award","provider":"Opay Digital Services Limited","amount":"NGN300000","deadline":"2025-04-12","link":"https://scholarsworld.ng/opay-futminna-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["FUTMINNA"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Bode Amao Foundation Scholarship (BAF) For Undergraduates: ₦100K Annual Opportunity","provider":"Bode Amao Foundation","amount":"NGN100000","deadline":"2025-12-31","link":"https://bodeamaofoundation.org/","is_active":false,"done_for_the_year":true,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Akoka Study Centre PWC Scholarship 2025: APPLY NOW","provider":"Akoka Study Centre / PwC","amount":"Tuition support","deadline":"2025-04-14","link":"https://scholarsworld.ng/akoka-study-centre-pwc-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"M","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Apex Foundation Scholarship 2025: How To Apply","provider":"Apex Foundation","amount":"Tuition support","deadline":"2025-04-30","link":"https://scholarsworld.ng/apex-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Rehoboth Dream Solid Foundation Scholarship 2025: Fully Funded Opportunity","provider":"Rehoboth Dream Solid Foundation","amount":"Tuition support","deadline":"2025-04-30","link":"https://scholarsworld.ng/rehoboth-dream-solid-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"MTN Scholarship 2025 for Undergraduate Nigerians: ₦300,000 Award","provider":"MTN","amount":"NGN300000","deadline":"2025-04-25","link":"https://www.mtn.ng/scholarships/","is_active":false,"done_for_the_year":true,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[300],"gender":"ANY","religion":"NONE","courses":["ENG","BLD","SCI","ICT","MED"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false},{"min_cgpa":2.5,"min_jamb":0,"levels":[200,300],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":true}]},{"name":"NNPC Seplat Scholarship 2025 for Nigerian Students: ₦200,000 Annual Opportunity","provider":"NNPC/Seplat Energy Plc","amount":"NGN200000","deadline":"2025-04-21","link":"https://scholarsworld.ng/nnpc-seplat-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ARTS/HUM","BLD","BUS","ENG","ICT","LAW","MED","SCI"],"universities":["ALL"],"test":true,"financial":false,"orphan":false,"disability":false}]},{"name":"UNIFEMGA Scholarship Fund 2025: Step-by-Step Guide","provider":"University of Ife Muslim Graduate Association (UNIFEMGA)","amount":"NGN100000","deadline":"2025-03-31","link":"https://scholarsworld.ng/unifemga-scholarship-fund/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"Muslim","courses":["ALL"],"universities":["OAU"],"test":false,"financial":true,"orphan":false,"disability":false},{"min_cgpa":2.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"Muslim","courses":["ALL"],"universities":["OAU"],"test":false,"financial":true,"orphan":false,"disability":false},{"min_cgpa":2.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"Muslim","courses":["ALL"],"universities":["OAU"],"test":false,"financial":true,"orphan":false,"disability":true}]},{"name":"KadaraBrite Scholarship 2025 For Nigerians: $500 Opportunity","provider":"KadaraBrite","amount":"₦800000","deadline":"2025-05-15","link":"https://scholarsworld.ng/kadarabrite-scholarship-fund/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["Federal or State Universities"],"test":false,"financial":true,"orphan":true,"disability":false}]},{"name":"Karen Chukwu Scholarship Fund 2025 For Nigerians: How To Apply","provider":"Karen Chukwu","amount":"Tuition support","deadline":"2025-03-31","link":"https://scholarsworld.ng/karen-chukwu-scholarship-fund/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"FATE Scholarship 2025 For Nigerians: Fully Funded Opportunity","provider":"FATE Foundation","amount":"Tuition support","deadline":"2025-05-16","link":"https://scholarsworld.ng/fate-scholarship-program/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ENG","SCI","ICT","ARTS/HUM"],"universities":["ALL"],"test":true,"financial":false,"orphan":false,"disability":false}]},{"name":"2025 NWAG Scholarship Opportunity (Nigerian Women Association of Georgia Scholarship): Apply Now","provider":"Nigerian Women Association of Georgia, Inc. (NWAG)","amount":"$300","deadline":"2025-05-31","link":"https://scholarsworld.ng/nwag-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[200,300,400],"gender":"F","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Sigma Club Scholarship 2025 | Full Application Guide","provider":"Sigma Club","amount":"NGN100000","deadline":"2025-03-10","link":"https://scholarsworld.ng/sigma-club-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["UI"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"2025 Wilson and Yinka Badejo Scholarship (WYBF) Opportunity: Full Application Guide","provider":"Wilson and Yinka Badejo Foundation","amount":"NGN70000","deadline":"2025-04-30","link":"https://scholarsworld.ng/wilson-and-yinka-badejo-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"2025 OCI Foundation Scholarship: Providing Financial Support for Nigerians","provider":"Onyebuchi Chris Ifediora (OCI) Foundation","amount":"Tuition support","deadline":"2025-04-26","link":"https://scholarsworld.ng/oci-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Learnpally Undergraduate Scholarship 2025: Call for Applications","provider":"Learnpally Foundation","amount":"Tuition support","deadline":"2025-02-28","link":"https://scholarsworld.ng/learnpally-undergraduate-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.2,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"FCM Foundation SEED Scholarship For Nigerians (Students’ Empowerment and Education Development) 2025","provider":"FCM Foundation","amount":"Tuition support","deadline":"2025-03-20","link":"https://scholarsworld.ng/fcm-foundation-seed-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":4.5,"min_jamb":0,"levels":[300],"gender":"ANY","religion":"Muslim","courses":["ALL"],"universities":["ABU","BUK","FUGUS","UDUSOK","KASU","KUST","SSU","ZSU","SSUE"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"Selar Tuition Fund for Nigerian Undergraduate Students 2025","provider":"Selar","amount":"NGN100000","deadline":"2025-03-03","link":"https://scholarsworld.ng/selar-tuition-fund-for-nigerians/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3,"min_jamb":0,"levels":[400,500,600],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":true,"orphan":false,"disability":false}]},{"name":"2025 Foursquare National Scholarship: Educational Opportunity for Nigerians","provider":"Foursquare Gospel Church in Nigeria","amount":"Tuition support","deadline":"2025-03-25","link":"https://scholarsworld.ng/foursquare-national-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"Christian","courses":["ALL"],"universities":["Federal Universities","State Universities","Polytechnics","McPherson University"],"test":true,"financial":true,"orphan":false,"disability":false},{"min_cgpa":3.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"Christian","courses":["ALL"],"universities":["Federal Universities","State Universities","Polytechnics","McPherson University"],"test":true,"financial":true,"orphan":false,"disability":false}]},{"name":"2025 Rotary DEWEF Undergraduate Scholarship:  ₦100K Annual Fund","provider":"Rotary Foundation","amount":"NGN100000","deadline":"Not Specified","link":"https://scholarsworld.ng/rotary-dewef-undergraduate-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":3.5,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":true,"financial":true,"orphan":false,"disability":false}]},{"name":"NIPES Daniel Ejike Ewim Foundation Scholarship 2025: ₦2m Awards","provider":"National Institute of Professional Engineers and Scientists (NIPES) & Dr. Daniel Ejike Ewim Foundation","amount":"₦200,000","deadline":"2025-06-30","link":"https://scholarsworld.ng/nipes-daniel-ejike-ewim-foundation-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ENG","SCI","MED","ICT"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"2025 Pody Student Scholarship (PSS) Program | How To Apply","provider":"Pody Network","amount":"₦240,000","deadline":"Not Specified","link":"https://scholarsworld.ng/pody-student-scholarship-pss-program/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"2025 KPMG Seyi Bickersteth Scholarship Programme: Opportunity for Nigerian Students","provider":"Seyi Bickersteth Scholarship Programme","amount":"Tuition support","deadline":"2025-02-03","link":"https://scholarsworld.ng/seyi-bickersteth-scholarship-program/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":230,"levels":[100],"gender":"ANY","religion":"NONE","courses":["BUS"],"universities":["ALL"],"test":true,"financial":true,"orphan":false,"disability":false}]},{"name":"2025 NHEF Scholars Program (Nigeria Higher Education Foundation): Career Opportunity for Undergraduates","provider":"Nigeria Higher Education Foundation (NHEF)","amount":"Tuition support","deadline":"2025-03-07","link":"https://scholarsworld.ng/nhef-scholars-program/","is_active":false,"done_for_the_year":null,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[200,300,400,500],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ABU","BUK","UI","UNILAG","UNN","UNIPORT"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"Wells Mountain Initiative – WMI Scholarship 2025 for Undergraduates from Developing Countries","provider":"Wells Mountain Initiative (WMI)","amount":"$1500","deadline":"Not Specified","link":"https://scholarsworld.ng/wells-mountain-initiative-wmi-scholarship/","is_active":false,"done_for_the_year":null,"tracks":[]},{"name":"Cowrywise Ambassadors Scholarship","provider":"Cowrywise","amount":"N200,000","deadline":"2026-12-31","link":"https://ambassadors.cowrywise.com/scholarship","is_active":true,"done_for_the_year":true,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400],"gender":"ANY","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":true,"financial":false,"orphan":false,"disability":false}]},{"name":"NLNG Undergraduate Scholarship Scheme 2026 (UGSS) For Nigerians: APPLY NOW","provider":"Nigeria Liquefied Natural Gas (NLNG) Limited","amount":"₦300,000","deadline":"2025-12-12","link":"https://scholarsworld.ng/nlng-undergraduate-scholarship/","is_active":false,"done_for_the_year":true,"tracks":[]},{"name":"Airtel Africa Scholarship 2025 for Undergraduates: Fully Funded","provider":"Airtel Africa Foundation","amount":"Tuition support","deadline":"Not Specified","link":"https://scholarsworld.ng/airtel-africa-scholarship/","is_active":true,"done_for_the_year":true,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100],"gender":"ANY","religion":"None","courses":["ICT"],"universities":["UNILAG","UNN","ABU","UNIBEN","OAU","UNILORIN","TASEUD"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"NIPES Engineering and Science Scholarship 2025: ₦1m Award For Undergraduates","provider":"Nigerian Institution of Professional Engineers and Scientists (NIPES)","amount":"₦200,000","deadline":"2026-04-30","link":"https://scholarsworld.ng/nipes-engineering-and-science-scholarship/","is_active":true,"done_for_the_year":true,"tracks":[]},{"name":"West Africa Oil and Gas Scholarship 2025 for Undergraduates (₦250,000/Yr + Laptop)","provider":"West Africa Oil and Gas Development Programme (WESTAFRICAOIL)","amount":"₦250,000","deadline":"2025-12-23","link":"https://scholarship.westafricaoil.com/guidelines/","is_active":false,"done_for_the_year":true,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200],"gender":"ANY","religion":"NONE","courses":["SCI","ENG","ICT","LAW","ARTS/HUM","MED","BUS"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]},{"name":"ASUU Scholarship Scheme for Undergraduate Student","provider":"ASSU","amount":"N2000000","deadline":"Not Specified","link":"None","is_active":true,"done_for_the_year":true,"tracks":[{"min_cgpa":0,"min_jamb":0,"levels":[100,200,300,400],"gender":"ALL","religion":"NONE","courses":["ALL"],"universities":["ALL"],"test":false,"financial":false,"orphan":false,"disability":false}]}];
+
+    function openModal(index) {
+      const s = scholarships[index];
+      document.getElementById('modalTitle').textContent = s.name;
+      
+      let body = '';
+      
+      // Basic Info
+      body += '<div class="info-row"><span class="info-label">Provider</span><span class="info-value">' + s.provider + '</span></div>';
+      body += '<div class="info-row"><span class="info-label">Amount</span><span class="info-value">' + s.amount + '</span></div>';
+      body += '<div class="info-row"><span class="info-label">Deadline</span><span class="info-value">' + s.deadline + '</span></div>';
+      
+      const status = s.is_active ? '🟢 Active' : (s.done_for_the_year ? '🔴 Closed' : '🟡 Inactive');
+      body += '<div class="info-row"><span class="info-label">Status</span><span class="info-value">' + status + '</span></div>';
+      
+      // Requirements
+      if (s.tracks && s.tracks.length > 0) {
+        body += '<div class="req-section"><div class="req-title">Eligibility Requirements</div>';
+        
+        const track = s.tracks[0];
+        const badges = [];
+        
+        if (track.min_cgpa > 0) badges.push('<span class="req-badge">CGPA ≥ ' + track.min_cgpa + '</span>');
+        if (track.min_jamb > 0) badges.push('<span class="req-badge">JAMB ≥ ' + track.min_jamb + '</span>');
+        if (track.levels && track.levels.length > 0 && track.levels.length < 5) {
+          badges.push('<span class="req-badge">' + track.levels.map(l => l + 'L').join(', ') + '</span>');
+        }
+        if (track.gender && track.gender.toUpperCase() !== 'ANY' && track.gender.toUpperCase() !== 'ALL') {
+          badges.push('<span class="req-badge">' + (track.gender === 'F' ? 'Female Only' : 'Male Only') + '</span>');
+        }
+        if (track.religion && track.religion.toUpperCase() !== 'NONE' && track.religion.toUpperCase() !== 'ANY') {
+          badges.push('<span class="req-badge">' + track.religion + '</span>');
+        }
+        if (track.courses && track.courses.length > 0 && !track.courses.includes('ALL')) {
+          badges.push('<span class="req-badge">' + track.courses.slice(0,3).join(', ') + '</span>');
+        }
+        if (track.universities && track.universities.length > 0 && !track.universities.includes('ALL')) {
+          badges.push('<span class="req-badge">Specific Unis</span>');
+        }
+        if (track.test) badges.push('<span class="req-badge warning">Test Required</span>');
+        if (track.financial) badges.push('<span class="req-badge warning">Financial Need</span>');
+        if (track.orphan) badges.push('<span class="req-badge warning">Orphan/Single Parent</span>');
+        if (track.disability) badges.push('<span class="req-badge warning">Disability Specific</span>');
+        
+        if (badges.length === 0) badges.push('<span class="req-badge success">Open to All</span>');
+        
+        body += badges.join('');
+        body += '</div>';
+      }
+      
+      // Apply Button
+      if (s.link && s.link !== 'None') {
+        body += '<a href="' + s.link + '" class="apply-btn" target="_blank">Apply Now →</a>';
+      }
+      
+      document.getElementById('modalBody').innerHTML = body;
+      document.getElementById('modalOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(event) {
+      if (!event || event.target === document.getElementById('modalOverlay')) {
+        document.getElementById('modalOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>

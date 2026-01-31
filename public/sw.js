@@ -105,6 +105,11 @@ const OFFLINE_HTML = `
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   
+  // Skip WebSocket connections
+  if (url.protocol === 'ws:' || url.protocol === 'wss:') {
+    return;
+  }
+  
   // Only handle GET requests
   if (event.request.method !== 'GET') return;
   
@@ -185,12 +190,25 @@ self.addEventListener('fetch', (event) => {
         if (response && response.ok && response.type === 'basic') {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
+            cache.put(event.request, responseClone).catch(() => {
+              // Ignore cache storage errors
+            });
           });
         }
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => {
+        return caches.match(event.request)
+          .then(cached => {
+            if (cached) return cached;
+            // Return a valid offline response
+            return new Response('Offline', {
+              status: 503,
+              statusText: 'Service Unavailable',
+              headers: { 'Content-Type': 'text/plain' }
+            });
+          });
+      })
   );
 });
 

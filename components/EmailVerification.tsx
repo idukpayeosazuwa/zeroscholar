@@ -79,7 +79,7 @@ const EmailVerification: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-green-800">Email Verified! 🎉</h2>
+              <h2 className="text-2xl font-bold text-green-800">Email Verified!</h2>
               <p className="text-gray-600 mt-2">
                 Your account is now active. Redirecting to sign in...
               </p>

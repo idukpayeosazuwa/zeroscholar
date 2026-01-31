@@ -5,18 +5,18 @@ const features = [
   {
     title: 'AI-Powered Matching',
     description: 'Our advanced AI analyzes your profile against 181 verified scholarships to find your perfect matches.',
-    icon: '🤖'
+    icon: ''
   },
 
   {
     title: 'Application Tracking',
     description: 'Keep track of where you\'ve applied and monitor your progress all in one place.',
-    icon: '📊'
+    icon: ''
   },
   {
     title: 'Aptitude Test Prep',
     description: 'Practice with our comprehensive test arena to ace scholarship aptitude exams.',
-    icon: '✏️'
+    icon: ''
   },
 
 ];

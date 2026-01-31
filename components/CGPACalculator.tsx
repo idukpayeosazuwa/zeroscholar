@@ -592,7 +592,7 @@ const CGPACalculator: React.FC = () => {
                                 {editingCreditUnits === (course.$id || course.localId) ? (
                                   <><button onClick={() => handleSaveCreditUnits(course.$id || course.localId || '')} className="px-3 py-1 text-xs bg-green-500 text-white rounded">✓ Save</button><button onClick={() => setEditingCreditUnits(null)} className="px-3 py-1 text-xs bg-gray-400 text-white rounded">✕ Cancel</button></>
                                 ) : (
-                                  <><button onClick={() => handleEditCreditUnits(course.$id || course.localId || '', course.creditUnits)} className="px-3 py-1 text-xs bg-blue-500 text-white rounded">📝 Units</button><button onClick={() => handleDeleteCourse(course.$id || course.localId || '')} className="p-2 text-red-600 hover:bg-red-100 rounded"><DeleteIcon className="h-5 w-5" /></button></>
+                                  <><button onClick={() => handleEditCreditUnits(course.$id || course.localId || '', course.creditUnits)} className="px-3 py-1 text-xs bg-blue-500 text-white rounded">Edit Units</button><button onClick={() => handleDeleteCourse(course.$id || course.localId || '')} className="p-2 text-red-600 hover:bg-red-100 rounded"><DeleteIcon className="h-5 w-5" /></button></>
                                 )}
                              </div>
                           </div>

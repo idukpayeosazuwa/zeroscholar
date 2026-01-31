@@ -1,0 +1,114 @@
+[
+  {
+    "id": "ver_032",
+    "passage": "Work-related stress is one of the biggest causes of sick leave in the UK. If you've noticed you always seem to be rushing about, or miss meal breaks, take work home or don't have enough time for relaxation, seeing your family or for exercise, then you may well find yourself under stress, especially at work. There is often no single cause of work-related stress, but it can be caused by poor working conditions, long hours, relationship problems with colleagues, or lack of job security. Stress is often the result of a combination of these factors that builds up over time. Work-related stress can result in both physical problems such as headaches, muscular tension, back or neck pain, tiredness, digestive problems and sweating; or emotional problems, such as a lower sex drive, feelings of inadequacy, irritability and lack of concentration. According to recent surveys, one in six of the UK working population said their job is very stressful, and thirty percent of men said that the demands of their job interfere with their private lives.",
+    "question": "Stress at work is often caused by relationship problems with your partner.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - This may well be true, but is not stated in the passage so we have to answer Cannot Say. The passage refers only to relationship problems with colleagues and does not say if relationship problems with a partner do or don't cause stress."
+  },
+  {
+    "id": "ver_033",
+    "passage": "Work-related stress is one of the biggest causes of sick leave in the UK. If you've noticed you always seem to be rushing about, or miss meal breaks, take work home or don't have enough time for relaxation, seeing your family or for exercise, then you may well find yourself under stress, especially at work. There is often no single cause of work-related stress, but it can be caused by poor working conditions, long hours, relationship problems with colleagues, or lack of job security. Stress is often the result of a combination of these factors that builds up over time. Work-related stress can result in both physical problems such as headaches, muscular tension, back or neck pain, tiredness, digestive problems and sweating; or emotional problems, such as a lower sex drive, feelings of inadequacy, irritability and lack of concentration. According to recent surveys, one in six of the UK working population said their job is very stressful, and thirty percent of men said that the demands of their job interfere with their private lives.",
+    "question": "Work-related stress can result in tiredness and a lack of concentration.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - The fifth sentence lists tiredness as one of the physical problems caused by stress, and lack of concentration is listed under emotional problems."
+  },
+  {
+    "id": "ver_034",
+    "passage": "Work-related stress is one of the biggest causes of sick leave in the UK. If you've noticed you always seem to be rushing about, or miss meal breaks, take work home or don't have enough time for relaxation, seeing your family or for exercise, then you may well find yourself under stress, especially at work. There is often no single cause of work-related stress, but it can be caused by poor working conditions, long hours, relationship problems with colleagues, or lack of job security. Stress is often the result of a combination of these factors that builds up over time. Work-related stress can result in both physical problems such as headaches, muscular tension, back or neck pain, tiredness, digestive problems and sweating; or emotional problems, such as a lower sex drive, feelings of inadequacy, irritability and lack of concentration. According to recent surveys, one in six of the UK working population said their job is very stressful, and thirty percent of men said that the demands of their job interfere with their private lives.",
+    "question": "One in six working men say their job is very stressful.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - One in six of the UK working population said their job is very stressful in the study referred to in the passage. The passage does not tell us the ratio for men only, which may be higher, equal, or lower."
+  },
+  {
+    "id": "ver_035",
+    "passage": "Work-related stress is one of the biggest causes of sick leave in the UK. If you've noticed you always seem to be rushing about, or miss meal breaks, take work home or don't have enough time for relaxation, seeing your family or for exercise, then you may well find yourself under stress, especially at work. There is often no single cause of work-related stress, but it can be caused by poor working conditions, long hours, relationship problems with colleagues, or lack of job security. Stress is often the result of a combination of these factors that builds up over time. Work-related stress can result in both physical problems such as headaches, muscular tension, back or neck pain, tiredness, digestive problems and sweating; or emotional problems, such as a lower sex drive, feelings of inadequacy, irritability and lack of concentration. According to recent surveys, one in six of the UK working population said their job is very stressful, and thirty percent of men said that the demands of their job interfere with their private lives.",
+    "question": "If you spend more time with your family, you will not suffer from stress.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - The passage states that stress can be caused by not spending enough time with your family. However, the passage does not tell us explicitly that everyone who spends more time with their family will or will not suffer from stress."
+  },
+  {
+    "id": "ver_036",
+    "passage": "For many years the hunt has been on to find an effective way to treat cancerous tumours using physical rather than chemical means. That hunt may now be over with the latest breakthrough made by Dr Jennifer West at Rice University in Houston, Texas. West has done tests on animals using a non-chemical procedure known as Photothermal Ablation. She injected millions of nanoparticles, which can absorb infrared light, into the animals' bloodstreams. These particles go straight to the tumours because, unlike healthy tissue, tumours have abnormal blood capillaries that will let them through. A few hours later an optical fibre is inserted into the tumour and a blast of infrared light is passed down the fibre, which heats the particles and effectively cooks the tumour.",
+    "question": "Photothermal Ablation is the latest breakthrough in chemical treatment for cancer.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "B",
+    "explanation": "False - The passage tells us that Photothermal Ablation is a non-chemical procedure which could be used in the treatment of cancerous tumours."
+  },
+  {
+    "id": "ver_037",
+    "passage": "For many years the hunt has been on to find an effective way to treat cancerous tumours using physical rather than chemical means. That hunt may now be over with the latest breakthrough made by Dr Jennifer West at Rice University in Houston, Texas. West has done tests on animals using a non-chemical procedure known as Photothermal Ablation. She injected millions of nanoparticles, which can absorb infrared light, into the animals' bloodstreams. These particles go straight to the tumours because, unlike healthy tissue, tumours have abnormal blood capillaries that will let them through. A few hours later an optical fibre is inserted into the tumour and a blast of infrared light is passed down the fibre, which heats the particles and effectively cooks the tumour.",
+    "question": "Nanoparticles are objects whose dimensions are measured in nanometres, or billionths of a metre.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - The dimensions of nanoparticles are not given in the passage so we have to answer Cannot Say. In fact this is true, but we have to base our answers on only the information contained within the passage, not what knowledge we may have picked up from outside this test."
+  },
+  {
+    "id": "ver_038",
+    "passage": "For many years the hunt has been on to find an effective way to treat cancerous tumours using physical rather than chemical means. That hunt may now be over with the latest breakthrough made by Dr Jennifer West at Rice University in Houston, Texas. West has done tests on animals using a non-chemical procedure known as Photothermal Ablation. She injected millions of nanoparticles, which can absorb infrared light, into the animals' bloodstreams. These particles go straight to the tumours because, unlike healthy tissue, tumours have abnormal blood capillaries that will let them through. A few hours later an optical fibre is inserted into the tumour and a blast of infrared light is passed down the fibre, which heats the particles and effectively cooks the tumour.",
+    "question": "Nanoparticles can absorb infrared light.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - The fourth sentence says nanoparticles, which can absorb infrared light."
+  },
+  {
+    "id": "ver_039",
+    "passage": "U3b Networks (U3b being short for the underprivileged three billion who lack internet access) is a company in Jersey set up by Greg Wyler, former owner of Rwanda's national telephone company. His company intends to provide cheap, high-speed internet access to remote areas in developing countries, which up to now has been the reserve of developed countries. Mr Wyler plans to charge $500 per megabit per month, compared with the $4,000 charged by existing companies. Mr Wyler has so far raised 40 million euros from investors, but this seems like a risky investment, especially as billions were lost on similar projects in the past. So why are people investing in the hope of finding customers in the world's poorest regions? The reason is that previous projects were over-ambitious and set out to provide global coverage, whereas U3b's project is far more modest in its optimism and its services will be available only to a 100km wide corridor around the equator, which happens to cover most developing countries. It will initially use just five satellites circling 8,000km above the equator and further expansion will be determined by customer appetite.",
+    "question": "Greg Wyler had a background in telecoms.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - The first sentence tells us that Greg Wyler is a former owner of Rwanda's national telephone company, and has now set up U3b Networks."
+  },
+  {
+    "id": "ver_040",
+    "passage": "U3b Networks (U3b being short for the underprivileged three billion who lack internet access) is a company in Jersey set up by Greg Wyler, former owner of Rwanda's national telephone company. His company intends to provide cheap, high-speed internet access to remote areas in developing countries, which up to now has been the reserve of developed countries. Mr Wyler plans to charge $500 per megabit per month, compared with the $4,000 charged by existing companies. Mr Wyler has so far raised 40 million euros from investors, but this seems like a risky investment, especially as billions were lost on similar projects in the past. So why are people investing in the hope of finding customers in the world's poorest regions? The reason is that previous projects were over-ambitious and set out to provide global coverage, whereas U3b's project is far more modest in its optimism and its services will be available only to a 100km wide corridor around the equator, which happens to cover most developing countries. It will initially use just five satellites circling 8,000km above the equator and further expansion will be determined by customer appetite.",
+    "question": "The satellites for the project will cost 8 million euros each.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - There is no information in the passage to tell us the cost of each satellite. We are told that the project will initially use five satellites and that the amount raised so far is 40 million euros, but we don't have enough information to say for sure what each satellite will cost."
+  },
+  {
+    "id": "ver_041",
+    "passage": "U3b Networks (U3b being short for the underprivileged three billion who lack internet access) is a company in Jersey set up by Greg Wyler, former owner of Rwanda's national telephone company. His company intends to provide cheap, high-speed internet access to remote areas in developing countries, which up to now has been the reserve of developed countries. Mr Wyler plans to charge $500 per megabit per month, compared with the $4,000 charged by existing companies. Mr Wyler has so far raised 40 million euros from investors, but this seems like a risky investment, especially as billions were lost on similar projects in the past. So why are people investing in the hope of finding customers in the world's poorest regions? The reason is that previous projects were over-ambitious and set out to provide global coverage, whereas U3b's project is far more modest in its optimism and its services will be available only to a 100km wide corridor around the equator, which happens to cover most developing countries. It will initially use just five satellites circling 8,000km above the equator and further expansion will be determined by customer appetite.",
+    "question": "The majority of developing countries lie within 100km of the equator.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - The passage tells us that the services will be available only to a 100km wide corridor around the equator, which happens to cover most developing countries."
+  },
+  {
+    "id": "ver_042",
+    "passage": "We have all heard about bullying in schools, but bullying in the workplace is a huge problem in the UK which results in nearly 19 million days of lost output per year and costs the country 6 billion pounds annually. Workplace bullying is the abuse of a position of power by one individual over another. Otherwise known as harassment, intimidation, aggression, coercive management and by other euphemisms, bullying in the workplace can take many forms involving gender, race or age. In a nutshell, workplace bullying means behaviour that is humiliating or offensive towards some individual. This kind of bullying ranges from violence to less obvious actions like deliberately ignoring a fellow worker.",
+    "question": "Bullying in the workplace hinders UK economic output.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - The first sentence says that bullying in the workplace results in nearly 19 million days of lost output per year and costs the country 6 billion pounds annually. This means that economic output of the UK is damaged and therefore it hinders UK economic output."
+  },
+  {
+    "id": "ver_043",
+    "passage": "We have all heard about bullying in schools, but bullying in the workplace is a huge problem in the UK which results in nearly 19 million days of lost output per year and costs the country 6 billion pounds annually. Workplace bullying is the abuse of a position of power by one individual over another. Otherwise known as harassment, intimidation, aggression, coercive management and by other euphemisms, bullying in the workplace can take many forms involving gender, race or age. In a nutshell, workplace bullying means behaviour that is humiliating or offensive towards some individual. This kind of bullying ranges from violence to less obvious actions like deliberately ignoring a fellow worker.",
+    "question": "Another name for workplace bullying is coercive management.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - The passage states that coercive management is a euphemism for bullying, i.e., a less direct expression to make it sound less severe."
+  },
+  {
+    "id": "ver_044",
+    "passage": "We have all heard about bullying in schools, but bullying in the workplace is a huge problem in the UK which results in nearly 19 million days of lost output per year and costs the country 6 billion pounds annually. Workplace bullying is the abuse of a position of power by one individual over another. Otherwise known as harassment, intimidation, aggression, coercive management and by other euphemisms, bullying in the workplace can take many forms involving gender, race or age. In a nutshell, workplace bullying means behaviour that is humiliating or offensive towards some individual. This kind of bullying ranges from violence to less obvious actions like deliberately ignoring a fellow worker.",
+    "question": "Bullying in the workplace is sometimes caused by religious intolerance.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - The passage does identify race as one form of victimization used in bullying but the passage does not tell us explicitly that this intolerance is a cause of bullying. It would be reasonable to guess that workplace bullying could be the outcome of religious or race intolerance, but we cannot be sure of this given just the information in the passage."
+  },
+  {
+    "id": "ver_045",
+    "passage": "We have all heard about bullying in schools, but bullying in the workplace is a huge problem in the UK which results in nearly 19 million days of lost output per year and costs the country 6 billion pounds annually. Workplace bullying is the abuse of a position of power by one individual over another. Otherwise known as harassment, intimidation, aggression, coercive management and by other euphemisms, bullying in the workplace can take many forms involving gender, race or age. In a nutshell, workplace bullying means behaviour that is humiliating or offensive towards some individual. This kind of bullying ranges from violence to less obvious actions like deliberately ignoring a fellow worker.",
+    "question": "Deliberately ignoring a colleague is a form of bullying.",
+    "options": ["A) True", "B) False", "C) Cannot say"],
+    "correctAnswer": "A",
+    "explanation": "True - The last sentence in the passage states that deliberately ignoring a fellow worker is a less obvious but still existing kind of workplace bullying."
+  }
+]

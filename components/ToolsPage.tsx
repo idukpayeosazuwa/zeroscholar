@@ -31,7 +31,7 @@ const ToolsPage: React.FC = () => {
     {
       id: 'aptitude',
       name: 'Aptitude Test Arena',
-      description: 'Practice aptitude tests and improve your test-taking skills',
+      description: 'Practice numerical, verbal, and abstract reasoning questions',
       icon: (
         <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -39,7 +39,7 @@ const ToolsPage: React.FC = () => {
       ),
       path: '/app/tools/aptitude',
       color: 'from-green-500 to-green-600',
-      isAvailable: false
+      isAvailable: true
     },
     {
       id: 'vault',
@@ -138,7 +138,7 @@ const ToolsPage: React.FC = () => {
         {/* Coming Soon Note */}
         <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-sm text-blue-800">
-            <span className="font-semibold">💡 Tip:</span> More tools are coming soon! We're working on Aptitude Test Arena, Document Vault, and Auto Apply to make your scholarship journey even easier.
+            <span className="font-semibold">Tip:</span> More tools are coming soon! We're working on Document Vault and Auto Apply to make your scholarship journey even easier.
           </p>
         </div>
       </div>

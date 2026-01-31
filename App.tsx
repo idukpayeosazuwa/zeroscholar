@@ -18,6 +18,11 @@ import ScholarshipFinder from './components/ScholarshipFinder';
 import EditProfile from './pages/EditProfile';
 import CGPACalculator from './components/CGPACalculator';
 import ToolsPage from './components/ToolsPage';
+import AptitudeTestPage from './pages/AptitudeTestPage';
+import AptitudeTestPreview from './pages/AptitudeTestPreview';
+import VerbalTestPage from './pages/VerbalTestPage';
+import VerbalTestSelectionPage from './pages/VerbalTestSelectionPage';
+import TestDebug from './pages/TestDebug';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import OfflineBanner from './components/OfflineBanner';
 // import AptitudeTestArena from './components/AptitudeTestArena';
@@ -49,9 +54,24 @@ const App: React.FC = () => {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
     
+    // Emergency logout: Ctrl+Shift+L to force clear everything
+    const handleEmergencyLogout = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+        e.preventDefault();
+        console.warn('🚨 EMERGENCY LOGOUT TRIGGERED');
+        localStorage.clear();
+        sessionStorage.clear();
+        account.deleteSession('current').catch(() => {});
+        window.location.href = '/login';
+      }
+    };
+    
+    window.addEventListener('keydown', handleEmergencyLogout);
+    
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('keydown', handleEmergencyLogout);
       mountedRef.current = false;
     };
   }, []);
@@ -178,6 +198,35 @@ const App: React.FC = () => {
           }
         }
       } catch (error: any) {
+        // Check if user was deleted or session is invalid (401, 404 errors)
+        const isInvalidSession = error?.code === 401 || error?.code === 404 || 
+                                  error?.type === 'user_not_found' || 
+                                  error?.type === 'general_unauthorized_scope';
+        
+        if (isInvalidSession) {
+          console.error('Invalid session detected (user may have been deleted). Clearing all data...');
+          // Clear ALL cached data
+          localStorage.clear();
+          sessionStorage.clear();
+          
+          if (!cancelled) {
+            setUser(null);
+            setUserProfile(null);
+            setAllScholarships([]);
+            setWrappedScholarships([]);
+          }
+          
+          // Force logout and redirect
+          try {
+            await account.deleteSession('current');
+          } catch (e) {
+            // Ignore errors during logout
+          }
+          
+          navigate('/login');
+          return;
+        }
+        
         // If we have cached data and it's a network error (or we are offline), keep the session
         if ((cachedProfile || cachedUser) && (!navigator.onLine || error?.message === 'Network request failed')) {
         } else {
@@ -616,11 +665,19 @@ const App: React.FC = () => {
       
       <main className="pb-24 flex-1 overflow-y-auto" style={{ flex: '1 1 auto', overflowY: 'auto' }}>
         <Routes>
+          {/* Test routes - always available when authenticated */}
+          <Route path="/test/debug" element={<TestDebug />} />
+          <Route path="/test/numerical" element={<AptitudeTestPreview />} />
+          <Route path="/test/verbal" element={<VerbalTestSelectionPage />} />
+          <Route path="/test/verbal/:testId" element={<VerbalTestPage />} />
+          
           {userProfile && (
             <>
               <Route path="/edit-profile" element={<EditProfile userProfile={userProfile} userId={user?.$id || ''} onProfileUpdate={handleProfileUpdate} isOnline={isOnline} />} />
               <Route path="/tools" element={<ToolsPage />} />
               <Route path="/tools/cgpa-calculator" element={<CGPACalculator />} />
+              <Route path="/tools/aptitude" element={<AptitudeTestPage />} />
+              <Route path="/" element={<div className="p-4 md:p-6">{renderContent()}</div>} />
             </>
           )}
           <Route path="*" element={<div className="p-4 md:p-6">{renderContent()}</div>} />

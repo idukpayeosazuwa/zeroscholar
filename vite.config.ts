@@ -5,6 +5,11 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     
+    console.log('📋 Vite Config Loading:');
+    console.log('  Mode:', mode);
+    console.log('  VITE_APPWRITE_ENDPOINT:', env.VITE_APPWRITE_ENDPOINT);
+    console.log('  VITE_APPWRITE_PROJECT_ID:', env.VITE_APPWRITE_PROJECT_ID);
+    
     return {
       server: {
         port: 3000,
@@ -13,7 +18,10 @@ export default defineConfig(({ mode }) => {
       plugins: [react()],
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
+        // Explicitly expose Appwrite config
+        'import.meta.env.VITE_APPWRITE_ENDPOINT': JSON.stringify(env.VITE_APPWRITE_ENDPOINT),
+        'import.meta.env.VITE_APPWRITE_PROJECT_ID': JSON.stringify(env.VITE_APPWRITE_PROJECT_ID),
       },
       resolve: {
         alias: {

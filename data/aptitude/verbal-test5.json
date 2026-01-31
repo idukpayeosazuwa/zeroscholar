@@ -1,0 +1,158 @@
+[
+  {
+    "id": "ver_046",
+    "passage": "",
+    "question": "It is recommended to wait before taking advantage of any new opportunities, to make certain they would be of benefit to the campaign.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "B",
+    "explanation": "False – The passage states: \"Seizing opportunities when they arise is key to the success of the campaign.\""
+  },
+  {
+    "id": "ver_047",
+    "passage": "The secret to success in business is entrepreneurial spirit at all levels of the company. Employees who are identified as entrepreneurs in their own right are more motivated – their own financial success becomes integrated with the company's. Those who are oriented towards personal entrepreneurship will work long hours to develop their own tried-and-tested business practices and strategies, contributing as willing partners to the achievements of the company as a whole. Orientation and value-formation training can induce this kind of thinking in new staff recruits, inculcating the notion of how quickly it is possible to achieve financial security through hard work and innovative business approaches, combined with the impression that to miss out on opportunities for such rapid economic and social advancement would be at best unwise and at worst catastrophic.",
+    "question": "Employees instilled with the idea of personal entrepreneurship will be less willing to contribute to the success of the company as a whole.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "B",
+    "explanation": "False – the passage states in fact that such employees will contribute \"as willing partners to the achievements of the company.\""
+  },
+  {
+    "id": "ver_048",
+    "passage": "The secret to success in business is entrepreneurial spirit at all levels of the company. Employees who are identified as entrepreneurs in their own right are more motivated – their own financial success becomes integrated with the company's. Those who are oriented towards personal entrepreneurship will work long hours to develop their own tried-and-tested business practices and strategies, contributing as willing partners to the achievements of the company as a whole. Orientation and value-formation training can induce this kind of thinking in new staff recruits, inculcating the notion of how quickly it is possible to achieve financial security through hard work and innovative business approaches, combined with the impression that to miss out on opportunities for such rapid economic and social advancement would be at best unwise and at worst catastrophic.",
+    "question": "New staff members can be indoctrinated with the virtues of entrepreneurship.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "A",
+    "explanation": "True – the passage states that \"this kind of thinking\" - which refers directly to the personal entrepreneurship approach discussed in the first paragraph – can be induced through \"Orientation and value-formation training\"."
+  },
+  {
+    "id": "ver_049",
+    "passage": "The secret to success in business is entrepreneurial spirit at all levels of the company. Employees who are identified as entrepreneurs in their own right are more motivated – their own financial success becomes integrated with the company's. Those who are oriented towards personal entrepreneurship will work long hours to develop their own tried-and-tested business practices and strategies, contributing as willing partners to the achievements of the company as a whole. Orientation and value-formation training can induce this kind of thinking in new staff recruits, inculcating the notion of how quickly it is possible to achieve financial security through hard work and innovative business approaches, combined with the impression that to miss out on opportunities for such rapid economic and social advancement would be at best unwise and at worst catastrophic.",
+    "question": "Employees encouraged to think of themselves as entrepreneurs work fewer hours than other staff members.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Cannot say – while the passage states, \"Those who are oriented towards personal entrepreneurship will work long hours\", therefore implying that the answer to this question should be 'false', there is no explicit comparison with other staff in either direction, so no definite answer can be given."
+  },
+  {
+    "id": "ver_050",
+    "passage": "For ambitious employees, a good relationship with their immediate boss is crucial. A bad relationship can lead to missed opportunities for promotion, and even damage professional reputations. A boss who possesses a thorough understanding of the company's future direction and ultimate goals is the person best equipped to help an employee achieve success. Communication is key. It is important to understand a boss's personal goals and priorities within the company, as well as their individual management approach. Clarifying instructions, anticipating needs, requesting feedback, and accepting criticism gracefully all help to build a solid working relationship. On the other hand, artificial flattery or excessive deference are tactics unlikely to impress if promotion is the goal – a good employee should demonstrate the potential to be an equally effective boss.",
+    "question": "Employees must reject criticism to build a good working relationship with their boss.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "B",
+    "explanation": "False – the passage explicitly states the opposite, that \"accepting criticism gracefully [helps to] build a solid working relationship.\""
+  },
+  {
+    "id": "ver_051",
+    "passage": "For ambitious employees, a good relationship with their immediate boss is crucial. A bad relationship can lead to missed opportunities for promotion, and even damage professional reputations. A boss who possesses a thorough understanding of the company's future direction and ultimate goals is the person best equipped to help an employee achieve success. Communication is key. It is important to understand a boss's personal goals and priorities within the company, as well as their individual management approach. Clarifying instructions, anticipating needs, requesting feedback, and accepting criticism gracefully all help to build a solid working relationship. On the other hand, artificial flattery or excessive deference are tactics unlikely to impress if promotion is the goal – a good employee should demonstrate the potential to be an equally effective boss.",
+    "question": "A bad relationship with a boss can lead to missed opportunities, but does not risk an employee's reputation.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "B",
+    "explanation": "False – the passage states, \"A bad relationship [with an employer] can...damage professional reputations.\" The statement is therefore incorrect."
+  },
+  {
+    "id": "ver_052",
+    "passage": "For ambitious employees, a good relationship with their immediate boss is crucial. A bad relationship can lead to missed opportunities for promotion, and even damage professional reputations. A boss who possesses a thorough understanding of the company's future direction and ultimate goals is the person best equipped to help an employee achieve success. Communication is key. It is important to understand a boss's personal goals and priorities within the company, as well as their individual management approach. Clarifying instructions, anticipating needs, requesting feedback, and accepting criticism gracefully all help to build a solid working relationship. On the other hand, artificial flattery or excessive deference are tactics unlikely to impress if promotion is the goal – a good employee should demonstrate the potential to be an equally effective boss.",
+    "question": "Flattering the boss can be an effective approach for an employee seeking promotion.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Cannot say - the passage states \"artificial flattery [is] unlikely to impress if promotion is the goal\", but makes no comment about the effect of sincere flattery. So that tells us about artificial flattery and that it is unlikely to impress. Regarding flattery in general, the passage does not state that flattery can or cannot be an effective approach for seeking promotion, so we cannot say if this is true or false."
+  },
+  {
+    "id": "ver_053",
+    "passage": "A good salesperson should always learn something about the company, and even the individuals, behind the product he or she is selling. Confidence in a product depends in part on confidence in the integrity, competence, and commitment of those who manufacture and distribute that product. Salespeople should therefore familiarise themselves with the principal personalities behind a company, gaining an understanding of its personnel structure and the functions, duties, and experience of key individuals within the business. It is also useful to know something of the history and development of the company, as well as being aware of its present reputation, and to be familiar with the company's particular practices and policies. As well as providing a more thorough knowledge of the product, this information can help to form the basis of an effective sales pitch.",
+    "question": "Knowledge of a company's reputation is not useful for salespeople.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "B",
+    "explanation": "False – in direct contradiction to the statement above, the passage states, \"It is also useful to know something of the history and development of the company, as well as being aware of its present reputation.\""
+  },
+  {
+    "id": "ver_054",
+    "passage": "A good salesperson should always learn something about the company, and even the individuals, behind the product he or she is selling. Confidence in a product depends in part on confidence in the integrity, competence, and commitment of those who manufacture and distribute that product. Salespeople should therefore familiarise themselves with the principal personalities behind a company, gaining an understanding of its personnel structure and the functions, duties, and experience of key individuals within the business. It is also useful to know something of the history and development of the company, as well as being aware of its present reputation, and to be familiar with the company's particular practices and policies. As well as providing a more thorough knowledge of the product, this information can help to form the basis of an effective sales pitch.",
+    "question": "The personal traits and abilities of a company's personnel can influence the confidence people have in their product.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "A",
+    "explanation": "True – the passage states, \"Confidence in a product depends in part on confidence in the integrity, competence, and commitment [i.e., personal traits and abilities] of those who manufacture and distribute that product.\" The statement above is therefore correct."
+  },
+  {
+    "id": "ver_055",
+    "passage": "A good salesperson should always learn something about the company, and even the individuals, behind the product he or she is selling. Confidence in a product depends in part on confidence in the integrity, competence, and commitment of those who manufacture and distribute that product. Salespeople should therefore familiarise themselves with the principal personalities behind a company, gaining an understanding of its personnel structure and the functions, duties, and experience of key individuals within the business. It is also useful to know something of the history and development of the company, as well as being aware of its present reputation, and to be familiar with the company's particular practices and policies. As well as providing a more thorough knowledge of the product, this information can help to form the basis of an effective sales pitch.",
+    "question": "It is helpful to have knowledge of the background, policies and reputation of a company when developing an effective sales pitch.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "A",
+    "explanation": "True – the passage states that \"this information\", i.e., the knowledge of company history and policies described earlier in the paragraph and referred to in the question, \"can help to form the basis of an effective sales pitch.\""
+  },
+  {
+    "id": "ver_056",
+    "passage": "Well-regulated, ethical practices should always be an area of primary concern for any business. In an environment where multinational conglomerates predominate, owners of small businesses may feel anonymous enough to become flexible about their code of ethics. However, the increasingly inescapable attention of the media allows an unprecedented number of individuals to access news and information with greater speed than ever before – unethical practices can become a matter of public knowledge overnight, with devastating consequences. Codes of ethical practice should apply not only to clients, but to employees, who are just as able to draw inappropriate behaviour on the part of their employers to the public's attention. In today's society, businesses of any size must be able to demonstrate transparency and accountability in their dealings with employees, clients, and the public alike.",
+    "question": "Unethical practices are only a problem if the public becomes aware of them.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "C",
+    "explanation": "Cannot say – the passage states that \"the increasingly inescapable attention of the media\" means that \"unethical practices can become a matter of public knowledge overnight, with devastating consequences.\" It does not however make any explicit reference to the consequences of unethical practices which do not come to the public attention."
+  },
+  {
+    "id": "ver_057",
+    "passage": "Well-regulated, ethical practices should always be an area of primary concern for any business. In an environment where multinational conglomerates predominate, owners of small businesses may feel anonymous enough to become flexible about their code of ethics. However, the increasingly inescapable attention of the media allows an unprecedented number of individuals to access news and information with greater speed than ever before – unethical practices can become a matter of public knowledge overnight, with devastating consequences. Codes of ethical practice should apply not only to clients, but to employees, who are just as able to draw inappropriate behaviour on the part of their employers to the public's attention. In today's society, businesses of any size must be able to demonstrate transparency and accountability in their dealings with employees, clients, and the public alike.",
+    "question": "Employees of a company should be subject to ethical codes of practice.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "A",
+    "explanation": "True – The passage states that, \"Codes of ethical practice should apply not only to clients, but to employees\"."
+  },
+  {
+    "id": "ver_058",
+    "passage": "Well-regulated, ethical practices should always be an area of primary concern for any business. In an environment where multinational conglomerates predominate, owners of small businesses may feel anonymous enough to become flexible about their code of ethics. However, the increasingly inescapable attention of the media allows an unprecedented number of individuals to access news and information with greater speed than ever before – unethical practices can become a matter of public knowledge overnight, with devastating consequences. Codes of ethical practice should apply not only to clients, but to employees, who are just as able to draw inappropriate behaviour on the part of their employers to the public's attention. In today's society, businesses of any size must be able to demonstrate transparency and accountability in their dealings with employees, clients, and the public alike.",
+    "question": "More people than ever before have access to information about companies' ethical practices.",
+    "options": [
+      "A) True",
+      "B) False",
+      "C) Cannot say"
+    ],
+    "correctAnswer": "A",
+    "explanation": "True – the passage states that the media \"allows an unprecedented number of individuals to access news and information\" and explicitly confirms that this includes information about companies' ethical practices by adding \"unethical practices can become a matter of public knowledge overnight\"."
+  }
+]

@@ -657,7 +657,7 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
                 {/* Top Matches Highlight */}
                 {topMatches.length > 0 && (
                   <div className="w-full text-left">
-                    <h3 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">🔥 You Matched With Top Providers</h3>
+                    <h3 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">You Matched With Top Providers</h3>
                     
                     {/* Provider Badges */}
                     <div className="flex flex-wrap gap-2 mb-4">
