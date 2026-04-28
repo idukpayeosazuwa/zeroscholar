@@ -5,6 +5,7 @@ import { Query } from 'appwrite';
 interface Ambassador {
   $id: string;
   fullName: string;
+  referralCode: string;
   referralCount: number;
 }
 
@@ -15,20 +16,40 @@ const Leaderboard: React.FC = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await databases.listDocuments(
-          DATABASE_ID,
-          USERS_COLLECTION_ID,
-          [
-            Query.equal('isAmbassador', true),
-            Query.orderDesc('referralCount'),
-            Query.limit(50)
-          ]
+        const response = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [
+          Query.equal('isAmbassador', true),
+          Query.limit(50)
+        ]);
+
+        const baseAmbassadors: Array<{ $id: string; fullName: string; referralCode: string }> = response.documents
+          .map((doc: any) => ({
+            $id: doc.$id,
+            fullName: doc.fullName || 'Anonymous',
+            referralCode: (doc.referralCode || '').trim().toLowerCase()
+          }))
+          .filter((a) => Boolean(a.referralCode));
+
+        const counts = await Promise.all(
+          baseAmbassadors.map(async (a) => {
+            try {
+              const resp = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [
+                Query.equal('referredBy', a.referralCode),
+                Query.limit(1)
+              ]);
+              return resp.total || 0;
+            } catch {
+              return 0;
+            }
+          })
         );
-        const mappedData: Ambassador[] = response.documents.map((doc: any) => ({
-          $id: doc.$id,
-          fullName: doc.fullName || 'Anonymous',
-          referralCount: doc.referralCount || 0
-        }));
+
+        const mappedData: Ambassador[] = baseAmbassadors
+          .map((a, idx) => ({
+            ...a,
+            referralCount: counts[idx] || 0
+          }))
+          .sort((x, y) => (y.referralCount || 0) - (x.referralCount || 0));
+
         setAmbassadors(mappedData);
       } catch (err) {
         console.error('Failed to fetch leaderboard:', err);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { databases, USERS_COLLECTION_ID, DATABASE_ID, REFERRALS_COLLECTION_ID } from '../appwriteConfig';
+import { databases, USERS_COLLECTION_ID, DATABASE_ID } from '../appwriteConfig';
 import { UserProfile } from '../types';
 import { Query } from 'appwrite';
 
@@ -42,26 +42,22 @@ const AmbassadorOnboarding: React.FC<Props> = ({ userProfile, userId }) => {
   useEffect(() => {
     if (!userProfile.isAmbassador) return;
     if (!userId) return;
+    const code = (userProfile.referralCode || '').trim().toLowerCase();
+    if (!code) return;
 
     const fetchDashboard = async () => {
       setDashboardError('');
 
-      // Refresh ambassador's live referralCount.
-      // Prefer deriving from `referrals` collection totals when available (avoids counter drift).
+      // Derive referral totals from users collection.
+      // This works immediately as long as new users store `referredBy`.
       try {
-        const allTimeResp = await databases.listDocuments(DATABASE_ID, REFERRALS_COLLECTION_ID, [
-          Query.equal('referrerId', userId),
+        const allTimeResp = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [
+          Query.equal('referredBy', code),
           Query.limit(1)
         ]);
         setLiveReferralCount(allTimeResp.total || 0);
       } catch (e) {
-        // Fall back to the counter on the user document
-        try {
-          const ambassadorDoc: any = await databases.getDocument(DATABASE_ID, USERS_COLLECTION_ID, userId);
-          setLiveReferralCount(ambassadorDoc?.referralCount || 0);
-        } catch {
-          // Non-fatal
-        }
+        // Non-fatal; keep whatever we already have
       }
 
       const now = new Date();
@@ -72,13 +68,13 @@ const AmbassadorOnboarding: React.FC<Props> = ({ userProfile, userId }) => {
       setStatsLoading(true);
       try {
         const [monthResp, weekResp] = await Promise.all([
-          databases.listDocuments(DATABASE_ID, REFERRALS_COLLECTION_ID, [
-            Query.equal('referrerId', userId),
+          databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [
+            Query.equal('referredBy', code),
             Query.greaterThanEqual('$createdAt', startOfMonth.toISOString()),
             Query.limit(1)
           ]),
-          databases.listDocuments(DATABASE_ID, REFERRALS_COLLECTION_ID, [
-            Query.equal('referrerId', userId),
+          databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [
+            Query.equal('referredBy', code),
             Query.greaterThanEqual('$createdAt', sevenDaysAgo.toISOString()),
             Query.limit(1)
           ])
@@ -86,28 +82,28 @@ const AmbassadorOnboarding: React.FC<Props> = ({ userProfile, userId }) => {
         setMonthCount(monthResp.total || 0);
         setWeekCount(weekResp.total || 0);
       } catch (e: any) {
-        setDashboardError('Referral stats are unavailable until the referrals collection is set up in Appwrite.');
+        setDashboardError('Could not load referral stats right now.');
       } finally {
         setStatsLoading(false);
       }
 
       setReferralsLoading(true);
       try {
-        const listResp = await databases.listDocuments(DATABASE_ID, REFERRALS_COLLECTION_ID, [
-          Query.equal('referrerId', userId),
+        const listResp = await databases.listDocuments(DATABASE_ID, USERS_COLLECTION_ID, [
+          Query.equal('referredBy', code),
           Query.orderDesc('$createdAt'),
           Query.limit(50)
         ]);
 
         const mapped = listResp.documents.map((doc: any) => ({
           id: doc.$id,
-          refereeName: doc.refereeName || 'Anonymous',
+          refereeName: doc.fullName || doc.email || 'Anonymous',
           createdAt: doc.$createdAt
         }));
         setReferrals(mapped);
       } catch (e: any) {
         if (!dashboardError) {
-          setDashboardError('Referral list is unavailable until the referrals collection is set up in Appwrite.');
+          setDashboardError('Could not load referral list right now.');
         }
       } finally {
         setReferralsLoading(false);
@@ -116,7 +112,7 @@ const AmbassadorOnboarding: React.FC<Props> = ({ userProfile, userId }) => {
 
     fetchDashboard();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userProfile.isAmbassador, userId]);
+  }, [userProfile.isAmbassador, userId, userProfile.referralCode]);
 
   if (userProfile.isAmbassador) {
     const initials = getInitials(userProfile.fullName);

@@ -23,7 +23,6 @@ import AptitudeTestPreview from './pages/AptitudeTestPreview';
 import VerbalTestPage from './pages/VerbalTestPage';
 import VerbalTestSelectionPage from './pages/VerbalTestSelectionPage';
 import TestDebug from './pages/TestDebug';
-import PWAInstallPrompt from './components/PWAInstallPrompt';
 import OfflineBanner from './components/OfflineBanner';
 // import AptitudeTestArena from './components/AptitudeTestArena';
 
@@ -690,7 +689,6 @@ const App: React.FC = () => {
       </main>
       
       {userProfile && <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />}
-      <PWAInstallPrompt />
     </div>
   );
 };

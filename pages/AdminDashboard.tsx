@@ -66,16 +66,40 @@ const AdminDashboard: React.FC = () => {
   // Check authorization and fetch data
   const fetchAmbassadors = async () => {
     try {
-      const dbResponse = await databases.listDocuments(
-        DB_ID,
-        'users',
-        [
-          Query.equal('isAmbassador', true),
-          Query.orderDesc('referralCount'),
-          Query.limit(100)
-        ]
+      const dbResponse = await databases.listDocuments(DB_ID, 'users', [
+        Query.equal('isAmbassador', true),
+        Query.limit(100)
+      ]);
+
+      const base = dbResponse.documents
+        .map((doc: any) => ({
+          ...doc,
+          referralCode: (doc.referralCode || '').trim().toLowerCase()
+        }))
+        .filter((doc: any) => Boolean(doc.referralCode));
+
+      const totals = await Promise.all(
+        base.map(async (amb: any) => {
+          try {
+            const resp = await databases.listDocuments(DB_ID, 'users', [
+              Query.equal('referredBy', amb.referralCode),
+              Query.limit(1)
+            ]);
+            return resp.total || 0;
+          } catch {
+            return 0;
+          }
+        })
       );
-      setAmbassadors(dbResponse.documents);
+
+      const withTotals = base
+        .map((amb: any, idx: number) => ({
+          ...amb,
+          referralCount: totals[idx] || 0
+        }))
+        .sort((a: any, b: any) => (b.referralCount || 0) - (a.referralCount || 0));
+
+      setAmbassadors(withTotals);
     } catch (error) {
       console.error('Error fetching ambassadors:', error);
     }
