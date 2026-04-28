@@ -35,6 +35,7 @@ export const useDebugMode = () => {
   }
 
   if (debug.verbose) {
+    console.log('[DebugMode]', {
       online: navigator.onLine,
       serviceWorkerSupported: 'serviceWorker' in navigator,
       cacheSupported: 'caches' in window,

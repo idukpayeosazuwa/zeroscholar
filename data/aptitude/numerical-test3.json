@@ -1,0 +1,82 @@
+[
+  {
+    "id": "num_021",
+    "question": "What was the 2010 percentage change in the value of the Pacific Rim holding between October and November (to the nearest percent)?",
+    "imageUrls": ["/aptitude/numerical/Q17-chart.webp"],
+    "options": ["A: 41% less", "B: 41% more", "C: 36% less", "D: 34% less", "E: 33% less"],
+    "correctAnswer": "E",
+    "explanation": "Step 1 – Calculate the Oct value\nThe information that you need is shown in the pie-chart\n£37.5 million x 20% = £7.5 million\nStep 2 – Calculate the Nov value\nThe information that you need is shown in the graph\n50.0 x £100,000 = £5 million\nStep 3 – Calculate the % difference\n7.5 - 5.0 = 2.5\n100% x 2.5/7.5 = 33.33% less. Or simply divide 5.0 by 7.5 to get 0.6667, which is a 33.3% reduction.\nThus the correct answer is (E) 33% less"
+  },
+  {
+    "id": "num_022",
+    "question": "What was the ratio of Pacific Rim: Southern Pacific holdings in October 2010?",
+    "imageUrls": ["/aptitude/numerical/Q17-chart.webp"],
+    "options": ["A: 3:2", "B: 2:3", "C: 4:5", "D: 5:4", "E: 4:7"],
+    "correctAnswer": "E",
+    "explanation": "The information that you need is shown in the pie-chart\nStep 1 - Put these October %'s into a ratio\n20%:35% = 20:35\nStep 2 – Simplify the ratio, looking at the available answers.\n20:35 = 4:7\nThus the correct answer is (E) 4:7"
+  },
+  {
+    "id": "num_023",
+    "question": "In October 2010 which two Pacific Bond fund holdings when combined had the same value as Southern Pacific holdings?",
+    "imageUrls": ["/aptitude/numerical/Q17-chart.webp"],
+    "options": ["A: Northern Pacific and Central Pacific", "B: Central Pacific and Pacific Rim", "C: Pacific Mixed and Pacific Rim", "D: Pacific Mixed and Northern Pacific", "E: Pacific Rim and Northern Pacific"],
+    "correctAnswer": "B",
+    "explanation": "The information that you need is shown in the graph\nStep 1 – Look for those holdings that are likely to have a combined value around the 35% mark:\nNorthern Pacific + Pacific Mixed = 30%\nPacific Rim + Pacific Mixed = 32%\nNorthern Pacific + Central Pacific = 33%\nPacific Rim + Northern Pacific = 38%\nCentral Pacific + Pacific Rim = 35%\nThus the correct answer is (B) Central Pacific and Pacific Rim"
+  },
+  {
+    "id": "num_024",
+    "question": "Which of the following represents the largest amount?",
+    "imageUrls": ["/aptitude/numerical/Q17-chart.webp"],
+    "options": ["A: October's Pacific Mixed holding", "B: Average November value of each of the 5 holdings", "C: November value of holdings in Northern Pacific", "D: 70% of November's value of holdings in Southern Pacific", "E: Average December value of each of the 5 holdings"],
+    "correctAnswer": "B",
+    "explanation": "Step 1 - In this one it is not obvious which ones are going to be wrong and therefore able to be discounted, so we must calculate the value of each option:\n(A) October's Pacific Mixed holding = 4.5 million\n(B) Average November value of each of the 5 holdings = 7.2 million\n(C) November value of holdings in Northern Pacific = 6.14 million\n(D) 70% of November's value of holdings in Southern Pacific = 6.47 million\n(E) Average December value of each of the 5 holdings = 7 million\nThus the correct answer is (B) Average November value of each of the 5 holdings"
+  },
+  {
+    "id": "num_025",
+    "question": "In October 2010 what fraction of the total Pacific Bond did the Northern Pacific and Pacific Mixed fund holdings represent?",
+    "imageUrls": ["/aptitude/numerical/Q17-chart.webp"],
+    "options": ["A: 1/5", "B: 1/10", "C: 1/4", "D: 3/10", "E: 2/5"],
+    "correctAnswer": "D",
+    "explanation": "The information that you need is shown in the pie-chart.\nStep 1 - Add the Northern Pacific and Pacific Mixed %'s\n18% + 12% = 30%\nStep 2 – Express this figure as a fraction\n30 / 100 = 3/10\nThus the correct answer is (D) 3/10"
+  },
+  {
+    "id": "num_026",
+    "question": "For Weeks 1 and 3, across all 5 stores combined, what was the difference (in units) between Actual and Target sales volumes?",
+    "imageUrls": ["/aptitude/numerical/Q18-chart.webp"],
+    "options": ["A: 10 over target (Week 1); 10 under target (Week 3)", "B: 10 over target (Week 1); 15 under target (Week 3)", "C: 15 over target (Week 1); 10 under target (Week 3)", "D: 15 over target (Week 1); 15 under target (Week 3)", "E: 20 over target (Week 1); 10 under target (Week 3)"],
+    "correctAnswer": "E",
+    "explanation": "Step 1 – Calculate the total Week 1 and Week 3 sales across the 5 Stores\nWeek 1: 20 + 30 + 25 + 15 + 5 = 95\nWeek 3: 35 + 40 + 24 + 12 + 9 = 120\nStep 2 - Calculate the total Week 1 and Week 3 targets across the 5 Stores\nWeek 1: 15 + 20 + 20 + 10 + 10 = 75\nWeek 3: 35 + 35 + 30 + 15 + 15 = 130\nStep 3 – Calculate the difference for Weeks 1 and 3\nWeek 1: 95 – 75 = 20 over target\nWeek 3: 120 – 130 = 10 under target\nThus the correct answer is (E) 20 over target (Week 1); 10 under target (Week 3)"
+  },
+  {
+    "id": "num_027",
+    "question": "Over the three week period, which Store achieved the highest sales per sales staff member?",
+    "imageUrls": ["/aptitude/numerical/Q18-chart.webp"],
+    "options": ["A: Redcliff", "B: Ather", "C: Wilkington", "D: Trew", "E: Tunston"],
+    "correctAnswer": "C",
+    "explanation": "Step 1 – Calculate each Store's total sales\nUse the Actual sales figures for each of the 3 weeks, as follows:\nRedcliff 20 + 20 + 35 = 75\nAther 30 + 40 + 40 = 110\nWilkington 25 + 18 + 24 = 67\nTrew 15 + 14 + 12 = 41\nTunston 5 + 6 + 9 = 20\nStep 2 – Calculate each Store's average sales per sales staff member, as follows:\nRedcliff 75 / 8 = 9.4\nAther 110 / 9 = 12.2\nWilkington 67 / 5 = 13.4\nTrew 41 / 8= 5.1\nTunston 20 / 6 = 3.3\nThus the correct answer is (C) Wilkington"
+  },
+  {
+    "id": "num_028",
+    "question": "Next year staff numbers are to be reduced by 1 at stores with 6 or less staff, and by 2 staff at all other stores. What will be the average monthly target per staff member across all 5 stores if the regional target (across the 5 stores) is £168,000?",
+    "imageUrls": ["/aptitude/numerical/Q18-chart.webp"],
+    "options": ["A: £5,000", "B: £6,000", "C: £7,000", "D: £8,000", "E: £9,000"],
+    "correctAnswer": "B",
+    "explanation": "Step 1 – Calculate the new staff numbers\nRedcliff 8 – 2 = 6 staff\nAther 9 – 2 = 7 staff\nWilkington 5 – 1 = 4 staff\nTrew 8 – 2 = 6 staff\nTunston 6 – 1 = 5 staff\nStep 2 – Calculate the average target per staff member\nAverage = target / total number of staff = 168,000 / 28 = £6,000\nThus the correct answer is (B) £6,000"
+  },
+  {
+    "id": "num_029",
+    "question": "The Western Region's overall sales (£120,000) were in a ratio of 3:2 to the Eastern Region's sales which itself had half the sales of the Northern and Southern Regions combined. What were the total sales of all 4 Regions?",
+    "imageUrls": ["/aptitude/numerical/Q18-chart.webp"],
+    "options": ["A: £180,000", "B: £200,000", "C: £220,000", "D: £240,000", "E: £360,000"],
+    "correctAnswer": "E",
+    "explanation": "Step 1 – Calculate each Region's sales\nEastern Region's sales = 2 x 120,000 / 3 = 80,000\nNorthern + Southern Regions' sales = 80,000 x 2 = 160,000\nStep 2 – Calculate the total sales\n120,000 + 80,000 + 160,000 = 360,000\nThus the correct answer is (E) £360,000"
+  },
+  {
+    "id": "num_030",
+    "question": "All sales in the three week period were based on an average £9.50 reduction in the sales price of the units sold. What was the total saving made by customers who bought units over the 3 week period (to the nearest £100)?",
+    "imageUrls": ["/aptitude/numerical/Q18-chart.webp"],
+    "options": ["A: £3,000", "B: £3,500", "C: £4,000", "D: £4,500", "E: £5,000"],
+    "correctAnswer": "A",
+    "explanation": "Step 1 – Calculate the total sales\nWe could use the working from Q6 to obtain Week 1 and Week 3 sales totals.\nWeek 2 sales = 20 + 40 + 18 + 14 + 6 = 98\nTotal sales = Week 1 + Week 2 + Week 3 = 95 + 98 + 120 = 313\nStep 2 – Calculate the amount saved\n313 x £9.50 = £2,973.50\nStep 3 - (to the nearest £100)\n£2,973.50 = £3,000\nThus the correct answer is (A) £3,000"
+  }
+]

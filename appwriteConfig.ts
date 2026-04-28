@@ -46,3 +46,4 @@ export const SCHOLARSHIPS_COLLECTION_ID = 'scholarships';
 export const TRACKS_COLLECTION_ID = 'eligibility_tracks';
 export const USERCOURSES_COLLECTION_ID = 'usercourses';
 export const VOTES_COLLECTION_ID = 'cs240_votes';
+export const REFERRALS_COLLECTION_ID = 'referrals';

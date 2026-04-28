@@ -167,6 +167,7 @@ const VerbalTestPage: React.FC = () => {
 
         {/* Question Card */}
         <VerbalQuestionCard
+          key={currentQuestionIndex}
           question={currentQuestion}
           questionNumber={currentQuestionIndex + 1}
           onAnswer={handleAnswer}

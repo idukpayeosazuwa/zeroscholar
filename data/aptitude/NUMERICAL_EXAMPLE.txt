@@ -1,0 +1,33 @@
+// Example: How your numerical.json will look with BOTH approaches
+
+[
+  // First 10 questions - using chartConfig (already done)
+  { 
+    "id": "num_001",
+    "chartConfig": { ... },
+    ...
+  },
+  
+  // Questions 11-100 - using screenshots (new approach)
+  {
+    "id": "num_011",
+    "question": "What was the total profit in Q3 2024?",
+    "imageUrl": "/aptitude/numerical/q011.webp",
+    "options": ["A) £2.4m", "B) £2.8m", "C) £3.2m", "D) £3.6m", "E) £4.0m"],
+    "correctAnswer": "C",
+    "explanation": "Revenue £5.2m - Costs £2.0m = £3.2m profit",
+    "difficulty": "easy",
+    "timeLimit": 60
+  },
+  {
+    "id": "num_012",
+    "question": "Calculate the percentage change in market share.",
+    "imageUrl": "/aptitude/numerical/q012.webp",
+    "options": ["A) +12%", "B) +15%", "C) +18%", "D) +21%", "E) +24%"],
+    "correctAnswer": "B",
+    "explanation": "Change from 25% to 28.75% = (3.75/25) × 100 = 15%",
+    "difficulty": "medium",
+    "timeLimit": 90
+  }
+  // ... continue for all 90 questions
+]

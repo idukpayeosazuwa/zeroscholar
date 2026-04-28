@@ -340,12 +340,12 @@ const CGPACalculator: React.FC = () => {
 
   // --- Calculations ---
   const uniqueSemesters = useMemo(() => 
-    [...new Set(courses.map(c => c.semester))].sort((a, b) => parseInt(a) - parseInt(b)),
+    [...new Set(courses.map(c => c.semester))].sort((a, b) => parseInt(String(a), 10) - parseInt(String(b), 10)),
     [courses]
   );
   
   const uniqueLevels = useMemo(() => 
-    [...new Set(courses.map(c => c.courseLevel))].sort((a, b) => parseInt(a) - parseInt(b)),
+    [...new Set(courses.map(c => c.courseLevel))].sort((a, b) => parseInt(String(a), 10) - parseInt(String(b), 10)),
     [courses]
   );
 

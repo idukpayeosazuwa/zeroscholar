@@ -31,6 +31,9 @@ import BottomNav from './components/BottomNav';
 
 import { LogoIcon } from './components/icons/LogoIcon';
 
+import AmbassadorOnboarding from './pages/AmbassadorOnboarding';
+import Leaderboard from './pages/Leaderboard';
+
 const App: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -165,6 +168,20 @@ const App: React.FC = () => {
           setUserProfile(profile);
           // Cache the profile for offline use
           cacheUserProfile(profile);
+
+          // Sync email verification status into the profile doc (idempotent)
+          // This enables server-side referral processing only after verification.
+          if (currentUser.emailVerification && profileData.isEmailVerified !== true) {
+            try {
+              await databases.updateDocument(DATABASE_ID, USERS_COLLECTION_ID, currentUser.$id, {
+                isEmailVerified: true,
+                emailVerifiedAt: profileData.emailVerifiedAt || new Date().toISOString()
+              });
+            } catch (syncErr) {
+              // If the Appwrite schema doesn't have these fields yet, don't block the app.
+              console.warn('Failed to sync email verification into profile document:', syncErr);
+            }
+          }
           
           // Load applications from profile - it's a string array of scholarship IDs
           if (profileData.applications && Array.isArray(profileData.applications)) {
@@ -677,6 +694,8 @@ const App: React.FC = () => {
               <Route path="/tools" element={<ToolsPage />} />
               <Route path="/tools/cgpa-calculator" element={<CGPACalculator />} />
               <Route path="/tools/aptitude" element={<AptitudeTestPage />} />
+              <Route path="/ambassador" element={<AmbassadorOnboarding userProfile={userProfile} userId={user?.$id || ''} />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/" element={<div className="p-4 md:p-6">{renderContent()}</div>} />
             </>
           )}

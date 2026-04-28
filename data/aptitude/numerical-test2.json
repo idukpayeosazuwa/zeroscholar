@@ -1,0 +1,82 @@
+[
+  {
+    "id": "num_011",
+    "question": "What is the number of shares not held by Directors of Leutts (as of 30 April 2009)?",
+    "imageUrls": ["/aptitude/numerical/Q11-chart.webp", "/aptitude/numerical/Q11-table.webp"],
+    "options": ["A: 25,620", "B: 6,850", "C: 43,500", "D: 4,880", "E: Cannot tell from data"],
+    "correctAnswer": "A",
+    "explanation": "The data you need is in both the pie-chart and the table.\nStep 1 - The pie-chart shows that 16% of Directors hold shares, so 100 – 16 = 84% do not hold shares\nStep 2 - Calculate the total number of director shares at 30 April 2009\nDirector At 30 April 2009\nGeoffrey Yates 1,050\nTobey Gilham 950\nSusan Preddy 820\nSamantha Hoxton 1,100\nTrudy Stupples 960\nTotal = 4,880\nStep 3 - Calculate 84%\n16% = 4,880\n84% = 4,880 x 84 / 16 = 25,620\nThus the correct answer is (A) 25,620."
+  },
+  {
+    "id": "num_012",
+    "question": "Which Director has bought or sold the largest number of shares across the 2-month period shown?",
+    "imageUrls": ["/aptitude/numerical/Q11-chart.webp", "/aptitude/numerical/Q11-table.webp"],
+    "options": ["A: Geoffrey Yates", "B: Trudy Stupples", "C: Samantha Hoxton", "D: Susan Preddy", "E: Tobey Gilham"],
+    "correctAnswer": "B",
+    "explanation": "Step 1 - The largest number of shares can be found by calculating the differences in shareholdings between the periods 1st April – 30 April and 30 April – 31st May.\nDirector At 1st April 2009 At 30 April 2009 Shares Dealt over period At 30 April 2009 At 31st May 2009 Shares Dealt over period Total Shares Dealt\nGeoffrey Yates 1,100 1,050 50 1,050 910 140 50 + 140 = 190\nTobey Gilham 1,050 950 100 950 820 130 100 + 130 = 230\nSusan Preddy 950 820 130 820 250 570 130 + 570 = 700\nSamantha Hoxton 990 1,100 110 1,100 550 550 110 + 550 = 660\nTrudy Stupples 1,200 960 240 960 2,400 1,440 240 + 1,440 = 1,680\nThus the correct answer is (B) Trudy Stupples"
+  },
+  {
+    "id": "num_013",
+    "question": "If Tobey Gilham sells half of his shareholding at 31 May 2009 at £45 per share, how much is this trade worth?",
+    "imageUrls": ["/aptitude/numerical/Q11-chart.webp", "/aptitude/numerical/Q11-table.webp"],
+    "options": ["A: £3,690", "B: £18,250", "C: £18,450", "D: £9,230", "E: £36,900"],
+    "correctAnswer": "C",
+    "explanation": "Step 1 - From the table, Tobey Gilham holds 820 shares at 31 May 2009\n820 / 2 = 410 shares at £45 per share\n£45 x 410 = £18,450\nThus the correct answer is (C) £18,450"
+  },
+  {
+    "id": "num_014",
+    "question": "Which of the following statements is true?",
+    "imageUrls": ["/aptitude/numerical/Q11-chart.webp", "/aptitude/numerical/Q11-table.webp"],
+    "options": ["A: Current employees and Directors owned 40% of Leutts shares on 30 April 2009", "B: The largest Director share dealing was 1,440 shares", "C: Directors held 4,870 shares in total on 30 April 2009", "D: Tobey Gilham held the most shares of any Director on 1st April 2009", "E: Each Director has less shares on 31 May 2009 compared to 1st April 2009"],
+    "correctAnswer": "B",
+    "explanation": "Step 1 - Go through checking whether each answer option is true or false\nNote 1 - Current employees and Directors owned 37% of Leutts shares on 30 April 2009 – not 40%. FALSE\nNote 2 - The largest Director share dealing was 1440 shares which Trudy Stupples bought between 30 April – 31st May. TRUE\nNote 3 - Directors held 4,880 shares in total on 30 April 2009 – not 4870 shares. FALSE\nNote 4 - Trudy Stupples held the most shares of any Director on 1st April 2009 – not Tobey Gilham. FALSE\nNote 5 - Each Director does not have less shares on 31 May 2009 compared to 1st April 2009 – Trudy Stupples has more shares. FALSE\nThus the correct answer is (B) 'The largest Director share dealing was 1440 shares'"
+  },
+  {
+    "id": "num_015",
+    "question": "If Leutts shares are worth £52 on 30 April 2009, then what is the share valuation of the entire company?",
+    "imageUrls": ["/aptitude/numerical/Q11-chart.webp", "/aptitude/numerical/Q11-table.webp"],
+    "options": ["A: £1,686,000", "B: £1,588,000", "C: £1,566,000", "D: £1,586,000", "E: £1,856,000"],
+    "correctAnswer": "D",
+    "explanation": "Step 1 - Total number of Director shares = 4,880\nThis represents 16% of the total shares\nSo, 100% = 4880 x 100 / 16 = 30,500\nCompany share valuation = 30,500 x £52 = £1,586,000\nThus the correct answer is (D) £1,586,000"
+  },
+  {
+    "id": "num_016",
+    "question": "The total number of £400,000 Apline houses sold in 2009 represented 80% of the annual sales target. If this target was split equally across 5 salerooms, what was the individual sales target for each salesroom?",
+    "imageUrls": ["/aptitude/numerical/Q16-chart.webp"],
+    "options": ["A: 155", "B: 120", "C: 125", "D: 325", "E: 225"],
+    "correctAnswer": "C",
+    "explanation": "Step 1 - Total £400,000 house sales = 230 + 270 = 500 houses\nStep 2 - 500 = 2009 target (5 salesrooms) x 80% / 100\n2009 target (5 salesrooms) = 500/0.8 = 625\nStep 3 - 2009 target per salesroom = 625/5 = 125\nThus the correct answer is (C) 125"
+  },
+  {
+    "id": "num_017",
+    "question": "Stamp duty of 3% is paid on house sales over £250,000. How much stamp duty is paid by purchasers of Apline houses in 2009?",
+    "imageUrls": ["/aptitude/numerical/Q16-chart.webp"],
+    "options": ["A: £16,425,000", "B: £18,550,000", "C: £19,425,000", "D: £6,000,000", "E: £8,550,000"],
+    "correctAnswer": "C",
+    "explanation": "Step 1 – Calculate the total number of houses where stamp duty is due\n£300,000 houses: 460 + 490 = 950\n£400,000 houses: 230 + 270 = 500\n£500,000 houses: 150 + 175 = 325\nStep 2 – Calculate the stamp duty due\n950 x £300,000 x 3% = £8,550,000\n500 x £400,000 x 3% = £6,000,000\n325 x £500,000 x 3% = £4,875,000\nTotal = £19,425,000\nThus the correct answer is (C) £19,425,000"
+  },
+  {
+    "id": "num_018",
+    "question": "What is the total value of 2009 Apline house sales?",
+    "imageUrls": ["/aptitude/numerical/Q16-chart.webp"],
+    "options": ["A: £127.5 million", "B: £777.5 million", "C: £115 million", "D: £162.5 million", "E: £353,409 million"],
+    "correctAnswer": "B",
+    "explanation": "Step 1 - Calculate the total house sales for each half-year period, as follows;\nPrice Jan to June 2009 July to Dec 2009 Total Sales (£million)\n£200,000 310 340 130\n£300,000 460 490 285\n£400,000 230 270 200\n£500,000 150 175 162.5\n777.5\nThus the correct answer is (B) £777.5 million"
+  },
+  {
+    "id": "num_019",
+    "question": "In 2010, Apline house sales between Jan-June remain the same as those in 2009, while the sales for the July-Dec period increase by a fifth. What is the difference in Apline house sales between July-Dec 2010 and Jan-June for 2010 (in £million)?",
+    "imageUrls": ["/aptitude/numerical/Q16-chart.webp"],
+    "options": ["A: 43.5", "B: 52.2", "C: 100", "D: 125", "E: 125.6"],
+    "correctAnswer": "E",
+    "explanation": "Step 1 - Calculate the total sales for Jan to June:\n£200,000 x 310 = £62,000,000\n£300,000 x 460= £138,000,000\n£400,000 x 230 = £92,000,000\n£500,000 x 150 = £75,000,000\n£62,000,000 + £138,000,000 + £92,000,000 + £75,000,000 = £367,000,000\nStep 2 - Calculate the total sales for July to Dec and apply the increase of a fifth:\n£200,000 x 340 x 1.2 = £81,600,000\n£300,000 x 490 x 1.2 = £176,400,000\n£400,000 x 270 x 1.2 = £129,600,000\n£500,000 x 175 x 1.2 = £105,000,000\n£81,600,000 + £176,400,000 + £129,600,000 + £105,000,000 = £492,600,000\nStep 3 - Calculate the total difference between the two periods:\n£492,600,000 - £367,000,000 = £125,600,000\nThus the correct answer is (E) 125.6"
+  },
+  {
+    "id": "num_020",
+    "question": "A marketing drive is to be used to increase the value of Jan-June house sales to the value of July-December house sales. If each £ spent on marketing results in £3 of increased sales, what value must be spent on marketing?",
+    "imageUrls": ["/aptitude/numerical/Q16-chart.webp"],
+    "options": ["A: £156.6 million", "B: £75.4 million", "C: £52.2 million", "D: £36.6 million", "E: £14.5 million"],
+    "correctAnswer": "E",
+    "explanation": "Step 1 – Calculate the difference between the value of Jan-June house sales and the value of July-December house sales. This sum in millions is:\n6 + 9 + 16 + 12.5 = 43.5 million.\nStep 2 – Calculate the marketing spend needed\n43.5 / 3 = 14.5 (million).\nThus the correct answer is (E) £14.5 million"
+  }
+]

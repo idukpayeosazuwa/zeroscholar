@@ -36,6 +36,14 @@ export interface UserProfile {
   notifiedScholarships?: string[];
   pushSubscription?: string; // Storing the subscription object as a JSON string
   applications?: string[]; // Array of scholarship IDs that user has applied to
+  isAmbassador?: boolean;
+  referralCode?: string;
+  referredBy?: string;
+  referralCount?: number;
+  isEmailVerified?: boolean;
+  emailVerifiedAt?: string;
+  referralProcessed?: boolean;
+  referralProcessedAt?: string;
 }
 
 export interface Application {
@@ -145,7 +153,9 @@ export interface TableConfig {
 export interface NumericalQuestion {
   id: string;
   question: string;
-  chartConfig: ChartConfig | TableConfig;
+  chartConfig?: ChartConfig | TableConfig; // Optional now
+  imageUrl?: string; // Single image URL
+  imageUrls?: string[]; // Multiple images (charts + tables)
   options: string[];
   correctAnswer: string;
   explanation?: string;

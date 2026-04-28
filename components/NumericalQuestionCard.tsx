@@ -55,8 +55,30 @@ export const NumericalQuestionCard: React.FC<NumericalQuestionCardProps> = ({
         </div>
       </div>
 
-      {/* Chart/Table */}
-      <ChartRenderer config={question.chartConfig} />
+      {/* Chart/Table or Images */}
+      {question.imageUrls && question.imageUrls.length > 0 ? (
+        <div className="mb-4 space-y-3">
+          {question.imageUrls.map((url, index) => (
+            <div key={index} className="bg-gray-50 rounded-lg p-2 md:p-4 flex justify-center">
+              <img 
+                src={url} 
+                alt={`Numerical reasoning question ${questionNumber} - image ${index + 1}`}
+                className="w-full h-auto rounded max-h-[360px] sm:max-h-[576px] md:max-h-[864px] lg:max-h-[1152px]"
+              />
+            </div>
+          ))}
+        </div>
+      ) : question.imageUrl ? (
+        <div className="mb-4 bg-gray-50 rounded-lg p-2 md:p-4 flex justify-center">
+          <img 
+            src={question.imageUrl} 
+            alt={`Numerical reasoning question ${questionNumber}`}
+            className="w-full h-auto rounded max-h-[360px] sm:max-h-[576px] md:max-h-[864px] lg:max-h-[1152px]"
+          />
+        </div>
+      ) : question.chartConfig ? (
+        <ChartRenderer config={question.chartConfig} />
+      ) : null}
 
       {/* Options */}
       <div className="space-y-2 mb-4">
@@ -128,13 +150,51 @@ export const NumericalQuestionCard: React.FC<NumericalQuestionCardProps> = ({
         <div className="border-t pt-4">
           <button
             onClick={() => setShowExplanation(!showExplanation)}
-            className="text-blue-600 hover:text-blue-800 font-medium text-sm mb-2"
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium text-sm mb-2"
           >
-            {showExplanation ? '▼ Hide Explanation' : '▶ Show Explanation'}
+            <svg 
+              className={`w-4 h-4 transition-transform ${showExplanation ? 'rotate-90' : ''}`} 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+            {showExplanation ? 'Hide Explanation' : 'Show Explanation'}
           </button>
           {showExplanation && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-gray-700">
-              {question.explanation}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="prose prose-sm max-w-none">
+                {question.explanation.split('\n').map((line, index) => {
+                  const trimmedLine = line.trim();
+                  if (!trimmedLine) return <div key={index} className="h-2" />;
+                  
+                  // Check if line starts with "Step"
+                  if (trimmedLine.startsWith('Step')) {
+                    return (
+                      <p key={index} className="font-semibold text-gray-900 mt-3 mb-1">
+                        {trimmedLine}
+                      </p>
+                    );
+                  }
+                  
+                  // Check if line starts with "Note" or "Thus"
+                  if (trimmedLine.startsWith('Note') || trimmedLine.startsWith('Thus')) {
+                    return (
+                      <p key={index} className="text-gray-700 mb-1 italic">
+                        {trimmedLine}
+                      </p>
+                    );
+                  }
+                  
+                  // Regular line
+                  return (
+                    <p key={index} className="text-gray-700 mb-1">
+                      {trimmedLine}
+                    </p>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

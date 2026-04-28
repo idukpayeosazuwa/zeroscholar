@@ -66,6 +66,7 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
   const [isLogin, setIsLogin] = useState(showLogin || searchParams.get('showLogin') === 'true');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [needsOTPVerification, setNeedsOTPVerification] = useState(false);
   const [otpUserId, setOtpUserId] = useState('');
   const [verificationEmail, setVerificationEmail] = useState('');
@@ -166,7 +167,12 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
         const safeJamb = parseInt(jambScore) || 0;
 
         // DO NOT CHANGE THIS PAYLOAD STRUCTURE
+        const referredByItemRaw = localStorage.getItem('referredByItem');
+        const referredByItem = referredByItemRaw ? referredByItemRaw.trim().toLowerCase() : null;
+        console.log("🚀 [Auth Signup] New user referred by:", referredByItem || "Nobody");
+
         const payload = {
+            fullName: fullName || null,
             email: user.email,
             level: numericLevel,
             course: course,
@@ -182,7 +188,10 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
             chal: isDisabled,
             uid: user.$id,
             notified: [],
-            applications: []
+            applications: [],
+            isAmbassador: false,
+            referredBy: referredByItem || null,
+            referralCount: 0
         };
 
         // 4. Save to Database (Using Retry Logic)
@@ -193,6 +202,8 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
           payload
         );
         
+        localStorage.removeItem('referredByItem');
+
         // 5. Send OTP via Email
         try {
           const tokenResult = await account.createEmailToken(user.$id, user.email);
@@ -506,6 +517,22 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
               </>
             )}
 
+            {!isLogin && (
+              <div>
+                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+                  Full Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="fullName"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required={!isLogin}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+                  placeholder="John Doe"
+                />
+              </div>
+            )}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email Address <span className="text-red-500">*</span>

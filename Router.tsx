@@ -13,11 +13,26 @@ import { UniversityLevel } from './types';
 import { Models } from 'appwrite';
 import AdminDashboard from './pages/AdminDashboard';
 import VotingPage from './pages/VotingPage';
+import ReferralRedirect from './pages/ReferralRedirect';
 
 const Router: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Universally catch referral codes via query parameters (e.g. ?ref=alex)
+  // This prevents 404 server errors caused by deep-path linking
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const refCode = params.get('ref');
+    if (refCode) {
+      const normalizedRefCode = refCode.trim().toLowerCase();
+      if (normalizedRefCode) {
+        console.log("🔗 Caught referral code from URL parameter:", normalizedRefCode);
+        localStorage.setItem('referredByItem', normalizedRefCode);
+      }
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -103,6 +118,7 @@ const Router: React.FC = () => {
       <Route path="/tools/cgpa-calculator" element={<CGPACalculatorPage />} />
       {/* Aptitude Test Preview - for testing */}
       <Route path="/test/preview" element={<AptitudeTestPreview />} />
+      <Route path="/ref/:code" element={<ReferralRedirect />} />
       <Route 
         path="/login" 
         element={

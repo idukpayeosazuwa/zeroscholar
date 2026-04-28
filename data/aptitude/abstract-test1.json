@@ -1,0 +1,22 @@
+[
+  {
+    "id": "abs_001",
+    "question": "Which shape completes the pattern?",
+    "imageUrl": "/aptitude/abstract/q001.webp",
+    "options": ["A", "B", "C", "D", "E"],
+    "correctAnswer": "C",
+    "explanation": "The pattern shows a rotation of 90 degrees clockwise in each step.",
+    "difficulty": "medium",
+    "timeLimit": 60
+  },
+  {
+    "id": "abs_002",
+    "question": "What comes next in the sequence?",
+    "imageUrl": "/aptitude/abstract/q002.webp",
+    "options": ["A", "B", "C", "D", "E"],
+    "correctAnswer": "B",
+    "explanation": "Each shape gains one side in sequence.",
+    "difficulty": "easy",
+    "timeLimit": 45
+  }
+]

@@ -153,7 +153,7 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
 
   // Check if a track matches user profile
   const checkTrackMatch = (track: any, profile: UserProfileFromDB | null, scholarshipName: string = ''): { matches: boolean, reasons: string[] } => {
-    if (!profile) return true; // Show all if no profile
+    if (!profile) return { matches: true, reasons: [] }; // Show all if no profile
 
     const reasons: string[] = [];
     let matches = true;

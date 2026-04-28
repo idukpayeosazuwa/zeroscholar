@@ -74,11 +74,13 @@ export function formatDate(
       return 'Invalid date';
     }
 
-    const options: Intl.DateTimeFormatOptions = {
+    const optionsByFormat: Record<'short' | 'medium' | 'long', Intl.DateTimeFormatOptions> = {
       short: { month: 'short', day: 'numeric', year: 'numeric' },
       medium: { month: 'long', day: 'numeric', year: 'numeric' },
-      long: { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }
-    }[format];
+      long: { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' },
+    };
+
+    const options = optionsByFormat[format];
 
     return date.toLocaleDateString('en-US', options);
   } catch {
