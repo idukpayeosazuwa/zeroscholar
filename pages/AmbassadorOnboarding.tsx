@@ -140,7 +140,7 @@ const AmbassadorOnboarding: React.FC<Props> = ({ userProfile, userId }) => {
         <div className="bg-gray-50 border rounded-lg p-4 mb-6">
           <p className="text-sm text-gray-600 mb-2">Your referral link</p>
           <code className="bg-white px-3 py-2 rounded text-blue-600 font-mono block break-all border">
-            {window.location.origin}/?ref={userProfile.referralCode}
+            {window.location.origin}/login?ref={userProfile.referralCode}&showLogin=false
           </code>
         </div>
 
