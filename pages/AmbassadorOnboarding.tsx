@@ -46,12 +46,22 @@ const AmbassadorOnboarding: React.FC<Props> = ({ userProfile, userId }) => {
     const fetchDashboard = async () => {
       setDashboardError('');
 
-      // Refresh ambassador's live referralCount
+      // Refresh ambassador's live referralCount.
+      // Prefer deriving from `referrals` collection totals when available (avoids counter drift).
       try {
-        const ambassadorDoc: any = await databases.getDocument(DATABASE_ID, USERS_COLLECTION_ID, userId);
-        setLiveReferralCount(ambassadorDoc?.referralCount || 0);
+        const allTimeResp = await databases.listDocuments(DATABASE_ID, REFERRALS_COLLECTION_ID, [
+          Query.equal('referrerId', userId),
+          Query.limit(1)
+        ]);
+        setLiveReferralCount(allTimeResp.total || 0);
       } catch (e) {
-        // Non-fatal
+        // Fall back to the counter on the user document
+        try {
+          const ambassadorDoc: any = await databases.getDocument(DATABASE_ID, USERS_COLLECTION_ID, userId);
+          setLiveReferralCount(ambassadorDoc?.referralCount || 0);
+        } catch {
+          // Non-fatal
+        }
       }
 
       const now = new Date();
@@ -120,7 +130,7 @@ const AmbassadorOnboarding: React.FC<Props> = ({ userProfile, userId }) => {
             </div>
             <div>
               <h2 className="text-2xl font-bold">Ambassador Dashboard</h2>
-              <p className="text-gray-600 text-sm">Track your verified referrals</p>
+              <p className="text-gray-600 text-sm">Track your referrals</p>
             </div>
           </div>
           <button
@@ -146,7 +156,7 @@ const AmbassadorOnboarding: React.FC<Props> = ({ userProfile, userId }) => {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div className="border rounded-lg p-4">
-            <p className="text-sm text-gray-600">All-time (verified)</p>
+            <p className="text-sm text-gray-600">All-time</p>
             <p className="text-2xl font-bold text-blue-700">{liveReferralCount}</p>
           </div>
           <div className="border rounded-lg p-4">
@@ -162,12 +172,12 @@ const AmbassadorOnboarding: React.FC<Props> = ({ userProfile, userId }) => {
         <div className="border rounded-lg overflow-hidden">
           <div className="px-4 py-3 bg-gray-100 border-b">
             <h3 className="font-semibold text-gray-800">Your referrals (name only)</h3>
-            <p className="text-xs text-gray-600">Shows verified referrals once processed</p>
+            <p className="text-xs text-gray-600">Shows referrals once processed</p>
           </div>
           {referralsLoading ? (
             <div className="p-4 text-gray-500">Loading referrals…</div>
           ) : referrals.length === 0 ? (
-            <div className="p-4 text-gray-500">No verified referrals yet.</div>
+            <div className="p-4 text-gray-500">No referrals yet.</div>
           ) : (
             <div className="divide-y">
               {referrals.map((r) => (

@@ -1,8 +1,10 @@
 const sdk = require('node-appwrite');
 
 /*
-  Track Referral Function
-  Trigger: databases.[database_id].collections.[users_collection_id].documents.*.create
+    Track Referral Function
+    Recommended Trigger:
+        databases.[database_id].collections.[users_collection_id].documents.*.create
+    (Counts referrals immediately on signup)
 */
 
 module.exports = async function (context) {
@@ -64,7 +66,6 @@ module.exports = async function (context) {
 
     const referredByRaw = userDoc ? userDoc.referredBy : null;
     const referredBy = typeof referredByRaw === 'string' ? referredByRaw.trim().toLowerCase() : null;
-    const isEmailVerified = userDoc ? userDoc.isEmailVerified === true : false;
     const referralProcessedFlag = userDoc ? userDoc.referralProcessed === true : false;
 
     if (!referredBy) {
@@ -72,38 +73,10 @@ module.exports = async function (context) {
         return context.res.json({ success: true, message: "No referral code attached", skipped: true });
     }
 
-    // Only count referrals after email verification
-    if (!isEmailVerified) {
-        context.log("User email not verified yet. Skipping.");
-        return context.res.json({ success: true, message: "Email not verified", skipped: true });
-    }
-
     // Idempotency guard
     if (referralProcessedFlag) {
         context.log("Referral already processed (flag). Skipping.");
         return context.res.json({ success: true, message: "Already processed", skipped: true });
-    }
-
-    // Secondary idempotency: if a referral record already exists for this referee, skip.
-    if (userDoc && userDoc.$id) {
-        try {
-            const existingReferral = await databases.listDocuments(
-                DATABASE_ID,
-                REFERRALS_COLLECTION_ID,
-                [
-                    sdk.Query.equal('refereeId', userDoc.$id),
-                    sdk.Query.limit(1)
-                ]
-            );
-
-            if (existingReferral.total > 0) {
-                context.log("Referral already processed (referrals collection). Skipping.");
-                return context.res.json({ success: true, message: "Already processed", skipped: true });
-            }
-        } catch (e) {
-            // If the referrals collection doesn't exist yet, don't block processing.
-            context.log('Could not check referrals collection for idempotency: ' + (e.message || String(e)));
-        }
     }
 
     try {
@@ -124,23 +97,16 @@ module.exports = async function (context) {
         const ambassador = ambassadors.documents[0];
         const currentCount = ambassador.referralCount || 0;
 
-        // Increment the count
-        await databases.updateDocument(
-            DATABASE_ID,
-            USERS_COLLECTION_ID,
-            ambassador.$id,
-            {
-                referralCount: currentCount + 1
-            }
-        );
-
-        // Create a referral record (for ambassador dashboard list)
+        // Idempotency gate:
+        // If the `referrals` collection exists, create the referral record using refereeId as the document ID.
+        // This makes retries/concurrent executions safe: only one will be able to create the record.
+        let referralRecordCreated = false;
         if (userDoc && userDoc.$id) {
             try {
                 await databases.createDocument(
                     DATABASE_ID,
                     REFERRALS_COLLECTION_ID,
-                    sdk.ID.unique(),
+                    userDoc.$id,
                     {
                         referrerId: ambassador.$id,
                         referrerCode: referredBy,
@@ -151,10 +117,34 @@ module.exports = async function (context) {
                         `read("user:${ambassador.$id}")`
                     ]
                 );
+                referralRecordCreated = true;
             } catch (e) {
-                // Don't fail the whole function if this collection isn't set up yet.
-                context.log('Failed to create referral record: ' + (e.message || String(e)));
+                const msg = e && (e.message || String(e));
+
+                // Document already exists => already processed
+                if (String(msg).toLowerCase().includes('document') && String(msg).toLowerCase().includes('exists')) {
+                    context.log('Referral record already exists. Skipping increment.');
+                    return context.res.json({ success: true, message: 'Already processed', skipped: true });
+                }
+
+                // If the referrals collection isn't set up yet, allow counting to proceed,
+                // but note that this loses the strongest idempotency guarantee.
+                context.log('Could not create referral record (collection missing or schema mismatch?): ' + msg);
             }
+        }
+
+        // Increment the count (best-effort; dashboard can also derive totals from referrals collection when available)
+        try {
+            await databases.updateDocument(
+                DATABASE_ID,
+                USERS_COLLECTION_ID,
+                ambassador.$id,
+                {
+                    referralCount: currentCount + 1
+                }
+            );
+        } catch (e) {
+            context.log('Failed to increment referralCount on ambassador doc: ' + (e.message || String(e)));
         }
 
         // Mark referral as processed on the referred user's profile (idempotent)
