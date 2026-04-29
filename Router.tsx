@@ -110,6 +110,8 @@ const Router: React.FC = () => {
   return (
     <Routes>
       <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/admin/demographics" element={<AdminDashboard />} />
+      <Route path="/admin/demogrpahics" element={<AdminDashboard />} />
       {/* CS240 Election Voting - no auth required */}
       <Route path="/vote" element={<VotingPage />} />
       <Route path="/" element={isAuthenticated ? <Navigate to="/app" /> : <Landing />} />

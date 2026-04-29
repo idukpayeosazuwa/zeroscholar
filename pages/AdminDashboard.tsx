@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { account, databases } from '../appwriteConfig';
 import { Query } from 'appwrite';
 import { normalizeDate } from '../lib/utils/dateFormatter';
@@ -6,6 +7,24 @@ import { normalizeDate } from '../lib/utils/dateFormatter';
 const DB_ID = 'scholarship_db';
 const SCHOLARSHIP_COL_ID = 'scholarships';
 const TRACKS_COL_ID = 'eligibility_tracks';
+
+type Counts = Record<string, number>;
+
+const normalizeKey = (value: unknown) => {
+  const str = String(value ?? '').trim();
+  if (!str) return 'Unknown';
+  return str;
+};
+
+const sortCounts = (counts: Counts) =>
+  Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([key, count]) => ({ key, count }));
+
+const toPct = (count: number, total: number) => {
+  if (!total) return 0;
+  return (count / total) * 100;
+};
 
 interface Scholarship {
   $id: string;
@@ -41,7 +60,10 @@ const AdminDashboard: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
-  const [activeTab, setActiveTab] = useState<'scholarships' | 'ambassadors'>('scholarships');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [activeTab, setActiveTab] = useState<'scholarships' | 'ambassadors' | 'demographics'>('scholarships');
   const [ambassadors, setAmbassadors] = useState<any[]>([]);
   const [scholarships, setScholarships] = useState<Scholarship[]>([]);
   const [selectedScholarship, setSelectedScholarship] = useState<Scholarship | null>(null);
@@ -52,6 +74,19 @@ const AdminDashboard: React.FC = () => {
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const [demographicsLoading, setDemographicsLoading] = useState(false);
+  const [demographicsError, setDemographicsError] = useState<string | null>(null);
+  const [demographicsLoaded, setDemographicsLoaded] = useState(false);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [stateCounts, setStateCounts] = useState<Counts>({});
+  const [lgaCounts, setLgaCounts] = useState<Counts>({});
+  const [universityCounts, setUniversityCounts] = useState<Counts>({});
+  const [genderCounts, setGenderCounts] = useState<Counts>({});
+  const [levelCounts, setLevelCounts] = useState<Counts>({});
+  const [courseCounts, setCourseCounts] = useState<Counts>({});
+  const [religionCounts, setReligionCounts] = useState<Counts>({});
+  const [cgpaCounts, setCgpaCounts] = useState<Counts>({});
   
   // Temporary text fields for array inputs to allow comma display
   const [tempArrayInputs, setTempArrayInputs] = useState<{
@@ -62,6 +97,19 @@ const AdminDashboard: React.FC = () => {
     required_lga_list?: string;
     specific_requirements?: string;
   }>({});
+
+  const demographicsSections = useMemo(
+    () => [
+      { title: 'States', counts: stateCounts },
+      { title: 'Universities', counts: universityCounts },
+      { title: 'Gender', counts: genderCounts },
+      { title: 'Level', counts: levelCounts },
+      { title: 'CGPA', counts: cgpaCounts },
+      { title: 'Course', counts: courseCounts },
+      { title: 'Religion', counts: religionCounts },
+    ],
+    [stateCounts, universityCounts, genderCounts, levelCounts, cgpaCounts, courseCounts, religionCounts]
+  );
 
   // Check authorization and fetch data
   const fetchAmbassadors = async () => {
@@ -129,6 +177,104 @@ const AdminDashboard: React.FC = () => {
 
     checkAuth();
   }, [refreshTrigger]);
+
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === '/admin/demographics' || path === '/admin/demogrpahics') {
+      setActiveTab('demographics');
+    }
+  }, [location.pathname]);
+
+  const fetchDemographics = async () => {
+    setDemographicsLoading(true);
+    setDemographicsError(null);
+
+    const states: Counts = {};
+    const unis: Counts = {};
+    const genders: Counts = {};
+    const levels: Counts = {};
+    const courses: Counts = {};
+    const religions: Counts = {};
+    const cgpaBuckets: Counts = {
+      '0 (Unknown)': 0,
+      '0–3.49': 0,
+      '3.5–3.99': 0,
+      '4.0–4.49': 0,
+      '4.5+': 0,
+    };
+
+    let total = 0;
+    let offset = 0;
+
+    try {
+      while (true) {
+        const res = await databases.listDocuments(DB_ID, 'users', [
+          Query.limit(100),
+          Query.offset(offset),
+        ]);
+
+        if (!res.documents || res.documents.length === 0) break;
+
+        for (const doc of res.documents as any[]) {
+          total++;
+
+          const state = normalizeKey(doc.state);
+          const uni = normalizeKey(doc.uni ?? doc.university);
+          const gender = normalizeKey(doc.gender);
+          const level = normalizeKey(doc.level);
+          const course = normalizeKey(doc.course);
+          const religion = normalizeKey(doc.rel);
+
+          const cgpaRaw = doc.cgpa;
+          const cgpa = typeof cgpaRaw === 'number' ? cgpaRaw : Number(cgpaRaw);
+          if (!Number.isFinite(cgpa) || cgpa <= 0) {
+            cgpaBuckets['0 (Unknown)'] = (cgpaBuckets['0 (Unknown)'] || 0) + 1;
+          } else if (cgpa < 3.5) {
+            cgpaBuckets['0–3.49'] = (cgpaBuckets['0–3.49'] || 0) + 1;
+          } else if (cgpa < 4.0) {
+            cgpaBuckets['3.5–3.99'] = (cgpaBuckets['3.5–3.99'] || 0) + 1;
+          } else if (cgpa < 4.5) {
+            cgpaBuckets['4.0–4.49'] = (cgpaBuckets['4.0–4.49'] || 0) + 1;
+          } else {
+            cgpaBuckets['4.5+'] = (cgpaBuckets['4.5+'] || 0) + 1;
+          }
+
+          states[state] = (states[state] || 0) + 1;
+          unis[uni] = (unis[uni] || 0) + 1;
+          genders[gender] = (genders[gender] || 0) + 1;
+          levels[level] = (levels[level] || 0) + 1;
+          courses[course] = (courses[course] || 0) + 1;
+          religions[religion] = (religions[religion] || 0) + 1;
+        }
+
+        if (res.documents.length < 100) break;
+        offset += 100;
+      }
+
+      setTotalUsers(total);
+      setStateCounts(states);
+      setLgaCounts({});
+      setUniversityCounts(unis);
+      setGenderCounts(genders);
+      setLevelCounts(levels);
+      setCgpaCounts(cgpaBuckets);
+      setCourseCounts(courses);
+      setReligionCounts(religions);
+      setDemographicsLoaded(true);
+    } catch (e: any) {
+      setDemographicsError(e?.message || 'Failed to load demographics');
+    } finally {
+      setDemographicsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!authorized) return;
+    if (activeTab !== 'demographics') return;
+    if (demographicsLoading) return;
+
+    fetchDemographics();
+  }, [authorized, activeTab]);
 
   const fetchScholarships = async () => {
     try {
@@ -426,7 +572,10 @@ const AdminDashboard: React.FC = () => {
           
           <div className="mt-6 flex space-x-4 border-b border-gray-200">
             <button
-              onClick={() => setActiveTab('scholarships')}
+              onClick={() => {
+                setActiveTab('scholarships');
+                navigate('/admin');
+              }}
               className={`py-2 px-4 font-medium transition ${
                 activeTab === 'scholarships' 
                   ? 'border-b-2 border-blue-600 text-blue-600' 
@@ -436,7 +585,10 @@ const AdminDashboard: React.FC = () => {
               Scholarships
             </button>
             <button
-              onClick={() => setActiveTab('ambassadors')}
+              onClick={() => {
+                setActiveTab('ambassadors');
+                navigate('/admin');
+              }}
               className={`py-2 px-4 font-medium transition ${
                 activeTab === 'ambassadors' 
                   ? 'border-b-2 border-blue-600 text-blue-600' 
@@ -444,6 +596,19 @@ const AdminDashboard: React.FC = () => {
               }`}
             >
               Ambassadors
+            </button>
+            <button
+              onClick={() => {
+                setActiveTab('demographics');
+                navigate('/admin/demographics');
+              }}
+              className={`py-2 px-4 font-medium transition ${
+                activeTab === 'demographics'
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Demographics
             </button>
           </div>
         </div>
@@ -1050,7 +1215,7 @@ const AdminDashboard: React.FC = () => {
             )}
           </div>
         </div>
-        ) : (
+        ) : activeTab === 'ambassadors' ? (
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="p-6 border-b">
               <h2 className="text-xl font-bold text-gray-900">Ambassadors</h2>
@@ -1080,6 +1245,95 @@ const AdminDashboard: React.FC = () => {
               {ambassadors.length === 0 && (
                 <p className="text-center text-gray-500 p-8">No ambassadors found.</p>
               )}
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className="bg-white rounded-lg shadow p-6 mb-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Total users</p>
+                  <p className="text-3xl font-bold text-gray-900">{demographicsLoading ? '…' : totalUsers}</p>
+                  {!demographicsLoading && !demographicsError && totalUsers === 0 && (
+                    <p className="text-sm text-gray-500 mt-1">No user documents returned (check Appwrite Users collection + permissions).</p>
+                  )}
+                </div>
+                <button
+                  onClick={() => {
+                    fetchDemographics();
+                  }}
+                  className="px-3 py-2 text-sm font-semibold text-white bg-blue-600 rounded hover:bg-blue-700"
+                  disabled={demographicsLoading}
+                >
+                  Refresh
+                </button>
+              </div>
+              {demographicsError && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded">
+                  {demographicsError}
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {demographicsSections.map((section) => {
+                const rows =
+                  section.title === 'CGPA'
+                    ? ['0 (Unknown)', '0–3.49', '3.5–3.99', '4.0–4.49', '4.5+'].map((key) => ({
+                        key,
+                        count: (section.counts as Counts)[key] || 0,
+                      }))
+                    : sortCounts(section.counts);
+                return (
+                  <div key={section.title} className="bg-white rounded-lg shadow overflow-hidden">
+                    <div className="p-6 border-b">
+                      <h2 className="text-xl font-bold text-gray-900">{section.title}</h2>
+                    </div>
+                    <div className="overflow-auto max-h-96">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Count</th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Percent</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {demographicsLoading ? (
+                            <tr>
+                              <td className="px-6 py-4 text-sm text-gray-500" colSpan={3}>Loading…</td>
+                            </tr>
+                          ) : rows.length === 0 ? (
+                            <tr>
+                              <td className="px-6 py-4 text-sm text-gray-500" colSpan={3}>No data.</td>
+                            </tr>
+                          ) : (
+                            rows.map((row) => {
+                              const pct = toPct(row.count, totalUsers);
+                              const width = Math.min(100, Math.max(0, pct));
+
+                              return (
+                                <tr key={row.key}>
+                                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                                    <div className="flex flex-col gap-2">
+                                      <div className="truncate">{row.key}</div>
+                                      <div className="h-2 w-full bg-gray-100 rounded">
+                                        <div className="h-2 bg-blue-600 rounded" style={{ width: `${width}%` }} />
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-bold">{row.count}</td>
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">{pct.toFixed(1)}%</td>
+                                </tr>
+                              );
+                            })
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
