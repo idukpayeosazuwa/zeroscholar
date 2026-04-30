@@ -58,11 +58,11 @@ async function clearAllNotifiedArrays(databases, DB_ID, USER_COL_ID) {
 }
 
 /**
- * Queue-based email sender for rate limiting (50 emails per minute)
+ * Queue-based email sender for rate limiting (50 emails per 2 minutes)
  */
 async function sendEmailBatch(emailQueue, transporter, databases, DB_ID, USER_COL_ID) {
-  const EMAILS_PER_MINUTE = 50;
-  const MS_BETWEEN_EMAILS = (60 * 1000) / EMAILS_PER_MINUTE; // ~1200ms between emails
+  const EMAILS_PER_MINUTE = 25; // 50 emails per 2 minutes
+  const MS_BETWEEN_EMAILS = (120 * 1000) / 50; // ~2400ms between emails
 
   let emailsSent = 0;
   let notifiedUsers = 0;
@@ -96,7 +96,7 @@ async function sendEmailBatch(emailQueue, transporter, databases, DB_ID, USER_CO
       notifiedUsers++;
       console.log(`✅ Email sent to ${user.email} (${emailsSent} of ${emailQueue.length})`);
 
-      // Rate limiting: wait between emails for 50/min
+      // Rate limiting: wait between emails for 50 per 2 mins
       if (emailsSent < emailQueue.length) {
         await new Promise(resolve => setTimeout(resolve, MS_BETWEEN_EMAILS));
       }
@@ -181,16 +181,15 @@ function checkTrackMatch(track, userProfile) {
 }
 
 function generateEmailHTML(userName, scholarships) {
+  const appBaseUrlRaw = process.env.APP_URL || process.env.FRONTEND_URL || process.env.SCHOLARAI_APP_URL || 'https://scholar-ai.tech';
+  const appBaseUrl = String(appBaseUrlRaw).trim().replace(/\/+$/, '');
+  const appLink = `${appBaseUrl}/app?from=email`;
+
   const scholarshipRows = scholarships.map((s, index) => {
-    const hasLink = s.official_link && s.official_link.toLowerCase() !== 'none';
-    const applyButton = hasLink
-      ? `<a href="${s.official_link}" 
+    const applyButton = `<a href="${appLink}"
            style="display: inline-block; background-color: #2563eb; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500;">
-          Apply Now
-        </a>`
-      : `<span style="display: inline-block; background-color: #6b7280; color: white; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 500;">
-          Check Requirements on Website
-        </span>`;
+          Open in ScholarAI
+        </a>`;
 
     return `
     <tr style="background-color: ${index % 2 === 0 ? '#f9fafb' : '#ffffff'};">
@@ -430,9 +429,9 @@ async function main() {
 
     console.log(`Email queue prepared: ${emailQueue.length} users to notify`);
 
-    // Send emails with rate limiting (50 per minute)
+    // Send emails with rate limiting (50 per 2 minutes)
     if (emailQueue.length > 0) {
-      console.log('Starting email batch sending at 50 emails per minute...');
+      console.log('Starting email batch sending at 50 emails per 2 minutes...');
       const { emailsSent, notifiedUsers } = await sendEmailBatch(emailQueue, transporter, databases, DB_ID, USER_COL_ID);
       
       console.log(`SUMMARY: ${allUsers.length} users processed, ${notifiedUsers} notified, ${emailsSent} emails sent`);
