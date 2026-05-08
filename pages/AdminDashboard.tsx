@@ -28,15 +28,15 @@ const toPct = (count: number, total: number) => {
 
 interface Scholarship {
   $id: string;
-  scholarship_name: string;
-  provider: string;
-  deadline: string;
-  award_amount: string;
-  official_link: string;
-  is_active: boolean;
-}
-
-interface Track {
+    scholarship_name: string;
+      provider: string;
+        deadline: string;
+          award_amount: string;
+            official_link: string;
+              is_active: boolean;
+              }
+              
+              interface Track {
   $id: string;
   scholarship_id: string;
   track_name: string;
@@ -79,6 +79,10 @@ const AdminDashboard: React.FC = () => {
   const [demographicsError, setDemographicsError] = useState<string | null>(null);
   const [demographicsLoaded, setDemographicsLoaded] = useState(false);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [notifiedUsersCount, setNotifiedUsersCount] = useState(0);
+  const [appliedUsersCount, setAppliedUsersCount] = useState(0);
+  const [notifiedScholarshipCounts, setNotifiedScholarshipCounts] = useState<Counts>({});
+  const [appliedScholarshipCounts, setAppliedScholarshipCounts] = useState<Counts>({});
   const [stateCounts, setStateCounts] = useState<Counts>({});
   const [lgaCounts, setLgaCounts] = useState<Counts>({});
   const [universityCounts, setUniversityCounts] = useState<Counts>({});
@@ -110,6 +114,20 @@ const AdminDashboard: React.FC = () => {
     ],
     [stateCounts, universityCounts, genderCounts, levelCounts, cgpaCounts, courseCounts, religionCounts]
   );
+
+  const scholarshipNameById = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const s of scholarships) {
+      const id = String((s as any).$id || '').trim();
+      if (!id) continue;
+      const name = String((s as any).scholarship_name || '').trim();
+      map[id] = name || id;
+    }
+    return map;
+  }, [scholarships]);
+
+  const notifiedScholarshipRows = useMemo(() => sortCounts(notifiedScholarshipCounts), [notifiedScholarshipCounts]);
+  const appliedScholarshipRows = useMemo(() => sortCounts(appliedScholarshipCounts), [appliedScholarshipCounts]);
 
   // Check authorization and fetch data
   const fetchAmbassadors = async () => {
@@ -203,6 +221,11 @@ const AdminDashboard: React.FC = () => {
       '4.5+': 0,
     };
 
+    let notifiedUsers = 0;
+    let appliedUsers = 0;
+    const notifiedByScholarship: Counts = {};
+    const appliedByScholarship: Counts = {};
+
     let total = 0;
     let offset = 0;
 
@@ -217,6 +240,37 @@ const AdminDashboard: React.FC = () => {
 
         for (const doc of res.documents as any[]) {
           total++;
+
+          const notifiedRawA = Array.isArray(doc.notified) ? doc.notified : [];
+          const notifiedRawB = Array.isArray(doc.notifiedScholarships) ? doc.notifiedScholarships : [];
+          const notifiedSet = new Set<string>(
+            [...notifiedRawA, ...notifiedRawB]
+              .filter((v) => typeof v === 'string')
+              .map((v) => v.trim())
+              .filter(Boolean)
+          );
+
+          if (notifiedSet.size > 0) {
+            notifiedUsers++;
+            for (const scholarshipId of notifiedSet) {
+              notifiedByScholarship[scholarshipId] = (notifiedByScholarship[scholarshipId] || 0) + 1;
+            }
+          }
+
+          const applicationsRaw = Array.isArray(doc.applications) ? doc.applications : [];
+          const applicationsSet = new Set<string>(
+            applicationsRaw
+              .filter((v: unknown) => typeof v === 'string')
+              .map((v: string) => v.trim())
+              .filter(Boolean)
+          );
+
+          if (applicationsSet.size > 0) {
+            appliedUsers++;
+            for (const scholarshipId of applicationsSet) {
+              appliedByScholarship[scholarshipId] = (appliedByScholarship[scholarshipId] || 0) + 1;
+            }
+          }
 
           const state = normalizeKey(doc.state);
           const uni = normalizeKey(doc.uni ?? doc.university);
@@ -252,6 +306,10 @@ const AdminDashboard: React.FC = () => {
       }
 
       setTotalUsers(total);
+      setNotifiedUsersCount(notifiedUsers);
+      setAppliedUsersCount(appliedUsers);
+      setNotifiedScholarshipCounts(notifiedByScholarship);
+      setAppliedScholarshipCounts(appliedByScholarship);
       setStateCounts(states);
       setLgaCounts({});
       setUniversityCounts(unis);
@@ -1251,12 +1309,24 @@ const AdminDashboard: React.FC = () => {
           <div>
             <div className="bg-white rounded-lg shadow p-6 mb-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Total users</p>
-                  <p className="text-3xl font-bold text-gray-900">{demographicsLoading ? '…' : totalUsers}</p>
-                  {!demographicsLoading && !demographicsError && totalUsers === 0 && (
-                    <p className="text-sm text-gray-500 mt-1">No user documents returned (check Appwrite Users collection + permissions).</p>
-                  )}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  <div>
+                    <p className="text-sm text-gray-600">Total users</p>
+                    <p className="text-3xl font-bold text-gray-900">{demographicsLoading ? '…' : totalUsers}</p>
+                    {!demographicsLoading && !demographicsError && totalUsers === 0 && (
+                      <p className="text-sm text-gray-500 mt-1">No user documents returned (check Appwrite Users collection + permissions).</p>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Users notified</p>
+                    <p className="text-3xl font-bold text-gray-900">{demographicsLoading ? '…' : notifiedUsersCount}</p>
+                    <p className="text-xs text-gray-500 mt-1">Users with ≥1 scholarship notification</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Users applied</p>
+                    <p className="text-3xl font-bold text-gray-900">{demographicsLoading ? '…' : appliedUsersCount}</p>
+                    <p className="text-xs text-gray-500 mt-1">Users with ≥1 application</p>
+                  </div>
                 </div>
                 <button
                   onClick={() => {
@@ -1273,6 +1343,110 @@ const AdminDashboard: React.FC = () => {
                   {demographicsError}
                 </div>
               )}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="p-6 border-b">
+                  <h2 className="text-xl font-bold text-gray-900">Notified scholarships</h2>
+                </div>
+                <div className="overflow-auto max-h-96">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Scholarship</th>
+                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Users</th>
+                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Percent</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {demographicsLoading ? (
+                        <tr>
+                          <td className="px-6 py-4 text-sm text-gray-500" colSpan={3}>Loading…</td>
+                        </tr>
+                      ) : notifiedScholarshipRows.length === 0 ? (
+                        <tr>
+                          <td className="px-6 py-4 text-sm text-gray-500" colSpan={3}>No data.</td>
+                        </tr>
+                      ) : (
+                        notifiedScholarshipRows.map((row) => {
+                          const denom = notifiedUsersCount || 0;
+                          const pct = toPct(row.count, denom);
+                          const width = Math.min(100, Math.max(0, pct));
+                          const label = scholarshipNameById[row.key] || row.key;
+
+                          return (
+                            <tr key={row.key}>
+                              <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                                <div className="flex flex-col gap-2">
+                                  <div className="truncate">{label}</div>
+                                  <div className="text-xs text-gray-500 font-mono truncate">{row.key}</div>
+                                  <div className="h-2 w-full bg-gray-100 rounded">
+                                    <div className="h-2 bg-blue-600 rounded" style={{ width: `${width}%` }} />
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-bold">{row.count}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">{pct.toFixed(1)}%</td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="p-6 border-b">
+                  <h2 className="text-xl font-bold text-gray-900">Applied scholarships</h2>
+                </div>
+                <div className="overflow-auto max-h-96">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Scholarship</th>
+                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Users</th>
+                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Percent</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {demographicsLoading ? (
+                        <tr>
+                          <td className="px-6 py-4 text-sm text-gray-500" colSpan={3}>Loading…</td>
+                        </tr>
+                      ) : appliedScholarshipRows.length === 0 ? (
+                        <tr>
+                          <td className="px-6 py-4 text-sm text-gray-500" colSpan={3}>No data.</td>
+                        </tr>
+                      ) : (
+                        appliedScholarshipRows.map((row) => {
+                          const denom = appliedUsersCount || 0;
+                          const pct = toPct(row.count, denom);
+                          const width = Math.min(100, Math.max(0, pct));
+                          const label = scholarshipNameById[row.key] || row.key;
+
+                          return (
+                            <tr key={row.key}>
+                              <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                                <div className="flex flex-col gap-2">
+                                  <div className="truncate">{label}</div>
+                                  <div className="text-xs text-gray-500 font-mono truncate">{row.key}</div>
+                                  <div className="h-2 w-full bg-gray-100 rounded">
+                                    <div className="h-2 bg-blue-600 rounded" style={{ width: `${width}%` }} />
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-bold">{row.count}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-right">{pct.toFixed(1)}%</td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -59,12 +59,6 @@ export default function Hero() {
               >
                 Get Started Free
               </button>
-              <button
-                onClick={() => navigate('/tools/cgpa-calculator')}
-                className="bg-white/20 hover:bg-white/30 backdrop-blur text-white px-8 py-3 rounded-lg font-semibold text-lg transition-colors border border-white/30"
-              >
-                Try Free CGPA Calculator
-              </button>
             </div>
         </div>
 

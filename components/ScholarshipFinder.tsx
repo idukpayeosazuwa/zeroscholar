@@ -46,6 +46,52 @@ interface ScholarshipWithTracks extends Scholarship {
   tracks?: any[];
 }
 
+const calculateTotalPotentialValue = (scholarships: Array<{ rewardAmount?: string }>) => {
+  let totalValue = 0;
+  let parsedCount = 0;
+
+  scholarships.forEach((s) => {
+    const amountStr = s.rewardAmount;
+
+    // Skip "Tuition support" or non-numeric strings
+    if (!amountStr || amountStr.toLowerCase().includes('tuition') || amountStr.toLowerCase().includes('support')) {
+      return;
+    }
+
+    // Remove commas before parsing to handle formatted numbers like "200,000"
+    const cleanedStr = amountStr.replace(/,/g, '');
+    const allNumbers = cleanedStr.match(/\d+/g);
+
+    if (allNumbers && allNumbers.length >= 2 && cleanedStr.includes('-')) {
+      // It's a range (e.g., "NGN150000 - NGN200000" gives ["150000", "200000"])
+      const min = parseFloat(allNumbers[0]);
+      const max = parseFloat(allNumbers[1]);
+      const avg = (min + max) / 2;
+      totalValue += avg;
+      parsedCount++;
+      return;
+    }
+
+    // Single value: join all numbers (in case there were commas) or use first
+    if (allNumbers && allNumbers.length > 0) {
+      const val = parseFloat(allNumbers.join(''));
+      if (!isNaN(val) && val > 0) {
+        totalValue += val;
+        parsedCount++;
+      }
+    }
+  });
+
+  return {
+    totalValue,
+    parsedCount,
+    formattedValue:
+      totalValue > 0
+        ? totalValue.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' })
+        : 'Varied Support',
+  };
+};
+
 // Animated Counter Component
 const AnimatedCounter = ({ value, duration = 2000, prefix = '' }: { value: number, duration?: number, prefix?: string }) => {
   const [count, setCount] = useState(0);
@@ -440,46 +486,11 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
   }, [dbScholarships, activeFilter, effectiveProfile, applications]);
 
   const wrappedStats = useMemo(() => {
-    let totalValue = 0;
-    let parsedCount = 0;
-    
-    wrappedScholarships.forEach((s, index) => {
-        const amountStr = s.rewardAmount;
-        
-        // Skip "Tuition support" or non-numeric strings
-        if (!amountStr || amountStr.toLowerCase().includes('tuition') || amountStr.toLowerCase().includes('support')) {
-            return;
-        }
-        
-        // Remove commas before parsing to handle formatted numbers like "200,000"
-        const cleanedStr = amountStr.replace(/,/g, '');
-        const allNumbers = cleanedStr.match(/\d+/g);
-        
-        if (allNumbers && allNumbers.length >= 2 && cleanedStr.includes('-')) {
-            // It's a range (e.g., "NGN150000 - NGN200000" gives ["150000", "200000"])
-            const min = parseFloat(allNumbers[0]);
-            const max = parseFloat(allNumbers[1]);
-            const avg = (min + max) / 2;
-            totalValue += avg;
-            parsedCount++;
-            return; // Exit early
-        }
-        
-        // Single value: join all numbers (in case there were commas) or use first
-        if (allNumbers && allNumbers.length > 0) {
-            const val = parseFloat(allNumbers.join(''));
-            if (!isNaN(val) && val > 0) {
-                totalValue += val;
-                parsedCount++;
-                return;
-            }
-        }
-    });
-
+    const { totalValue, formattedValue } = calculateTotalPotentialValue(wrappedScholarships);
     return {
         count: wrappedScholarships.length,
-        totalValue: totalValue,
-        formattedValue: totalValue > 0 ? totalValue.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' }) : 'Varied Support'
+      totalValue,
+      formattedValue
     };
   }, [wrappedScholarships]);
 
@@ -556,6 +567,13 @@ const ScholarshipFinder: React.FC<ScholarshipFinderProps> = ({
       <div className="text-sm text-gray-600">
         Showing <span className="font-semibold">{filteredScholarships.length}</span> scholarship{filteredScholarships.length !== 1 ? 's' : ''}
       </div>
+
+      {activeFilter === 'matched' && filteredScholarships.length > 0 && (
+        <div className="text-sm text-gray-600">
+          Total matched value:{' '}
+          <span className="font-semibold text-green-700">{wrappedStats.formattedValue}</span>
+        </div>
+      )}
 
       {/* Offline Notice for Matched Scholarships */}
       {activeFilter === 'matched' && !isOnline && (

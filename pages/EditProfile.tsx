@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { databases, DATABASE_ID, USERS_COLLECTION_ID } from '../appwriteConfig';
 import { UserProfile, UniversityLevel } from '../types';
 import { UNIVERSITY_LEVELS } from '../constants';
+import { UNIVERSITY_ALIAS_DATALIST_VALUES, isPlausibleUniversityAlias, normalizeUniversityAliasInput } from '../constants/universities';
 import { getErrorMessage, classifyError } from '../utils/errorHandler';
 
 interface EditProfileProps {
@@ -78,9 +79,16 @@ const EditProfile: React.FC<EditProfileProps> = ({ userProfile, userId, onProfil
       setError('');
       setIsSaving(true);
 
+      const normalizedUni = normalizeUniversityAliasInput(university);
+
       // Validate required fields - same as Auth.tsx
-      if (!course || !gender || !state || !university || !jambScore || !religion) {
+      if (!course || !gender || !state || !normalizedUni || !jambScore || !religion) {
         setError('Please fill in all required fields.');
+        return;
+      }
+
+      if (!isPlausibleUniversityAlias(normalizedUni)) {
+        setError('Please select a valid University alias (e.g. UNILAG).');
         return;
       }
 
@@ -103,7 +111,7 @@ const EditProfile: React.FC<EditProfileProps> = ({ userProfile, userId, onProfil
         gender: gender,
         state: normalizedState,
         lga: lga || null,
-        uni: university,
+        uni: normalizedUni,
         cgpa: safeCgpa,
         jamb: safeJamb,
         rel: religion,
@@ -211,12 +219,21 @@ const EditProfile: React.FC<EditProfileProps> = ({ userProfile, userId, onProfil
               <input
                 type="text"
                 id="university"
+                list="nigerian-university-aliases"
                 value={university}
                 onChange={(e) => setUniversity(e.target.value)}
                 required
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
-                placeholder="e.g. UNILAG, OAU"
+                placeholder="Search or type an alias (e.g. UNILAG)"
               />
+              <datalist id="nigerian-university-aliases">
+                {UNIVERSITY_ALIAS_DATALIST_VALUES.map((val) => (
+                  <option key={val} value={val} />
+                ))}
+              </datalist>
+              <p className="mt-1 text-xs text-gray-500">
+                Pick from the list to standardize your university (stored as an alias like UNILAG).
+              </p>
             </div>
           </div>
 

@@ -28,6 +28,7 @@ import { LogoIcon } from './icons/LogoIcon';
 import { Models } from 'appwrite';
 import { UniversityLevel } from '../types';
 import { UNIVERSITY_LEVELS } from '../constants';
+import { UNIVERSITY_ALIAS_DATALIST_VALUES, isPlausibleUniversityAlias, normalizeUniversityAliasInput } from '../constants/universities';
 import EmailOTPVerification from './EmailOTPVerification';
 import { retryWithBackoff, getErrorMessage, classifyError } from '../utils/errorHandler';
 
@@ -138,9 +139,17 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
         }
         onAuthSuccess(user, level);
       } else {
+        const normalizedUni = normalizeUniversityAliasInput(university);
+
         // Validate required fields
-        if (!course || !gender || !state || !university || !jambScore || !religion) {
+        if (!course || !gender || !state || !normalizedUni || !jambScore || !religion) {
           setError('Please fill in all required fields.');
+          setIsLoading(false);
+          return;
+        }
+
+        if (!isPlausibleUniversityAlias(normalizedUni)) {
+          setError('Please select a valid University alias (e.g. UNILAG).');
           setIsLoading(false);
           return;
         }
@@ -179,7 +188,7 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
             gender: gender,
             state: normalizedState,
             lga: lga || null,
-            uni: university,
+          uni: normalizedUni,
             cgpa: safeCgpa,
             jamb: safeJamb,
             rel: religion,
@@ -369,12 +378,21 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess, showLogin = false }) => {
                       <input
                         type="text"
                         id="university"
+                        list="nigerian-university-aliases"
                         value={university}
                         onChange={(e) => setUniversity(e.target.value)}
                         required
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
-                        placeholder="e.g. UNILAG, OAU"
+                        placeholder="Search or type an alias (e.g. UNILAG)"
                       />
+                      <datalist id="nigerian-university-aliases">
+                        {UNIVERSITY_ALIAS_DATALIST_VALUES.map((val) => (
+                          <option key={val} value={val} />
+                        ))}
+                      </datalist>
+                      <p className="mt-1 text-xs text-gray-500">
+                        Pick from the list to standardize your university (stored as an alias like UNILAG).
+                      </p>
                     </div>
                   </div>
 
